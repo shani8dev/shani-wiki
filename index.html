@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Favicons & Manifest -->
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/images/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/images/android-chrome-192x192.png" />
+  <link rel="icon" type="image/png" sizes="512x512" href="assets/images/android-chrome-512x512.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicon-16x16.png" />
+  <link rel="shortcut icon" href="assets/images/favicon.ico" type="image/x-icon" />
+  <link rel="manifest" href="assets/images/site.webmanifest" />
+  <meta name="theme-color" content="#1a102f" />
+
+    <title>ShaniOS Wiki</title>
+      <!-- Main CSS -->
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js"></script>
+</head>
+<body>
+    <div class="wiki-container">
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <h2>ShaniOS Wiki</h2>
+            </div>
+            <div class="search-box">
+                <input type="text" placeholder="Search...">
+                <button><i class="fas fa-search"></i></button>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#introduction"><i class="fas fa-home"></i> Introduction</a></li>
+                <li><a href="#features"><i class="fas fa-list"></i> Features</a></li>
+                <li><a href="#architecture"><i class="fas fa-layer-group"></i> Architecture</a></li>
+                <li>
+                    <a href="#installation" class="dropdown-link"><i class="fas fa-download"></i> Installation</a>
+                    <ul class="submenu">
+                        <li><a href="#system-requirements">System Requirements</a></li>
+                        <li><a href="#installation-steps">Installation Steps</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#usage" class="dropdown-link"><i class="fas fa-user"></i> Usage</a>
+                    <ul class="submenu">
+                        <li><a href="#updates">Updates</a></li>
+                        <li><a href="#software-management">Software Management</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#technical-details" class="dropdown-link"><i class="fas fa-cogs"></i> Technical Details</a>
+                    <ul class="submenu">
+                        <li><a href="#blue-green-deployment">Blue-Green Deployment</a></li>
+                        <li><a href="#btrfs-subvolumes">Btrfs Subvolumes</a></li>
+                        <li><a href="#security">Security Features</a></li>
+                    </ul>
+                </li>
+                <li><a href="#faq"><i class="fas fa-question-circle"></i> FAQ</a></li>
+                <li><a href="#contribute"><i class="fas fa-code-branch"></i> Contribute</a></li>
+            </ul>
+        </nav>
+
+        <main class="content">
+            <div class="header">
+                <div class="logo">
+                    <img src="assets/images/logo.svg" alt="ShaniOS Logo">
+                </div>
+                <div class="header-text">
+                    <h1>ShaniOS Wiki</h1>
+                    <p>A comprehensive guide to the immutable operating system with blue-green subvolume switching</p>
+                </div>
+            </div>
+
+            <section id="introduction" class="wiki-section">
+                <h2>Introduction</h2>
+                <p>ShaniOS is an innovative immutable operating system based on Arch Linux that employs a blue-green deployment strategy using Btrfs subvolumes. The system provides atomic updates through a custom deployment tool (shani-deploy), maintains system integrity with read-only root partitions, and offers enhanced security through AppArmor profiles, firewalld configurations, and full-disk encryption.</p>
+                
+                <h3>What is an Immutable OS?</h3>
+                <p>An immutable operating system is one where the system partition cannot be modified during normal operation. This approach offers several advantages:</p>
+                <ul>
+                    <li>Improved system stability and reliability</li>
+                    <li>Enhanced security by preventing runtime modifications</li>
+                    <li>Simpler system maintenance and updates</li>
+                    <li>Protection against accidental or malicious system changes</li>
+                </ul>
+                
+                <h3>Core Design Principles</h3>
+                <div class="card-container">
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-lock"></i></div>
+                        <h4>System Immutability</h4>
+                        <p>The root filesystem is mounted read-only to prevent runtime modifications</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-atom"></i></div>
+                        <h4>Atomic Updates</h4>
+                        <p>The system can be updated atomically by switching between blue and green subvolumes</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-history"></i></div>
+                        <h4>Reliable Rollback</h4>
+                        <p>If an update fails, the system can revert to the previous state</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-shield-alt"></i></div>
+                        <h4>Security First</h4>
+                        <p>Implementation of comprehensive security measures</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="features" class="wiki-section">
+                <h2>Features</h2>
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <i class="fas fa-sync-alt"></i>
+                        <div class="feature-content">
+                            <h3>Blue-Green Deployment</h3>
+                            <p>ShaniOS implements a blue-green deployment strategy using Btrfs subvolumes, adapting concepts from web application deployment. This approach maintains two complete system states (blue and green) with only one active at any time, enabling atomic updates and immediate rollback capabilities.</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-archive"></i>
+                        <div class="feature-content">
+                            <h3>Immutable System Design</h3>
+                            <p>The root filesystem is mounted read-only, preventing modifications during normal operation. This ensures system integrity and protects against both malicious attacks and accidental system changes.</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-box"></i>
+                        <div class="feature-content">
+                            <h3>Application Isolation</h3>
+                            <p>Flatpak is the preferred application deployment method, providing sandboxing and isolation from the base system. This enhances security while allowing users to install and manage applications independently from the system core.</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-shield-alt"></i>
+                        <div class="feature-content">
+                            <h3>Enhanced Security</h3>
+                            <p>ShaniOS comes with AppArmor profiles, firewalld configurations, and full-disk encryption through LUKS. The system also supports UEFI secure boot with Unified Kernel Images (UKIs).</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-power-off"></i>
+                        <div class="feature-content">
+                            <h3>Hibernation Support</h3>
+                            <p>Despite the challenges of implementing hibernation on a Btrfs filesystem, ShaniOS provides reliable hibernation support through a dedicated swap subvolume with Copy-on-Write explicitly disabled.</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-undo"></i>
+                        <div class="feature-content">
+                            <h3>Automatic Recovery</h3>
+                            <p>ShaniOS includes a robust boot failure detection and automatic rollback mechanism to ensure system reliability even when updates fail.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="architecture" class="wiki-section">
+                <h2>Architecture</h2>
+                <p>ShaniOS is built with a layered architecture designed to balance immutability, security, and user experience.</p>
+                
+                <div class="architecture-diagram">
+                    <img src="assets/images/architecture.png" alt="ShaniOS Architecture Diagram">
+                    <p class="caption">ShaniOS Architecture Diagram showing the layered structure from boot layer through user data layer, with blue-green deployment mechanism highlighted.</p>
+                </div>
+                
+                <h3>Architectural Layers</h3>
+                <div class="architecture-layers">
+                    <div class="layer">
+                        <h4>Boot Layer</h4>
+                        <p>systemd-boot with Unified Kernel Images (UKIs)</p>
+                    </div>
+                    <div class="layer">
+                        <h4>Storage Layer</h4>
+                        <p>LUKS-encrypted Btrfs with specialized subvolumes</p>
+                    </div>
+                    <div class="layer">
+                        <h4>Base System Layer</h4>
+                        <p>Read-only root filesystem</p>
+                    </div>
+                    <div class="layer">
+                        <h4>Configuration Layer</h4>
+                        <p>Overlay-mounted directories</p>
+                    </div>
+                    <div class="layer">
+                        <h4>Application Layer</h4>
+                        <p>Flatpak-based application deployment</p>
+                    </div>
+                    <div class="layer">
+                        <h4>User Data Layer</h4>
+                        <p>Persistent storage for user data</p>
+                    </div>
+                </div>
+                
+                <h3>Storage Layout</h3>
+                <p>The system uses Btrfs as its primary filesystem with a sophisticated subvolume structure designed to balance immutability, persistence, and performance.</p>
+                
+                <div class="architecture-diagram">
+                    <img src="assets/images/subvolumes.png" alt="Btrfs Subvolume Organization">
+                    <p class="caption">Btrfs Subvolume Organization showing hierarchical relationship between system subvolumes (@blue/@green), user data (@home), and persistence subvolumes (@data, @log, @cache).</p>
+                </div>
+                
+                <div class="subvolume-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Subvolume</th>
+                                <th>Purpose</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>@blue/@green</td>
+                                <td>Root subvolumes for blue-green deployment</td>
+                            </tr>
+                            <tr>
+                                <td>@home</td>
+                                <td>User data and personal configurations</td>
+                            </tr>
+                            <tr>
+                                <td>@data</td>
+                                <td>Persistent storage used by overlay filesystems</td>
+                            </tr>
+                            <tr>
+                                <td>@log</td>
+                                <td>System logs, mounted at /var/log</td>
+                            </tr>
+                            <tr>
+                                <td>@cache</td>
+                                <td>System cache, mounted at /var/cache</td>
+                            </tr>
+                            <tr>
+                                <td>@flatpak</td>
+                                <td>Dedicated subvolume for Flatpak applications</td>
+                            </tr>
+                            <tr>
+                                <td>@containers</td>
+                                <td>Container storage</td>
+                            </tr>
+                            <tr>
+                                <td>@swap</td>
+                                <td>Optimized subvolume for swap file with CoW disabled</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="installation" class="wiki-section">
+                <h2>Installation</h2>
+                
+                <div id="system-requirements">
+                    <h3>System Requirements</h3>
+                    <div class="requirements-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Component</th>
+                                    <th>Minimum</th>
+                                    <th>Recommended</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Processor</td>
+                                    <td>x86_64 dual-core</td>
+                                    <td>x86_64 quad-core</td>
+                                </tr>
+                                <tr>
+                                    <td>Memory</td>
+                                    <td>2 GB RAM</td>
+                                    <td>4 GB RAM</td>
+                                </tr>
+                                <tr>
+                                    <td>Storage</td>
+                                    <td>20 GB</td>
+                                    <td>40 GB</td>
+                                </tr>
+                                <tr>
+                                    <td>UEFI</td>
+                                    <td>Required</td>
+                                    <td>Required</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div id="installation-steps">
+                    <h3>Installation Steps</h3>
+                    <div class="installation-diagram">
+                        <img src="assets/images/installation.png" alt="Installation Sequence Diagram">
+                        <p class="caption">Installation Sequence Diagram showing workflow from ISO boot through disk partitioning to final bootloader setup.</p>
+                    </div>
+                    
+                    <div class="steps-container">
+                        <div class="step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h4>Download the ISO</h4>
+                                <p>Download the ShaniOS installation ISO from the official website.</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h4>Create Bootable Media</h4>
+                                <p>Use a tool like Ventoy, Rufus, or dd to create bootable USB media.</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h4>Boot from Installation Media</h4>
+                                <p>Boot your computer from the installation media. The system will start a minimal Sway window manager environment.</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">4</div>
+                            <div class="step-content">
+                                <h4>Launch OS-Installer</h4>
+                                <p>The OS-Installer application will launch automatically to guide you through the installation process.</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">5</div>
+                            <div class="step-content">
+                                <h4>Disk Partitioning</h4>
+                                <p>Follow the guided disk partitioning process. You can enable full-disk encryption with LUKS during this step.</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">6</div>
+                            <div class="step-content">
+                                <h4>System Installation</h4>
+                                <p>The installer will unpack the base Btrfs image and Flatpak image, create the necessary subvolumes, and configure the bootloader.</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">7</div>
+                            <div class="step-content">
+                                <h4>Configuration</h4>
+                                <p>Set up user accounts, timezone, and other system settings.</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">8</div>
+                            <div class="step-content">
+                                <h4>Complete Installation</h4>
+                                <p>Finalize the installation and reboot into your new ShaniOS system.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="usage" class="wiki-section">
+                <h2>Usage</h2>
+                
+                <div id="updates">
+                    <h3>System Updates</h3>
+                    <p>ShaniOS uses a custom update tool called <code>shani-deploy</code> that implements the blue-green deployment strategy for atomic system updates.</p>
+                    
+                    <div class="update-diagram">
+                        <img src="assets/images/update.png" alt="Update Process Flowchart">
+                        <p class="caption">Update Process Flowchart detailing steps from initialization through deployment to bootloader update and validation.</p>
+                    </div>
+                    
+                    <h4>Update Process</h4>
+                    <p>To update your ShaniOS system, simply run:</p>
+                    <div class="code-block">
+                        <pre><code>sudo shani-deploy</code></pre>
+                    </div>
+                    
+                    <p>The update process includes the following steps:</p>
+                    <ol>
+                        <li><strong>Initialization:</strong> Check running as root, internet connectivity</li>
+                        <li><strong>System Inhibit:</strong> Prevent system sleep/shutdown during update</li>
+                        <li><strong>Boot Validation:</strong> Ensure system is booted from expected subvolume</li>
+                        <li><strong>Update Information:</strong> Fetch latest version information from configured update channel</li>
+                        <li><strong>Download:</strong> Securely download and verify system image</li>
+                        <li><strong>Deployment:</strong> Apply update to inactive subvolume</li>
+                        <li><strong>UKI Generation:</strong> Create and sign new Unified Kernel Image</li>
+                        <li><strong>Bootloader Update:</strong> Update boot entries for the new system</li>
+                        <li><strong>Configuration Migration:</strong> Apply persistent configurations</li>
+                        <li><strong>Update Validation:</strong> Verify integrity of the new subvolume</li>
+                    </ol>
+                    
+                    <div class="note-box">
+                        <div class="note-icon"><i class="fas fa-info-circle"></i></div>
+                        <div class="note-content">
+                            <p><strong>Note:</strong> If an update fails, ShaniOS will automatically roll back to the previous working system on the next boot.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="software-management">
+                    <h3>Software Management</h3>
+                    <p>ShaniOS uses Flatpak as the primary method for application management, while the base system remains immutable.</p>
+                    
+                    <h4>Installing Applications</h4>
+                    <p>To install applications, use Flatpak:</p>
+                    <div class="code-block">
+                        <pre><code>flatpak install flathub org.application.Name</code></pre>
+                    </div>
+                    
+                    <h4>Managing Applications</h4>
+                    <p>You can manage your Flatpak applications through the command line or using graphical tools like GNOME Software or KDE Discover.</p>
+                    
+                    <h4>Base System Modifications</h4>
+                    <p>While the base system is immutable, you can make persistent modifications to certain directories like <code>/etc</code> through the overlay filesystem. These changes will persist across system updates.</p>
+                    
+                    <div class="warning-box">
+                        <div class="warning-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                        <div class="warning-content">
+                            <p><strong>Warning:</strong> Traditional package management workflows through pacman are not supported as they would violate the immutability of the system. Use Flatpak for application management instead.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="technical-details" class="wiki-section">
+                <h2>Technical Details</h2>
+                
+                <div id="blue-green-deployment">
+                    <h3>Blue-Green Deployment</h3>
+                    <p>ShaniOS implements a blue-green deployment strategy using Btrfs subvolumes, adapting concepts from web application deployment.</p>
+                    
+                    <div class="blue-green-diagram">
+                        <img src="assets/images/blue-green.png" alt="Blue-Green Deployment Diagram">
+                        <p class="caption">Blue-Green Deployment Diagram showing the active and inactive subvolumes, update flow, and subvolume switching mechanism.</p>
+                    </div>
+                    
+                    <h4>How It Works</h4>
+                    <p>The blue-green deployment concept works as follows:</p>
+                    <ol>
+                        <li><strong>Dual Root Subvolumes:</strong> The system maintains two complete root filesystems (@blue and @green).</li>
+                        <li><strong>Active/Inactive States:</strong> At any given time, one subvolume is active while the other remains inactive.</li>
+                        <li><strong>Update Process Flow:</strong>
+                            <ul>
+                                <li>System boots from active subvolume (e.g., @blue)</li>
+                                <li>Updates are applied to inactive subvolume (e.g., @green)</li>
+                                <li>Boot configuration is updated to point to the updated subvolume as active</li>
+                                <li>System reboots into the updated new active subvolume</li>
+                                <li>Previous active subvolume is preserved for potential rollback as inactive subvolume</li>
+                            </ul>
+                        </li>
+                    </ol>
+                </div>
+                
+                <div id="btrfs-subvolumes">
+                    <h3>Btrfs Subvolumes</h3>
+                    <p>ShaniOS uses Btrfs as its primary filesystem with a sophisticated subvolume structure designed to balance immutability, persistence, and performance.</p>
+                    
+                    <h4>Btrfs Features for Immutable Systems</h4>
+                    <p>Btrfs provides several features that make it ideal for implementing immutable operating systems:</p>
+                    <ul>
+                        <li>Copy-on-Write (CoW) functionality minimizes storage duplication</li>
+                        <li>Subvolumes enable efficient organization of filesystem components</li>
+                        <li>Snapshots provide atomic state preservation</li>
+                        <li>Send/receive operations allow efficient transfer of filesystem changes</li>
+                        <li>Compression capabilities reduce storage requirements</li>
+                    </ul>
+                    
+                    <h4>Overlay Filesystem Configuration</h4>
+                    <p>A critical aspect of ShaniOS's immutability strategy is the use of overlay filesystems to allow specific directories to be writable while maintaining the immutable nature of the root filesystem.</p>
+                    
+                    <div class="overlay-diagram">
+                        <img src="assets/images/overlay-fs.png" alt="Overlay Filesystem Structure">
+                        <p class="caption">Overlay Filesystem Structure showing the relationship between read-only lower layer and writable upper layer with workdir for filesystem operations.</p>
+                    </div>
+                </div>
+                
+                <div id="security">
+                    <h3>Security Features</h3>
+                    <p>ShaniOS includes comprehensive security features designed to protect against various threat categories:</p>
+                    
+                    <div class="security-features">
+                        <div class="security-feature">
+                            <h4>Full Disk Encryption</h4>
+                            <p>ShaniOS uses LUKS2 for full disk encryption with the following features:</p>
+                            <ul>
+                                <li>Modern argon2id key derivation function</li>
+                                <li>Support for both password and TPM2-based unlocking</li>
+                                <li>Automatic unlocking during system updates</li>
+                            </ul>
+                        </div>
+                        <div class="security-feature">
+                            <h4>Secure Boot</h4>
+                            <p>ShaniOS supports UEFI Secure Boot through:</p>
+                            <ul>
+                                <li>Machine Owner Keys (MOK): Custom MOK keys generated during build time</li>
+                                <li>Unified Kernel Images (UKIs): Combining kernel, initramfs, and command line into a single signed EFI binary</li>
+                                <li>Secure Boot Chain: Shim loaded by UEFI firmware, followed by GRUB and kernel</li>
+                            </ul>
+                        </div>
+                        <div class="security-feature">
+                            <h4>AppArmor</h4>
+                            <p>ShaniOS includes AppArmor for mandatory access control, limiting the capabilities of applications and processes to enhance system security.</p>
+                        </div>
+                        <div class="security-feature">
+                            <h4>Firewalld</h4>
+                            <p>The system comes with firewalld pre-configured to protect against network-based threats.</p>
+                        </div>
+                        <div class="security-feature">
+                            <h4>Application Isolation</h4>
+                            <p>Flatpak provides application sandboxing to contain malicious applications and prevent them from affecting the base system.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="faq" class="wiki-section">
+                <h2>Frequently Asked Questions</h2>
+                
+                <div class="faq-container">
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h3>Can I install regular Arch Linux packages?</h3>
+                            <div class="toggle-icon"><i class="fas fa-plus"></i></div>
+                        </div>
+                        <div class="faq-answer">
+                            <p>No, traditional package management workflows through pacman are not supported as they would violate the immutability of the system. Use Flatpak for application management instead. If you need specific packages, you may need to wait for the next system update that includes them or consider creating a custom system image.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h3>What happens if an update fails?</h3>
+                            <div class="toggle-icon"><i class="fas fa-plus"></i></div>
+                        </div>
+                        <div class="faq-answer">
+                            <p>ShaniOS includes a robust boot failure detection and automatic rollback mechanism. If the system detects that it failed to boot properly after an update, it will automatically revert to the previous working state. This ensures that your system remains bootable even when updates encounter issues.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h3>Does ShaniOS support hibernation?</h3>
+                            <div class="toggle-icon"><i class="fas fa-plus"></i></div>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Yes, ShaniOS provides hibernation support through a dedicated swap subvolume with Copy-on-Write explicitly disabled. This unique approach solves the challenges associated with implementing hibernation on Btrfs filesystems, providing reliable hibernation functionality.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h3>How do I make persistent changes to system configuration?</h3>
+                            <div class="toggle-icon"><i class="fas fa-plus"></i></div>
+                        </div>
+                        <div class="faq-answer">
+                            <p>While the root filesystem is immutable, ShaniOS uses overlay filesystems to allow specific directories like /etc to be writable. Changes made to these directories will persist across system updates. For more extensive system modifications, you may need to create a custom system image.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h3>How much disk space does ShaniOS require?</h3>
+                            <div class="toggle-icon"><i class="fas fa-plus"></i></div>
+                        </div>
+                        <div class="faq-answer">
+                            <p>ShaniOS requires at least 20 GB of disk space, with 40 GB recommended. Despite maintaining two complete system states (blue and green), the system's efficient use of Btrfs's Copy-on-Write features results in only about 18% storage overhead compared to traditional systems.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h3>Can I use ShaniOS on non-UEFI systems?</h3>
+                            <div class="toggle-icon"><i class="fas fa-plus"></i></div>
+                        </div>
+                        <div class="faq-answer">
+                            <p>No, ShaniOS requires UEFI firmware to support features like Unified Kernel Images (UKIs) and Secure Boot. Legacy BIOS systems are not supported at this time.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="contribute" class="wiki-section">
+                <h2>Contribute</h2>
+                <p>ShaniOS is an open-source project, and contributions are welcome! Here's how you can get involved:</p>
+                
+                <div class="contribute-options">
+                    <div class="contribute-option">
+                        <div class="contribute-icon"><i class="fas fa-code"></i></div>
+                        <h3>Code Contributions</h3>
+                        <p>Help improve ShaniOS by contributing code to the core system, update mechanisms, or installation tools.</p>
+                        <a href="https://github.com/shani8dev" class="btn">GitHub Repository</a>
+                    </div>
+                    <div class="contribute-option">
+                        <div class="contribute-icon"><i class="fas fa-bug"></i></div>
+                        <h3>Bug Reports</h3>
+                        <p>Found an issue? Report bugs to help make ShaniOS more stable and reliable.</p>
+                        <a href="https://t.me/shani8dev" class="btn">Report via Telegram</a>
+                    </div>
+                    <div class="contribute-option">
+                        <div class="contribute-icon"><i class="fas fa-book"></i></div>
+                        <h3>Documentation</h3>
+                        <p>Help improve this wiki and other documentation to make ShaniOS more accessible to users.</p>
+                        <a href="https://github.com/shani8dev/shani-wiki" class="btn">Wiki Repository</a>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- FOOTER SECTION -->
+            <footer class="wiki-footer">
+                <div class="footer-content">
+                    <div class="footer-logo">
+                        <img src="assets/images/about.svg" alt="Shanios" width="100" height="40" />
+                        <p>Immutable. Reliable. Secure.</p>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <p>&copy; <span id="current-year">2025</span> ShaniOS Project. All Rights Reserved.</p>
+                    <div class="footer-social">
+                        <a href="https://github.com/shanios" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                        <a href="https://t.me/shani8dev" aria-label="Telegram"><i class="fab fa-telegram"></i></a>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+  <!-- Back to Top -->
+  <a href="#hero" class="back-to-top" aria-label="Back to top">
+    <i class="fas fa-chevron-up"></i>
+  </a>
+
+  <!-- Scripts -->
+  <script src="assets/js/script.js"></script>
+</body>
+</html>
