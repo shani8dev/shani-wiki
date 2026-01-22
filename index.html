@@ -3,37 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- Favicons & Manifest -->
-  <link rel="apple-touch-icon" sizes="180x180" href="assets/images/apple-touch-icon.png" />
-  <link rel="icon" type="image/png" sizes="192x192" href="assets/images/android-chrome-192x192.png" />
-  <link rel="icon" type="image/png" sizes="512x512" href="assets/images/android-chrome-512x512.png" />
-  <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon-32x32.png" />
-  <link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicon-16x16.png" />
-  <link rel="shortcut icon" href="assets/images/favicon.ico" type="image/x-icon" />
-  <link rel="manifest" href="assets/images/site.webmanifest" />
-  <meta name="theme-color" content="#1a102f" />
+    <meta name="description" content="ShaniOS Technical Documentation - Comprehensive guide to the immutable Linux OS with atomic updates, blue-green deployment, and Btrfs filesystem.">
+    <meta name="keywords" content="ShaniOS, immutable OS, Linux, Btrfs, atomic updates, blue-green deployment, Arch Linux">
+    <meta name="author" content="ShaniOS Project">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="ShaniOS Wiki - Technical Documentation">
+    <meta property="og:description" content="Comprehensive technical documentation for ShaniOS - The immutable Linux OS with atomic updates">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://shani.dev">
+    <meta property="og:image" content="assets/images/logo.svg">
+    
+    <!-- Favicons & Manifest -->
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="assets/images/android-chrome-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="assets/images/android-chrome-512x512.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicon-16x16.png">
+    <link rel="shortcut icon" href="assets/images/favicon.ico" type="image/x-icon">
+    <link rel="manifest" href="assets/images/site.webmanifest">
+    <meta name="theme-color" content="#1a102f">
 
     <title>ShaniOS Wiki - Technical Documentation</title>
-      <!-- Main CSS -->
-    <link rel="stylesheet" href="assets/css/style.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js"></script>
+    
+    <!-- Preconnect for Performance -->
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    
+    <!-- Font Awesome -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js" defer></script>
 </head>
 <body>
     <div class="wiki-container">
-        <nav class="sidebar">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar" role="navigation" aria-label="Main navigation">
             <div class="sidebar-header">
                 <h2>ShaniOS Wiki</h2>
                 <p class="subtitle">Technical Documentation</p>
             </div>
-            <div class="search-box">
-                <input type="text" placeholder="Search documentation...">
-                <button><i class="fas fa-search"></i></button>
+            
+            <div class="search-box" role="search">
+                <input 
+                    type="text" 
+                    placeholder="Search documentation..." 
+                    aria-label="Search documentation"
+                    autocomplete="off">
+                <button aria-label="Search"><i class="fas fa-search"></i></button>
             </div>
+            
             <ul class="nav-links">
                 <li><a href="#overview"><i class="fas fa-home"></i> Overview</a></li>
                 <li>
-                    <a href="#installation" class="dropdown-link"><i class="fas fa-download"></i> Installation</a>
+                    <a href="#installation" class="dropdown-link" role="button" aria-expanded="false">
+                        <i class="fas fa-download"></i> Installation
+                    </a>
                     <ul class="submenu">
                         <li><a href="#requirements">Requirements</a></li>
                         <li><a href="#pre-installation">Pre-Installation</a></li>
@@ -42,7 +67,9 @@
                     </ul>
                 </li>
                 <li>
-                    <a href="#daily-use" class="dropdown-link"><i class="fas fa-desktop"></i> Daily Use</a>
+                    <a href="#daily-use" class="dropdown-link" role="button" aria-expanded="false">
+                        <i class="fas fa-desktop"></i> Daily Use
+                    </a>
                     <ul class="submenu">
                         <li><a href="#system-updates">System Updates</a></li>
                         <li><a href="#software-management">Software Management</a></li>
@@ -50,7 +77,9 @@
                     </ul>
                 </li>
                 <li>
-                    <a href="#architecture" class="dropdown-link"><i class="fas fa-layer-group"></i> Architecture</a>
+                    <a href="#architecture" class="dropdown-link" role="button" aria-expanded="false">
+                        <i class="fas fa-layer-group"></i> Architecture
+                    </a>
                     <ul class="submenu">
                         <li><a href="#blue-green">Blue-Green Deployment</a></li>
                         <li><a href="#filesystem">Filesystem Structure</a></li>
@@ -58,7 +87,9 @@
                     </ul>
                 </li>
                 <li>
-                    <a href="#advanced" class="dropdown-link"><i class="fas fa-cogs"></i> Advanced</a>
+                    <a href="#advanced" class="dropdown-link" role="button" aria-expanded="false">
+                        <i class="fas fa-cogs"></i> Advanced
+                    </a>
                     <ul class="submenu">
                         <li><a href="#btrfs-deep-dive">Btrfs Deep Dive</a></li>
                         <li><a href="#overlay-fs">Overlay Filesystem</a></li>
@@ -66,7 +97,9 @@
                     </ul>
                 </li>
                 <li>
-                    <a href="#security" class="dropdown-link"><i class="fas fa-shield-alt"></i> Security</a>
+                    <a href="#security" class="dropdown-link" role="button" aria-expanded="false">
+                        <i class="fas fa-shield-alt"></i> Security
+                    </a>
                     <ul class="submenu">
                         <li><a href="#security-overview">Security Overview</a></li>
                         <li><a href="#secure-boot">Secure Boot Setup</a></li>
@@ -79,26 +112,28 @@
             </ul>
         </nav>
 
+        <!-- Main Content -->
         <main class="content">
-            <div class="header">
+            <!-- Header -->
+            <header class="header">
                 <div class="logo">
-                    <img src="assets/images/logo.svg" alt="ShaniOS Logo">
+                    <img src="assets/images/logo.svg" alt="ShaniOS Logo" width="150" height="150">
                 </div>
                 <div class="header-text">
                     <h1>ShaniOS Technical Documentation</h1>
                     <p>Comprehensive guide to ShaniOS - The immutable Linux OS with atomic updates</p>
                 </div>
-            </div>
+            </header>
 
             <!-- OVERVIEW -->
             <section id="overview" class="wiki-section">
                 <h2>Overview</h2>
                 <p>Welcome to the ShaniOS technical documentation. This wiki provides in-depth information about ShaniOS's architecture, installation, configuration, and daily use.</p>
                 
-                <div class="note-box">
+                <div class="note-box" role="note">
                     <div class="note-icon"><i class="fas fa-info-circle"></i></div>
                     <div class="note-content">
-                        <p><strong>New to ShaniOS?</strong> Visit <a href="https://shani.dev" target="_blank">shani.dev</a> for an introduction to ShaniOS features and philosophy. This wiki focuses on technical implementation details.</p>
+                        <p><strong>New to ShaniOS?</strong> Visit <a href="https://shani.dev" target="_blank" rel="noopener noreferrer">shani.dev</a> for an introduction to ShaniOS features and philosophy. This wiki focuses on technical implementation details.</p>
                     </div>
                 </div>
 
@@ -115,77 +150,79 @@
 
                 <h3>Documentation Structure</h3>
                 <div class="card-container">
-                    <div class="card">
+                    <article class="card">
                         <div class="card-icon"><i class="fas fa-download"></i></div>
                         <h4>Installation</h4>
                         <p>System requirements, BIOS setup, and step-by-step installation guide</p>
-                    </div>
-                    <div class="card">
+                    </article>
+                    <article class="card">
                         <div class="card-icon"><i class="fas fa-user"></i></div>
                         <h4>Daily Use</h4>
                         <p>Updates, software management, gaming, containers, and common tasks</p>
-                    </div>
-                    <div class="card">
+                    </article>
+                    <article class="card">
                         <div class="card-icon"><i class="fas fa-project-diagram"></i></div>
                         <h4>Architecture</h4>
                         <p>Technical details of blue-green deployment and filesystem structure</p>
-                    </div>
-                    <div class="card">
+                    </article>
+                    <article class="card">
                         <div class="card-icon"><i class="fas fa-shield-alt"></i></div>
                         <h4>Security</h4>
                         <p>Secure Boot, TPM encryption, and security hardening</p>
-                    </div>
+                    </article>
                 </div>
             </section>
 
-            <!-- INSTALLATION (keeping existing content) -->
+            <!-- INSTALLATION -->
             <section id="installation" class="wiki-section">
                 <h2>Installation</h2>
                 
                 <div id="requirements">
                     <h3>System Requirements</h3>
-                    <div class="requirements-table">
+                    <div class="table-wrapper">
                         <table>
+                            <caption class="sr-only">ShaniOS System Requirements</caption>
                             <thead>
                                 <tr>
-                                    <th>Component</th>
-                                    <th>Minimum</th>
-                                    <th>Recommended</th>
+                                    <th scope="col">Component</th>
+                                    <th scope="col">Minimum</th>
+                                    <th scope="col">Recommended</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>Processor</td>
+                                    <th scope="row">Processor</th>
                                     <td>x86_64 dual-core with VT-x/AMD-V</td>
                                     <td>x86_64 quad-core or better</td>
                                 </tr>
                                 <tr>
-                                    <td>Memory</td>
+                                    <th scope="row">Memory</th>
                                     <td>4 GB RAM</td>
                                     <td>8 GB RAM or more</td>
                                 </tr>
                                 <tr>
-                                    <td>Storage</td>
+                                    <th scope="row">Storage</th>
                                     <td>32 GB (dual-image architecture)</td>
                                     <td>64 GB or more</td>
                                 </tr>
                                 <tr>
-                                    <td>Firmware</td>
+                                    <th scope="row">Firmware</th>
                                     <td>UEFI (required)</td>
                                     <td>UEFI with TPM 2.0</td>
                                 </tr>
                                 <tr>
-                                    <td>Installation Media</td>
+                                    <th scope="row">Installation Media</th>
                                     <td>8 GB USB drive</td>
                                     <td>16 GB USB 3.0 drive</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
-                    <div class="note-box">
+                    
+                    <div class="note-box" role="note">
                         <div class="note-icon"><i class="fas fa-info-circle"></i></div>
                         <div class="note-content">
-                            <p><strong>Why 32GB minimum?</strong> ShaniOS maintains two complete system images (@blue and @green) for atomic updates. Despite this, Btrfs Copy-on-Write results in only ~18% storage overhead compared to traditional systems.</p>
+                            <p><strong>Why 32GB minimum?</strong> ShaniOS maintains two complete system images (@blue and @green) for atomic updates. However, Btrfs Copy-on-Write shares unchanged data between them, resulting in only ~18% overhead compared to traditional systems.</p>
                         </div>
                     </div>
 
@@ -208,52 +245,52 @@
                     <p>Configure your firmware before installation (typically accessed via F2, F10, Del, or Esc during startup):</p>
                     
                     <div class="steps-container">
-                        <div class="step">
+                        <article class="step">
                             <div class="step-number">1</div>
                             <div class="step-content">
                                 <h4>Disable Fast Boot</h4>
                                 <p>Fast Boot can interfere with USB boot and Linux installation</p>
                             </div>
-                        </div>
-                        <div class="step">
+                        </article>
+                        <article class="step">
                             <div class="step-number">2</div>
                             <div class="step-content">
                                 <h4>Disable Secure Boot (Temporarily)</h4>
                                 <p>Required for installation. Can be re-enabled after enrolling ShaniOS MOK keys</p>
                             </div>
-                        </div>
-                        <div class="step">
+                        </article>
+                        <article class="step">
                             <div class="step-number">3</div>
                             <div class="step-content">
                                 <h4>Set SATA Mode to AHCI</h4>
                                 <p>Ensures optimal disk performance and compatibility</p>
                             </div>
-                        </div>
-                        <div class="step">
+                        </article>
+                        <article class="step">
                             <div class="step-number">4</div>
                             <div class="step-content">
                                 <h4>Enable UEFI Boot</h4>
                                 <p>Disable legacy/CSM mode. ShaniOS requires UEFI</p>
                             </div>
-                        </div>
-                        <div class="step">
+                        </article>
+                        <article class="step">
                             <div class="step-number">5</div>
                             <div class="step-content">
                                 <h4>Enable Virtualization</h4>
                                 <p>Enable Intel VT-x or AMD-V for container support</p>
                             </div>
-                        </div>
+                        </article>
                     </div>
 
                     <h3>Creating Installation Media</h3>
-                    <p>Download the ShaniOS ISO from <a href="https://shani.dev" target="_blank">shani.dev</a> and write it to USB:</p>
+                    <p>Download the ShaniOS ISO from <a href="https://shani.dev" target="_blank" rel="noopener noreferrer">shani.dev</a> and write it to USB:</p>
                     <ul>
                         <li><strong>Recommended:</strong> Balena Etcher (cross-platform, user-friendly)</li>
                         <li><strong>Windows:</strong> Rufus (advanced options available)</li>
                         <li><strong>Linux/Mac:</strong> dd command or GNOME Disks</li>
                     </ul>
                     
-                    <div class="warning-box">
+                    <div class="warning-box" role="alert">
                         <div class="warning-icon"><i class="fas fa-exclamation-triangle"></i></div>
                         <div class="warning-content">
                             <p><strong>Do Not Use Ventoy:</strong> Ventoy has known compatibility issues with ShaniOS's immutable architecture and will cause installation failures.</p>
@@ -266,55 +303,55 @@
                     <p>Installation takes approximately 10-15 minutes:</p>
                     
                     <div class="steps-container">
-                        <div class="step">
+                        <article class="step">
                             <div class="step-number">1</div>
                             <div class="step-content">
                                 <h4>Boot from USB</h4>
                                 <p>Press F12, F2, or Del during startup. Select your USB drive from the boot menu.</p>
                             </div>
-                        </div>
-                        <div class="step">
+                        </article>
+                        <article class="step">
                             <div class="step-number">2</div>
                             <div class="step-content">
                                 <h4>Select "Install ShaniOS"</h4>
                                 <p>Choose the installation option from the boot menu</p>
                             </div>
-                        </div>
-                        <div class="step">
+                        </article>
+                        <article class="step">
                             <div class="step-number">3</div>
                             <div class="step-content">
                                 <h4>Language & Region</h4>
                                 <p>Select language, timezone, and keyboard layout</p>
                             </div>
-                        </div>
-                        <div class="step">
+                        </article>
+                        <article class="step">
                             <div class="step-number">4</div>
                             <div class="step-content">
                                 <h4>Disk Selection</h4>
                                 <p>Choose target disk and partitioning scheme (automatic recommended)</p>
                             </div>
-                        </div>
-                        <div class="step">
+                        </article>
+                        <article class="step">
                             <div class="step-number">5</div>
                             <div class="step-content">
                                 <h4>Encryption (Optional)</h4>
                                 <p>Enable LUKS2 full-disk encryption. Recommended for laptops and portable systems.</p>
                             </div>
-                        </div>
-                        <div class="step">
+                        </article>
+                        <article class="step">
                             <div class="step-number">6</div>
                             <div class="step-content">
                                 <h4>Install</h4>
                                 <p>The installer creates Btrfs subvolumes, installs the base system, and configures the bootloader</p>
                             </div>
-                        </div>
-                        <div class="step">
+                        </article>
+                        <article class="step">
                             <div class="step-number">7</div>
                             <div class="step-content">
                                 <h4>Reboot</h4>
                                 <p>Remove USB drive when prompted and reboot into ShaniOS</p>
                             </div>
-                        </div>
+                        </article>
                     </div>
                 </div>
 
@@ -378,7 +415,7 @@
                         <li><strong>Storage Optimization:</strong> Runs deduplication and cleanup</li>
                     </ol>
                     
-                    <div class="note-box">
+                    <div class="note-box" role="note">
                         <div class="note-icon"><i class="fas fa-info-circle"></i></div>
                         <div class="note-content">
                             <p><strong>Automatic Rollback:</strong> If the updated system fails to boot, ShaniOS automatically reverts to the previous working state on next startup. The boot-success marker system tracks successful boots, and automatic fallback ensures system reliability.</p>
@@ -466,7 +503,7 @@ sudo nano /etc/some-config-file
 # and persist across system updates</code></pre>
                     </div>
                     
-                    <div class="warning-box">
+                    <div class="warning-box" role="alert">
                         <div class="warning-icon"><i class="fas fa-exclamation-triangle"></i></div>
                         <div class="warning-content">
                             <p><strong>No pacman:</strong> Traditional package management via pacman is not supported. The base system is immutable. Use Flatpak, containers, or AppImages for applications.</p>
@@ -533,7 +570,7 @@ distrobox enter ubuntu</code></pre>
                     <h4>Android Applications</h4>
                     <p>Waydroid is pre-installed. Launch from Applications menu and complete setup wizard.</p>
 
-                    <div class="note-box">
+                    <div class="note-box" role="note">
                         <div class="note-icon"><i class="fas fa-info-circle"></i></div>
                         <div class="note-content">
                             <p><strong>Important Notes:</strong></p>
@@ -1317,7 +1354,7 @@ flatpak run org.app.Name</code></pre>
                     </div>
                 </div>
                 <div class="footer-bottom">
-                    <p>&copy; <span id="current-year">2025</span> ShaniOS Project. All Rights Reserved.</p>
+                    <p>&copy; <span id="copyright-year"></span> Shanios Project. Open Source & Immutable.</p>
                     <div class="footer-social">
                         <a href="https://github.com/shani8dev" aria-label="GitHub" target="_blank"><i class="fab fa-github"></i></a>
                         <a href="https://t.me/shani8dev" aria-label="Telegram" target="_blank"><i class="fab fa-telegram"></i></a>
