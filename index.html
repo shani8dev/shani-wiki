@@ -914,7 +914,7 @@ distrobox enter ubuntu</code></pre>
                     <p>Transparent zstd compression enabled by default:</p>
                     <div class="code-block">
                         <pre><code># Mount options in fstab
-            compress=zstd,space_cache=v2,autodefrag</code></pre>
+compress=zstd,space_cache=v2,autodefrag</code></pre>
                     </div>
                     <ul>
                         <li>Reduces disk usage by 30-50% depending on data</li>
@@ -931,8 +931,7 @@ distrobox enter ubuntu</code></pre>
                     
                     <div class="code-block">
                         <pre><code># Example fstab entry for VM storage
-            LABEL=shani_root /var/lib/libvirt btrfs \
-              nofail,noatime,subvol=@libvirt,rw,nodatacow,nospace_cache 0 0</code></pre>
+LABEL=shani_root /var/lib/libvirt btrfs nofail,noatime,subvol=@libvirt,rw,nodatacow,nospace_cache 0 0</code></pre>
                     </div>
                 </div>
                 
@@ -995,11 +994,7 @@ distrobox enter ubuntu</code></pre>
                     <h4>How Overlay Works</h4>
                     <div class="code-block">
                         <pre><code># /etc overlay mount from fstab
-            overlay /etc overlay \
-              rw,lowerdir=/etc,\
-              upperdir=/data/overlay/etc/upper,\
-              workdir=/data/overlay/etc/work,\
-              index=off,metacopy=off 0 0</code></pre>
+overlay /etc overlay rw,lowerdir=/etc,upperdir=/data/overlay/etc/upper,workdir=/data/overlay/etc/work,index=off,metacopy=off 0 0</code></pre>
                     </div>
                     
                     <ul>
@@ -1019,10 +1014,10 @@ distrobox enter ubuntu</code></pre>
                     <h4>Viewing Changes</h4>
                     <div class="code-block">
                         <pre><code># List all overlay modifications
-            ls -la /data/overlay/etc/upper
+ls -la /data/overlay/etc/upper
 
-            # Compare with base system
-            diff -r /etc /data/overlay/etc/upper</code></pre>
+# Compare with base system
+diff -r /etc /data/overlay/etc/upper</code></pre>
                     </div>
                 </div>
                 
@@ -1036,17 +1031,14 @@ distrobox enter ubuntu</code></pre>
                     <div class="code-block">
                         <pre><code># Example bind mounts from fstab
 
-            # Network configuration
-            /data/varlib/NetworkManager /var/lib/NetworkManager \
-              none bind,nofail 0 0
+# Network configuration
+/data/varlib/NetworkManager /var/lib/NetworkManager none bind,nofail 0 0
 
-            # Bluetooth pairings
-            /data/varlib/bluetooth /var/lib/bluetooth \
-              none bind,nofail 0 0
+# Bluetooth pairings
+/data/varlib/bluetooth /var/lib/bluetooth none bind,nofail 0 0
 
-            # systemd state (timers, random seed)
-            /data/varlib/systemd /var/lib/systemd \
-              none bind,nofail 0 0</code></pre>
+# systemd state (timers, random seed)
+/data/varlib/systemd /var/lib/systemd none bind,nofail 0 0</code></pre>
                     </div>
                     
                     <h4>Complete Persistent Bindings</h4>
@@ -1281,13 +1273,11 @@ distrobox enter ubuntu</code></pre>
                                 <h4>Enroll Encryption Key</h4>
                                 <p><strong>With Secure Boot (recommended):</strong></p>
                                 <div class="code-block">
-                                    <pre><code>sudo systemd-cryptenroll --tpm2-device=auto \
-              --tpm2-pcrs=0+7 /dev/disk/by-label/shani_root</code></pre>
+                                    <pre><code>sudo systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=0+7 /dev/disk/by-label/shani_root</code></pre>
                                 </div>
                                 <p><strong>Without Secure Boot:</strong></p>
                                 <div class="code-block">
-                                    <pre><code>sudo systemd-cryptenroll --tpm2-device=auto \
-              --tpm2-pcrs=0 /dev/disk/by-label/shani_root</code></pre>
+                                    <pre><code>sudo systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=0 /dev/disk/by-label/shani_root</code></pre>
                                 </div>
                                 <p>Enter your LUKS password when prompted</p>
                             </div>
@@ -1300,7 +1290,7 @@ distrobox enter ubuntu</code></pre>
                                 <p>Both @blue and @green must be updated:</p>
                                 <div class="code-block">
                                     <pre><code>sudo gen-efi configure blue
-            sudo gen-efi configure green</code></pre>
+sudo gen-efi configure green</code></pre>
                                 </div>
                             </div>
                         </article>
@@ -1312,8 +1302,7 @@ distrobox enter ubuntu</code></pre>
                                 <p>Reboot. System should unlock automatically.</p>
                                 <div class="code-block">
                                     <pre><code># Verify enrollment
-            sudo cryptsetup luksDump /dev/disk/by-label/shani_root | \
-              grep systemd-tpm2</code></pre>
+sudo cryptsetup luksDump /dev/disk/by-label/shani_root | grep systemd-tpm2</code></pre>
                                 </div>
                             </div>
                         </article>
@@ -1322,26 +1311,23 @@ distrobox enter ubuntu</code></pre>
                     <h4>Remove TPM Enrollment</h4>
                     <p>To restore password-only unlocking:</p>
                     <div class="code-block">
-                        <pre><code>sudo systemd-cryptenroll --wipe-slot=tpm2 \
-              /dev/disk/by-label/shani_root
-            sudo gen-efi configure blue
-            sudo gen-efi configure green</code></pre>
+                        <pre><code>sudo systemd-cryptenroll --wipe-slot=tpm2 /dev/disk/by-label/shani_root
+sudo gen-efi configure blue
+sudo gen-efi configure green</code></pre>
                     </div>
                     
                     <h4>Re-enroll After Enabling Secure Boot</h4>
                     <p>If you enable Secure Boot after TPM enrollment:</p>
                     <div class="code-block">
                         <pre><code># Remove old enrollment
-            sudo systemd-cryptenroll --wipe-slot=tpm2 \
-              /dev/disk/by-label/shani_root
+sudo systemd-cryptenroll --wipe-slot=tpm2 /dev/disk/by-label/shani_root
 
-            # Re-enroll with Secure Boot protection
-            sudo systemd-cryptenroll --tpm2-device=auto \
-              --tpm2-pcrs=0+7 /dev/disk/by-label/shani_root
+# Re-enroll with Secure Boot protection
+sudo systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=0+7 /dev/disk/by-label/shani_root
 
-            # Update boot images
-            sudo gen-efi configure blue
-            sudo gen-efi configure green</code></pre>
+# Update boot images
+sudo gen-efi configure blue
+sudo gen-efi configure green</code></pre>
                     </div>
                     
                     <div class="note-box" role="note">
@@ -1407,13 +1393,13 @@ distrobox enter ubuntu</code></pre>
                             <p>Check network connectivity:</p>
                             <div class="code-block">
                                 <pre><code># Test connectivity
-            ping -c 3 shani.dev
+ping -c 3 shani.dev
 
-            # Check NetworkManager
-            systemctl status NetworkManager
+# Check NetworkManager
+systemctl status NetworkManager
 
-            # Retry update
-            sudo shani-deploy</code></pre>
+# Retry update
+sudo shani-deploy</code></pre>
                             </div>
                         </div>
                     </div>
@@ -1430,16 +1416,22 @@ distrobox enter ubuntu</code></pre>
                             <p>Try these steps:</p>
                             <div class="code-block">
                                 <pre><code># Update Flatpak
-            flatpak update
+flatpak update
 
-            # Repair installation
-            flatpak repair
+# Repair installation
+flatpak repair
 
-            # Check permissions
-            flatpak override --show org.app.Name
+# Check permissions
+flatpak override --show org.app.Name
 
-            # Run from terminal to see errors
-            flatpak run org.app.Name</code></pre>
+# Reset all overrides for the app
+flatpak override --reset org.app.Name
+
+# Run from terminal to see errors
+flatpak run org.app.Name
+
+# Check GPU / graphics issues (common for Electron & games)
+flatpak run --env=LIBGL_DEBUG=verbose org.app.Name</code></pre>
                             </div>
                         </div>
                     </div>
