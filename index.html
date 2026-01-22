@@ -593,7 +593,43 @@ distrobox enter ubuntu</code></pre>
                     <p>ShaniOS implements blue-green deployment using Btrfs subvolumes—a strategy adapted from DevOps for desktop Linux.</p>
                     
                     <div class="blue-green-diagram">
-                        <img src="assets/images/blue-green.png" alt="Blue-Green Deployment">
+                        <svg viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg" style="max-width: 100%; height: auto;">
+                            <!-- Background -->
+                            <rect width="800" height="400" fill="#0b0618"/>
+                            
+                            <!-- Blue System -->
+                            <g>
+                                <rect x="50" y="80" width="300" height="240" rx="12" fill="#1e3a8a" opacity="0.3" stroke="#3b82f6" stroke-width="2"/>
+                                <text x="200" y="110" text-anchor="middle" fill="#60a5fa" font-size="20" font-weight="bold">@blue (Active)</text>
+                                <text x="200" y="140" text-anchor="middle" fill="#93c5fd" font-size="14">Currently Running</text>
+                                <circle cx="200" cy="200" r="40" fill="#3b82f6" opacity="0.5"/>
+                                <text x="200" y="210" text-anchor="middle" fill="#fff" font-size="16">System</text>
+                                <text x="200" y="280" text-anchor="middle" fill="#93c5fd" font-size="12">Mounted as /</text>
+                            </g>
+                            
+                            <!-- Green System -->
+                            <g>
+                                <rect x="450" y="80" width="300" height="240" rx="12" fill="#166534" opacity="0.3" stroke="#22c55e" stroke-width="2"/>
+                                <text x="600" y="110" text-anchor="middle" fill="#4ade80" font-size="20" font-weight="bold">@green (Inactive)</text>
+                                <text x="600" y="140" text-anchor="middle" fill="#86efac" font-size="14">Ready for Update</text>
+                                <circle cx="600" cy="200" r="40" fill="#22c55e" opacity="0.5"/>
+                                <text x="600" y="210" text-anchor="middle" fill="#fff" font-size="16">System</text>
+                                <text x="600" y="280" text-anchor="middle" fill="#86efac" font-size="12">Standby Mode</text>
+                            </g>
+                            
+                            <!-- Arrow -->
+                            <g>
+                                <line x1="350" y1="200" x2="430" y2="200" stroke="#ff8a5c" stroke-width="3" marker-end="url(#arrowhead)"/>
+                                <text x="390" y="190" text-anchor="middle" fill="#ff8a5c" font-size="14">Update Flow</text>
+                            </g>
+                            
+                            <!-- Arrow marker -->
+                            <defs>
+                                <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                    <polygon points="0 0, 10 3, 0 6" fill="#ff8a5c"/>
+                                </marker>
+                            </defs>
+                        </svg>
                         <p class="caption">Blue-Green Deployment: Two complete system images with only one active at a time</p>
                     </div>
                     
@@ -626,77 +662,160 @@ distrobox enter ubuntu</code></pre>
                     <p>ShaniOS uses Btrfs with a sophisticated subvolume layout:</p>
                     
                     <div class="architecture-diagram">
-                        <img src="assets/images/subvolumes.png" alt="Btrfs Subvolume Structure">
+                        <svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg" style="max-width: 100%; height: auto;">
+                            <!-- Background -->
+                            <rect width="800" height="500" fill="#0b0618"/>
+                            
+                            <!-- Title -->
+                            <text x="400" y="30" text-anchor="middle" fill="#ff8a5c" font-size="22" font-weight="bold">Btrfs Subvolume Structure</text>
+                            
+                            <!-- Root Device -->
+                            <rect x="300" y="60" width="200" height="40" rx="8" fill="#8b5cf6" opacity="0.4" stroke="#8b5cf6" stroke-width="2"/>
+                            <text x="400" y="85" text-anchor="middle" fill="#fff" font-size="14">/dev/sda2 (Btrfs)</text>
+                            
+                            <!-- System Layer -->
+                            <g>
+                                <rect x="50" y="130" width="280" height="160" rx="8" fill="#1e3a8a" opacity="0.2" stroke="#3b82f6" stroke-width="1.5"/>
+                                <text x="190" y="155" text-anchor="middle" fill="#60a5fa" font-size="16" font-weight="bold">System Images</text>
+                                
+                                <rect x="70" y="170" width="100" height="35" rx="6" fill="#3b82f6" opacity="0.5"/>
+                                <text x="120" y="192" text-anchor="middle" fill="#fff" font-size="12">@blue</text>
+                                
+                                <rect x="210" y="170" width="100" height="35" rx="6" fill="#22c55e" opacity="0.5"/>
+                                <text x="260" y="192" text-anchor="middle" fill="#fff" font-size="12">@green</text>
+                                
+                                <text x="190" y="230" text-anchor="middle" fill="#93c5fd" font-size="11">Root filesystems</text>
+                                <text x="190" y="250" text-anchor="middle" fill="#93c5fd" font-size="11">Read-only</text>
+                            </g>
+                            
+                            <!-- User Data Layer -->
+                            <g>
+                                <rect x="370" y="130" width="180" height="160" rx="8" fill="#166534" opacity="0.2" stroke="#22c55e" stroke-width="1.5"/>
+                                <text x="460" y="155" text-anchor="middle" fill="#4ade80" font-size="16" font-weight="bold">User Data</text>
+                                
+                                <rect x="390" y="170" width="140" height="30" rx="6" fill="#22c55e" opacity="0.5"/>
+                                <text x="460" y="190" text-anchor="middle" fill="#fff" font-size="12">@home</text>
+                                
+                                <rect x="390" y="210" width="140" height="30" rx="6" fill="#22c55e" opacity="0.5"/>
+                                <text x="460" y="230" text-anchor="middle" fill="#fff" font-size="12">@data</text>
+                                
+                                <text x="460" y="260" text-anchor="middle" fill="#86efac" font-size="11">Persistent</text>
+                            </g>
+                            
+                            <!-- Services Layer -->
+                            <g>
+                                <rect x="590" y="130" width="180" height="160" rx="8" fill="#7c2d12" opacity="0.2" stroke="#f97316" stroke-width="1.5"/>
+                                <text x="680" y="155" text-anchor="middle" fill="#fb923c" font-size="16" font-weight="bold">Services</text>
+                                
+                                <rect x="610" y="170" width="140" height="24" rx="6" fill="#f97316" opacity="0.5"/>
+                                <text x="680" y="186" text-anchor="middle" fill="#fff" font-size="11">@flatpak</text>
+                                
+                                <rect x="610" y="200" width="140" height="24" rx="6" fill="#f97316" opacity="0.5"/>
+                                <text x="680" y="216" text-anchor="middle" fill="#fff" font-size="11">@containers</text>
+                                
+                                <rect x="610" y="230" width="140" height="24" rx="6" fill="#f97316" opacity="0.5"/>
+                                <text x="680" y="246" text-anchor="middle" fill="#fff" font-size="11">@waydroid</text>
+                                
+                                <text x="680" y="270" text-anchor="middle" fill="#fdba74" font-size="11">Isolated storage</text>
+                            </g>
+                            
+                            <!-- System Volumes -->
+                            <g>
+                                <rect x="50" y="320" width="700" height="150" rx="8" fill="#581c87" opacity="0.2" stroke="#a855f7" stroke-width="1.5"/>
+                                <text x="400" y="345" text-anchor="middle" fill="#c084fc" font-size="16" font-weight="bold">Additional Subvolumes</text>
+                                
+                                <rect x="70" y="360" width="110" height="28" rx="6" fill="#a855f7" opacity="0.4"/>
+                                <text x="125" y="378" text-anchor="middle" fill="#fff" font-size="11">@log</text>
+                                
+                                <rect x="200" y="360" width="110" height="28" rx="6" fill="#a855f7" opacity="0.4"/>
+                                <text x="255" y="378" text-anchor="middle" fill="#fff" font-size="11">@cache</text>
+                                
+                                <rect x="330" y="360" width="110" height="28" rx="6" fill="#a855f7" opacity="0.4"/>
+                                <text x="385" y="378" text-anchor="middle" fill="#fff" font-size="11">@machines</text>
+                                
+                                <rect x="460" y="360" width="110" height="28" rx="6" fill="#a855f7" opacity="0.4"/>
+                                <text x="515" y="378" text-anchor="middle" fill="#fff" font-size="11">@lxc</text>
+                                
+                                <rect x="590" y="360" width="110" height="28" rx="6" fill="#a855f7" opacity="0.4"/>
+                                <text x="645" y="378" text-anchor="middle" fill="#fff" font-size="11">@libvirt</text>
+                                
+                                <rect x="170" y="405" width="110" height="28" rx="6" fill="#a855f7" opacity="0.4"/>
+                                <text x="225" y="423" text-anchor="middle" fill="#fff" font-size="11">@swap</text>
+                                
+                                <text x="225" y="448" text-anchor="middle" fill="#e9d5ff" font-size="10">(nodatacow)</text>
+                            </g>
+                        </svg>
                         <p class="caption">Btrfs subvolume organization showing system, user, and persistence layers</p>
                     </div>
                     
-                    <div class="subvolume-table">
+                    <div class="table-wrapper">
                         <table>
+                            <caption class="sr-only">ShaniOS Subvolume Layout</caption>
                             <thead>
                                 <tr>
-                                    <th>Subvolume</th>
-                                    <th>Mount Point</th>
-                                    <th>Purpose</th>
+                                    <th scope="col">Subvolume</th>
+                                    <th scope="col">Mount Point</th>
+                                    <th scope="col">Purpose</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>@blue / @green</td>
+                                    <th scope="row">@blue / @green</th>
                                     <td>/</td>
                                     <td>Root filesystems for blue-green deployment</td>
                                 </tr>
                                 <tr>
-                                    <td>@home</td>
+                                    <th scope="row">@home</th>
                                     <td>/home</td>
                                     <td>User data and personal configurations</td>
                                 </tr>
                                 <tr>
-                                    <td>@data</td>
+                                    <th scope="row">@data</th>
                                     <td>/data</td>
                                     <td>Overlay storage and persistent service data</td>
                                 </tr>
                                 <tr>
-                                    <td>@log</td>
+                                    <th scope="row">@log</th>
                                     <td>/var/log</td>
                                     <td>System logs across reboots</td>
                                 </tr>
                                 <tr>
-                                    <td>@cache</td>
+                                    <th scope="row">@cache</th>
                                     <td>/var/cache</td>
                                     <td>Package manager cache</td>
                                 </tr>
                                 <tr>
-                                    <td>@flatpak</td>
+                                    <th scope="row">@flatpak</th>
                                     <td>/var/lib/flatpak</td>
                                     <td>Flatpak applications and runtimes</td>
                                 </tr>
                                 <tr>
-                                    <td>@waydroid</td>
+                                    <th scope="row">@waydroid</th>
                                     <td>/var/lib/waydroid</td>
                                     <td>Android system images and data</td>
                                 </tr>
                                 <tr>
-                                    <td>@containers</td>
+                                    <th scope="row">@containers</th>
                                     <td>/var/lib/containers</td>
                                     <td>Podman/Docker container storage</td>
                                 </tr>
                                 <tr>
-                                    <td>@machines</td>
+                                    <th scope="row">@machines</th>
                                     <td>/var/lib/machines</td>
                                     <td>systemd-nspawn containers</td>
                                 </tr>
                                 <tr>
-                                    <td>@lxc</td>
+                                    <th scope="row">@lxc</th>
                                     <td>/var/lib/lxc</td>
                                     <td>LXC containers</td>
                                 </tr>
                                 <tr>
-                                    <td>@libvirt</td>
+                                    <th scope="row">@libvirt</th>
                                     <td>/var/lib/libvirt</td>
                                     <td>Virtual machine disk images (nodatacow)</td>
                                 </tr>
                                 <tr>
-                                    <td>@swap</td>
+                                    <th scope="row">@swap</th>
                                     <td>/swap</td>
                                     <td>Swap file container (nodatacow)</td>
                                 </tr>
@@ -709,23 +828,69 @@ distrobox enter ubuntu</code></pre>
                     <h3>Boot Process</h3>
                     <p>Understanding ShaniOS boot sequence:</p>
                     
-                    <ol>
-                        <li><strong>UEFI Firmware:</strong> Loads systemd-boot from ESP (/boot/efi)</li>
-                        <li><strong>systemd-boot:</strong> Presents boot menu with @blue and @green entries</li>
-                        <li><strong>Kernel Loading:</strong> Boots selected Unified Kernel Image (UKI)</li>
-                        <li><strong>Initramfs:</strong> Unlocks LUKS partition (if encrypted), mounts selected root subvolume</li>
-                        <li><strong>systemd Init:</strong> Starts with <code>systemd.volatile=state</code> kernel parameter</li>
-                        <li><strong>Filesystem Setup:</strong>
-                            <ul>
-                                <li>Root mounted read-only</li>
-                                <li>/var created as tmpfs (volatile)</li>
-                                <li>/etc overlay mounted (writable layer over read-only base)</li>
-                                <li>Persistent subvolumes mounted (@home, @data, @log, etc.)</li>
-                                <li>Service state bind-mounted from @data</li>
-                            </ul>
-                        </li>
-                        <li><strong>System Start:</strong> Services launch, desktop environment loads</li>
-                    </ol>
+                    <div class="steps-container">
+                        <article class="step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h4>UEFI Firmware</h4>
+                                <p>Loads systemd-boot from ESP (/boot/efi)</p>
+                            </div>
+                        </article>
+                        
+                        <article class="step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h4>systemd-boot</h4>
+                                <p>Presents boot menu with @blue and @green entries</p>
+                            </div>
+                        </article>
+                        
+                        <article class="step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h4>Kernel Loading</h4>
+                                <p>Boots selected Unified Kernel Image (UKI)</p>
+                            </div>
+                        </article>
+                        
+                        <article class="step">
+                            <div class="step-number">4</div>
+                            <div class="step-content">
+                                <h4>Initramfs</h4>
+                                <p>Unlocks LUKS partition (if encrypted), mounts selected root subvolume</p>
+                            </div>
+                        </article>
+                        
+                        <article class="step">
+                            <div class="step-number">5</div>
+                            <div class="step-content">
+                                <h4>systemd Init</h4>
+                                <p>Starts with <code>systemd.volatile=state</code> kernel parameter</p>
+                            </div>
+                        </article>
+                        
+                        <article class="step">
+                            <div class="step-number">6</div>
+                            <div class="step-content">
+                                <h4>Filesystem Setup</h4>
+                                <ul>
+                                    <li>Root mounted read-only</li>
+                                    <li>/var created as tmpfs (volatile)</li>
+                                    <li>/etc overlay mounted (writable layer over read-only base)</li>
+                                    <li>Persistent subvolumes mounted (@home, @data, @log, etc.)</li>
+                                    <li>Service state bind-mounted from @data</li>
+                                </ul>
+                            </div>
+                        </article>
+                        
+                        <article class="step">
+                            <div class="step-number">7</div>
+                            <div class="step-content">
+                                <h4>System Start</h4>
+                                <p>Services launch, desktop environment loads</p>
+                            </div>
+                        </article>
+                    </div>
                 </div>
             </section>
 
@@ -749,7 +914,7 @@ distrobox enter ubuntu</code></pre>
                     <p>Transparent zstd compression enabled by default:</p>
                     <div class="code-block">
                         <pre><code># Mount options in fstab
-compress=zstd,space_cache=v2,autodefrag</code></pre>
+            compress=zstd,space_cache=v2,autodefrag</code></pre>
                     </div>
                     <ul>
                         <li>Reduces disk usage by 30-50% depending on data</li>
@@ -766,8 +931,8 @@ compress=zstd,space_cache=v2,autodefrag</code></pre>
                     
                     <div class="code-block">
                         <pre><code># Example fstab entry for VM storage
-LABEL=shani_root /var/lib/libvirt btrfs \
-  nofail,noatime,subvol=@libvirt,rw,nodatacow,nospace_cache 0 0</code></pre>
+            LABEL=shani_root /var/lib/libvirt btrfs \
+              nofail,noatime,subvol=@libvirt,rw,nodatacow,nospace_cache 0 0</code></pre>
                     </div>
                 </div>
                 
@@ -776,18 +941,65 @@ LABEL=shani_root /var/lib/libvirt btrfs \
                     <p>OverlayFS enables writable /etc on read-only root:</p>
                     
                     <div class="overlay-diagram">
-                        <img src="assets/images/overlay-fs.png" alt="Overlay Filesystem">
+                        <svg viewBox="0 0 700 400" xmlns="http://www.w3.org/2000/svg" style="max-width: 100%; height: auto;">
+                            <!-- Background -->
+                            <rect width="700" height="400" fill="#0b0618"/>
+                            
+                            <!-- Title -->
+                            <text x="350" y="30" text-anchor="middle" fill="#ff8a5c" font-size="20" font-weight="bold">Overlay Filesystem Structure</text>
+                            
+                            <!-- Lower Layer (Read-only) -->
+                            <g>
+                                <rect x="50" y="80" width="250" height="120" rx="8" fill="#7c2d12" opacity="0.3" stroke="#f97316" stroke-width="2"/>
+                                <text x="175" y="105" text-anchor="middle" fill="#fb923c" font-size="16" font-weight="bold">Lower Layer</text>
+                                <text x="175" y="130" text-anchor="middle" fill="#fdba74" font-size="13">/etc (Read-only)</text>
+                                <text x="175" y="155" text-anchor="middle" fill="#fdba74" font-size="12">From @blue/@green</text>
+                                <circle cx="175" cy="180" r="8" fill="#f97316"/>
+                                <text x="175" y="185" text-anchor="middle" fill="#fff" font-size="10">🔒</text>
+                            </g>
+                            
+                            <!-- Upper Layer (Writable) -->
+                            <g>
+                                <rect x="400" y="80" width="250" height="120" rx="8" fill="#166534" opacity="0.3" stroke="#22c55e" stroke-width="2"/>
+                                <text x="525" y="105" text-anchor="middle" fill="#4ade80" font-size="16" font-weight="bold">Upper Layer</text>
+                                <text x="525" y="130" text-anchor="middle" fill="#86efac" font-size="13">/data/overlay/etc/upper</text>
+                                <text x="525" y="155" text-anchor="middle" fill="#86efac" font-size="12">Changes stored here</text>
+                                <circle cx="525" cy="180" r="8" fill="#22c55e"/>
+                                <text x="525" y="185" text-anchor="middle" fill="#fff" font-size="10">✏️</text>
+                            </g>
+                            
+                            <!-- Merged View -->
+                            <g>
+                                <rect x="200" y="250" width="300" height="120" rx="8" fill="#1e3a8a" opacity="0.3" stroke="#3b82f6" stroke-width="2"/>
+                                <text x="350" y="275" text-anchor="middle" fill="#60a5fa" font-size="16" font-weight="bold">Merged View</text>
+                                <text x="350" y="300" text-anchor="middle" fill="#93c5fd" font-size="13">/etc (User sees this)</text>
+                                <text x="350" y="325" text-anchor="middle" fill="#93c5fd" font-size="12">Appears writable</text>
+                                <text x="350" y="345" text-anchor="middle" fill="#93c5fd" font-size="12">Changes persist across updates</text>
+                            </g>
+                            
+                            <!-- Arrows -->
+                            <g>
+                                <line x1="175" y1="210" x2="280" y2="250" stroke="#ff8a5c" stroke-width="2" marker-end="url(#arrow1)"/>
+                                <line x1="525" y1="210" x2="420" y2="250" stroke="#ff8a5c" stroke-width="2" marker-end="url(#arrow1)"/>
+                            </g>
+                            
+                            <defs>
+                                <marker id="arrow1" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                    <polygon points="0 0, 10 3, 0 6" fill="#ff8a5c"/>
+                                </marker>
+                            </defs>
+                        </svg>
                         <p class="caption">Overlay filesystem structure: read-only lower layer with writable upper layer</p>
                     </div>
                     
                     <h4>How Overlay Works</h4>
                     <div class="code-block">
                         <pre><code># /etc overlay mount from fstab
-overlay /etc overlay \
-  rw,lowerdir=/etc,\
-  upperdir=/data/overlay/etc/upper,\
-  workdir=/data/overlay/etc/work,\
-  index=off,metacopy=off 0 0</code></pre>
+            overlay /etc overlay \
+              rw,lowerdir=/etc,\
+              upperdir=/data/overlay/etc/upper,\
+              workdir=/data/overlay/etc/work,\
+              index=off,metacopy=off 0 0</code></pre>
                     </div>
                     
                     <ul>
@@ -807,10 +1019,10 @@ overlay /etc overlay \
                     <h4>Viewing Changes</h4>
                     <div class="code-block">
                         <pre><code># List all overlay modifications
-ls -la /data/overlay/etc/upper
+            ls -la /data/overlay/etc/upper
 
-# Compare with base system
-diff -r /etc /data/overlay/etc/upper</code></pre>
+            # Compare with base system
+            diff -r /etc /data/overlay/etc/upper</code></pre>
                     </div>
                 </div>
                 
@@ -824,17 +1036,17 @@ diff -r /etc /data/overlay/etc/upper</code></pre>
                     <div class="code-block">
                         <pre><code># Example bind mounts from fstab
 
-# Network configuration
-/data/varlib/NetworkManager /var/lib/NetworkManager \
-  none bind,nofail 0 0
+            # Network configuration
+            /data/varlib/NetworkManager /var/lib/NetworkManager \
+              none bind,nofail 0 0
 
-# Bluetooth pairings
-/data/varlib/bluetooth /var/lib/bluetooth \
-  none bind,nofail 0 0
+            # Bluetooth pairings
+            /data/varlib/bluetooth /var/lib/bluetooth \
+              none bind,nofail 0 0
 
-# systemd state (timers, random seed)
-/data/varlib/systemd /var/lib/systemd \
-  none bind,nofail 0 0</code></pre>
+            # systemd state (timers, random seed)
+            /data/varlib/systemd /var/lib/systemd \
+              none bind,nofail 0 0</code></pre>
                     </div>
                     
                     <h4>Complete Persistent Bindings</h4>
@@ -850,47 +1062,50 @@ diff -r /etc /data/overlay/etc/upper</code></pre>
                     </ul>
                     
                     <h4>Volatile vs Persistent</h4>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Location</th>
-                                <th>Type</th>
-                                <th>Behavior</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>/</td>
-                                <td>Read-only</td>
-                                <td>Immutable system files</td>
-                            </tr>
-                            <tr>
-                                <td>/etc</td>
-                                <td>Overlay</td>
-                                <td>Writable, persists in @data</td>
-                            </tr>
-                            <tr>
-                                <td>/var</td>
-                                <td>tmpfs</td>
-                                <td>Volatile, cleared on reboot</td>
-                            </tr>
-                            <tr>
-                                <td>/var/log</td>
-                                <td>Btrfs @log</td>
-                                <td>Persistent logs</td>
-                            </tr>
-                            <tr>
-                                <td>/var/lib/*</td>
-                                <td>Bind mount</td>
-                                <td>Selective persistence from @data</td>
-                            </tr>
-                            <tr>
-                                <td>/home</td>
-                                <td>Btrfs @home</td>
-                                <td>Persistent user data</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="table-wrapper">
+                        <table>
+                            <caption class="sr-only">Storage Persistence Comparison</caption>
+                            <thead>
+                                <tr>
+                                    <th scope="col">Location</th>
+                                    <th scope="col">Type</th>
+                                    <th scope="col">Behavior</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">/</th>
+                                    <td>Read-only</td>
+                                    <td>Immutable system files</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">/etc</th>
+                                    <td>Overlay</td>
+                                    <td>Writable, persists in @data</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">/var</th>
+                                    <td>tmpfs</td>
+                                    <td>Volatile, cleared on reboot</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">/var/log</th>
+                                    <td>Btrfs @log</td>
+                                    <td>Persistent logs</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">/var/lib/*</th>
+                                    <td>Bind mount</td>
+                                    <td>Selective persistence from @data</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">/home</th>
+                                    <td>Btrfs @home</td>
+                                    <td>Persistent user data</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </section>
 
@@ -904,7 +1119,7 @@ diff -r /etc /data/overlay/etc/upper</code></pre>
                     
                     <div class="security-features">
                         <div class="security-feature">
-                            <h4>Immutable Root Filesystem</h4>
+                            <h4>🔒 Immutable Root Filesystem</h4>
                             <p>Read-only root prevents runtime tampering:</p>
                             <ul>
                                 <li>Malware cannot modify system files</li>
@@ -914,7 +1129,7 @@ diff -r /etc /data/overlay/etc/upper</code></pre>
                         </div>
                         
                         <div class="security-feature">
-                            <h4>Full-Disk Encryption</h4>
+                            <h4>🔐 Full-Disk Encryption</h4>
                             <p>LUKS2 encryption with modern key derivation:</p>
                             <ul>
                                 <li>argon2id KDF (resistant to GPU attacks)</li>
@@ -924,7 +1139,7 @@ diff -r /etc /data/overlay/etc/upper</code></pre>
                         </div>
                         
                         <div class="security-feature">
-                            <h4>Application Sandboxing</h4>
+                            <h4>📦 Application Sandboxing</h4>
                             <p>Flatpak provides application isolation:</p>
                             <ul>
                                 <li>Apps run in containers</li>
@@ -934,7 +1149,7 @@ diff -r /etc /data/overlay/etc/upper</code></pre>
                         </div>
                         
                         <div class="security-feature">
-                            <h4>Mandatory Access Control</h4>
+                            <h4>🛡️ Mandatory Access Control</h4>
                             <p>AppArmor profiles restrict process capabilities:</p>
                             <ul>
                                 <li>System services confined</li>
@@ -944,7 +1159,7 @@ diff -r /etc /data/overlay/etc/upper</code></pre>
                         </div>
                         
                         <div class="security-feature">
-                            <h4>Network Security</h4>
+                            <h4>🌐 Network Security</h4>
                             <p>firewalld pre-configured and active:</p>
                             <ul>
                                 <li>Deny inbound by default</li>
@@ -972,7 +1187,7 @@ diff -r /etc /data/overlay/etc/upper</code></pre>
                     <p>To enable Secure Boot after installation:</p>
                     
                     <div class="steps-container">
-                        <div class="step">
+                        <article class="step">
                             <div class="step-number">1</div>
                             <div class="step-content">
                                 <h4>Import MOK Key</h4>
@@ -981,22 +1196,25 @@ diff -r /etc /data/overlay/etc/upper</code></pre>
                                 </div>
                                 <p>Set a one-time password when prompted</p>
                             </div>
-                        </div>
-                        <div class="step">
+                        </article>
+                        
+                        <article class="step">
                             <div class="step-number">2</div>
                             <div class="step-content">
                                 <h4>Reboot and Enroll</h4>
                                 <p>MOK Manager appears on reboot. Select "Enroll MOK" and enter your password</p>
                             </div>
-                        </div>
-                        <div class="step">
+                        </article>
+                        
+                        <article class="step">
                             <div class="step-number">3</div>
                             <div class="step-content">
                                 <h4>Enable in BIOS</h4>
                                 <p>Enter BIOS/UEFI settings and enable Secure Boot if still disabled</p>
                             </div>
-                        </div>
-                        <div class="step">
+                        </article>
+                        
+                        <article class="step">
                             <div class="step-number">4</div>
                             <div class="step-content">
                                 <h4>Verify Enrollment</h4>
@@ -1004,10 +1222,10 @@ diff -r /etc /data/overlay/etc/upper</code></pre>
                                     <pre><code>sudo mokutil --list-enrolled</code></pre>
                                 </div>
                             </div>
-                        </div>
+                        </article>
                     </div>
                     
-                    <div class="note-box">
+                    <div class="note-box" role="note">
                         <div class="note-icon"><i class="fas fa-info-circle"></i></div>
                         <div class="note-content">
                             <p><strong>Note:</strong> If MOK Manager doesn't appear, repeat step 1 and reboot. It only triggers when a key is pending enrollment.</p>
@@ -1026,7 +1244,7 @@ diff -r /etc /data/overlay/etc/upper</code></pre>
                         <li><strong>Recommended:</strong> Secure Boot enabled for maximum security</li>
                     </ul>
                     
-                    <div class="warning-box">
+                    <div class="warning-box" role="alert">
                         <div class="warning-icon"><i class="fas fa-exclamation-triangle"></i></div>
                         <div class="warning-content">
                             <p><strong>Security Warning:</strong> Without Secure Boot, attackers with physical access can replace your bootloader to steal the encryption key. With Secure Boot, TPM refuses to unlock if the system is tampered with.</p>
@@ -1036,7 +1254,7 @@ diff -r /etc /data/overlay/etc/upper</code></pre>
                     <h4>Enrollment Process</h4>
                     
                     <div class="steps-container">
-                        <div class="step">
+                        <article class="step">
                             <div class="step-number">1</div>
                             <div class="step-content">
                                 <h4>Verify TPM</h4>
@@ -1044,8 +1262,9 @@ diff -r /etc /data/overlay/etc/upper</code></pre>
                                     <pre><code>systemd-cryptenroll --tpm2-device=list</code></pre>
                                 </div>
                             </div>
-                        </div>
-                        <div class="step">
+                        </article>
+                        
+                        <article class="step">
                             <div class="step-number">2</div>
                             <div class="step-content">
                                 <h4>Check Secure Boot Status</h4>
@@ -1054,75 +1273,78 @@ diff -r /etc /data/overlay/etc/upper</code></pre>
                                 </div>
                                 <p>If disabled, consider enabling Secure Boot first</p>
                             </div>
-                        </div>
-                        <div class="step">
+                        </article>
+                        
+                        <article class="step">
                             <div class="step-number">3</div>
                             <div class="step-content">
                                 <h4>Enroll Encryption Key</h4>
                                 <p><strong>With Secure Boot (recommended):</strong></p>
                                 <div class="code-block">
                                     <pre><code>sudo systemd-cryptenroll --tpm2-device=auto \
-  --tpm2-pcrs=0+7 /dev/disk/by-label/shani_root</code></pre>
+              --tpm2-pcrs=0+7 /dev/disk/by-label/shani_root</code></pre>
                                 </div>
                                 <p><strong>Without Secure Boot:</strong></p>
                                 <div class="code-block">
                                     <pre><code>sudo systemd-cryptenroll --tpm2-device=auto \
-  --tpm2-pcrs=0 /dev/disk/by-label/shani_root</code></pre>
+              --tpm2-pcrs=0 /dev/disk/by-label/shani_root</code></pre>
                                 </div>
                                 <p>Enter your LUKS password when prompted</p>
                             </div>
-                        </div>
-                        <div class="step">
+                        </article>
+                        
+                        <article class="step">
                             <div class="step-number">4</div>
                             <div class="step-content">
                                 <h4>Regenerate Boot Images</h4>
                                 <p>Both @blue and @green must be updated:</p>
                                 <div class="code-block">
                                     <pre><code>sudo gen-efi configure blue
-sudo gen-efi configure green</code></pre>
+            sudo gen-efi configure green</code></pre>
                                 </div>
                             </div>
-                        </div>
-                        <div class="step">
+                        </article>
+                        
+                        <article class="step">
                             <div class="step-number">5</div>
                             <div class="step-content">
                                 <h4>Test & Verify</h4>
                                 <p>Reboot. System should unlock automatically.</p>
                                 <div class="code-block">
                                     <pre><code># Verify enrollment
-sudo cryptsetup luksDump /dev/disk/by-label/shani_root | \
-  grep systemd-tpm2</code></pre>
+            sudo cryptsetup luksDump /dev/disk/by-label/shani_root | \
+              grep systemd-tpm2</code></pre>
                                 </div>
                             </div>
-                        </div>
+                        </article>
                     </div>
                     
                     <h4>Remove TPM Enrollment</h4>
                     <p>To restore password-only unlocking:</p>
                     <div class="code-block">
                         <pre><code>sudo systemd-cryptenroll --wipe-slot=tpm2 \
-  /dev/disk/by-label/shani_root
-sudo gen-efi configure blue
-sudo gen-efi configure green</code></pre>
+              /dev/disk/by-label/shani_root
+            sudo gen-efi configure blue
+            sudo gen-efi configure green</code></pre>
                     </div>
                     
                     <h4>Re-enroll After Enabling Secure Boot</h4>
                     <p>If you enable Secure Boot after TPM enrollment:</p>
                     <div class="code-block">
                         <pre><code># Remove old enrollment
-sudo systemd-cryptenroll --wipe-slot=tpm2 \
-  /dev/disk/by-label/shani_root
+            sudo systemd-cryptenroll --wipe-slot=tpm2 \
+              /dev/disk/by-label/shani_root
 
-# Re-enroll with Secure Boot protection
-sudo systemd-cryptenroll --tpm2-device=auto \
-  --tpm2-pcrs=0+7 /dev/disk/by-label/shani_root
+            # Re-enroll with Secure Boot protection
+            sudo systemd-cryptenroll --tpm2-device=auto \
+              --tpm2-pcrs=0+7 /dev/disk/by-label/shani_root
 
-# Update boot images
-sudo gen-efi configure blue
-sudo gen-efi configure green</code></pre>
+            # Update boot images
+            sudo gen-efi configure blue
+            sudo gen-efi configure green</code></pre>
                     </div>
                     
-                    <div class="note-box">
+                    <div class="note-box" role="note">
                         <div class="note-icon"><i class="fas fa-info-circle"></i></div>
                         <div class="note-content">
                             <p><strong>Important:</strong></p>
@@ -1185,13 +1407,13 @@ sudo gen-efi configure green</code></pre>
                             <p>Check network connectivity:</p>
                             <div class="code-block">
                                 <pre><code># Test connectivity
-ping -c 3 shani.dev
+            ping -c 3 shani.dev
 
-# Check NetworkManager
-systemctl status NetworkManager
+            # Check NetworkManager
+            systemctl status NetworkManager
 
-# Retry update
-sudo shani-deploy</code></pre>
+            # Retry update
+            sudo shani-deploy</code></pre>
                             </div>
                         </div>
                     </div>
@@ -1208,16 +1430,16 @@ sudo shani-deploy</code></pre>
                             <p>Try these steps:</p>
                             <div class="code-block">
                                 <pre><code># Update Flatpak
-flatpak update
+            flatpak update
 
-# Repair installation
-flatpak repair
+            # Repair installation
+            flatpak repair
 
-# Check permissions
-flatpak override --show org.app.Name
+            # Check permissions
+            flatpak override --show org.app.Name
 
-# Run from terminal to see errors
-flatpak run org.app.Name</code></pre>
+            # Run from terminal to see errors
+            flatpak run org.app.Name</code></pre>
                             </div>
                         </div>
                     </div>
@@ -1321,27 +1543,27 @@ flatpak run org.app.Name</code></pre>
                         <div class="contribute-icon"><i class="fab fa-github"></i></div>
                         <h3>Code Contributions</h3>
                         <p>Contribute to core system development, shani-deploy, installer, or other components.</p>
-                        <a href="https://github.com/shani8dev" class="btn" target="_blank">GitHub Organization</a>
+                        <a href="https://github.com/shani8dev" class="btn" target="_blank" rel="noopener noreferrer">GitHub Organization</a>
                     </div>
                     <div class="contribute-option">
                         <div class="contribute-icon"><i class="fas fa-bug"></i></div>
                         <h3>Bug Reports</h3>
                         <p>Found a bug? Report it to help improve ShaniOS stability and reliability.</p>
-                        <a href="https://t.me/shani8dev" class="btn" target="_blank">Telegram Community</a>
+                        <a href="https://t.me/shani8dev" class="btn" target="_blank" rel="noopener noreferrer">Telegram Community</a>
                     </div>
                     <div class="contribute-option">
                         <div class="contribute-icon"><i class="fas fa-book"></i></div>
                         <h3>Documentation</h3>
                         <p>Help improve this wiki and other documentation to make ShaniOS more accessible.</p>
-                        <a href="https://github.com/shani8dev" class="btn" target="_blank">Contribute Docs</a>
+                        <a href="https://github.com/shani8dev" class="btn" target="_blank" rel="noopener noreferrer">Contribute Docs</a>
                     </div>
                 </div>
                 
                 <h3>Development Resources</h3>
                 <ul>
-                    <li><strong>Website:</strong> <a href="https://shani.dev" target="_blank">shani.dev</a></li>
-                    <li><strong>GitHub:</strong> <a href="https://github.com/shani8dev" target="_blank">github.com/shani8dev</a></li>
-                    <li><strong>Telegram:</strong> <a href="https://t.me/shani8dev" target="_blank">t.me/shani8dev</a></li>
+                    <li><strong>Website:</strong> <a href="https://shani.dev" target="_blank" rel="noopener noreferrer">shani.dev</a></li>
+                    <li><strong>GitHub:</strong> <a href="https://github.com/shani8dev" target="_blank" rel="noopener noreferrer">github.com/shani8dev</a></li>
+                    <li><strong>Telegram:</strong> <a href="https://t.me/shani8dev" target="_blank" rel="noopener noreferrer">t.me/shani8dev</a></li>
                 </ul>
             </section>
             
