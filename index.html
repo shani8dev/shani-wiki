@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -56,6 +57,20 @@
             <ul class="nav-links">
                 <li><a href="#overview"><i class="fas fa-home"></i> Overview</a></li>
                 <li>
+                    <a href="#getting-started" class="dropdown-link" role="button" aria-expanded="false">
+                        <i class="fas fa-rocket"></i> Getting Started
+                    </a>
+                    <ul class="submenu">
+                        <li><a href="#what-is-shanios">What is ShaniOS?</a></li>
+                        <li><a href="#system-optimizations">System Optimizations</a></li>
+                        <li><a href="#key-concepts">Key Concepts</a></li>
+                        <li><a href="#understanding-immutability">Understanding Immutability</a></li>
+                        <li><a href="#blue-green">Blue-Green Deployment</a></li>
+                        <li><a href="#atomic-updates">Atomic Updates</a></li>
+                        <li><a href="#persistence">Persistence Strategy</a></li>
+                    </ul>
+                </li>
+                <li>
                     <a href="#installation" class="dropdown-link" role="button" aria-expanded="false">
                         <i class="fas fa-download"></i> Installation
                     </a>
@@ -67,32 +82,24 @@
                     </ul>
                 </li>
                 <li>
-                    <a href="#getting-started" class="dropdown-link" role="button" aria-expanded="false">
-                        <i class="fas fa-rocket"></i> Getting Started
-                    </a>
-                    <ul class="submenu">
-                        <li><a href="#what-is-shanios">What is ShaniOS?</a></li>
-                        <li><a href="#key-concepts">Key Concepts</a></li>
-                        <li><a href="#understanding-immutability">Understanding Immutability</a></li>
-                        <li><a href="#blue-green">Blue-Green Deployment</a></li>
-                        <li><a href="#atomic-updates">Atomic Updates</a></li>
-                        <li><a href="#persistence">Persistence Strategy</a></li>
-                        <li><a href="#security-features">Security Features</a></li>
-                        <li><a href="#secure-boot">Secure Boot</a></li>
-                        <li><a href="#tpm-encryption">TPM Encryption</a></li>
-                    </ul>
-                </li>
-                <li>
                     <a href="#architecture" class="dropdown-link" role="button" aria-expanded="false">
                         <i class="fas fa-layer-group"></i> Architecture
                     </a>
                     <ul class="submenu">
-
                         <li><a href="#btrfs-deep-dive">Btrfs Deep Dive</a></li>
                         <li><a href="#filesystem">Filesystem Structure</a></li>
                         <li><a href="#overlay-fs">Overlay Filesystem</a></li>
                         <li><a href="#boot-process">Boot Process</a></li>
-
+                    </ul>
+                </li>
+                <li>
+                    <a href="#security" class="dropdown-link" role="button" aria-expanded="false">
+                        <i class="fas fa-shield-alt"></i> Security
+                    </a>
+                    <ul class="submenu">
+                        <li><a href="#security-features">Security Features</a></li>
+                        <li><a href="#secure-boot">Secure Boot</a></li>
+                        <li><a href="#tpm-encryption">TPM Encryption</a></li>
                     </ul>
                 </li>
                 <li>
@@ -142,6 +149,762 @@
                         <p><strong>New to ShaniOS?</strong> Visit <a href="https://shani.dev" target="_blank" rel="noopener noreferrer">shani.dev</a> for an introduction. This wiki focuses on technical implementation and usage details.</p>
                     </div>
                 </div>
+            </section>
+
+            <!-- GETTING STARTED -->
+            <section id="getting-started" class="wiki-section">
+                <h2>Getting Started</h2>
+                
+                <div id="what-is-shanios">
+                    <h3>What is ShaniOS?</h3>
+                    <p>ShaniOS is an immutable Linux distribution that brings enterprise DevOps practices to desktop computing. Built on Arch Linux with Btrfs filesystem, it provides atomic updates, instant rollback, and system integrity by design.</p>
+
+                    <div class="immutability-diagram">
+                        <svg viewBox="0 0 1000 400" xmlns="http://www.w3.org/2000/svg" style="max-width: 100%; height: auto;">
+                            <!-- Background -->
+                            <rect width="1000" height="400" fill="#0b0618"/>
+                            
+                            <!-- Title -->
+                            <text x="500" y="30" text-anchor="middle" fill="#ff8a5c" font-size="22" font-weight="bold">Traditional vs Immutable OS</text>
+                            
+                            <!-- Traditional OS -->
+                            <g>
+                                <rect x="50" y="70" width="400" height="280" rx="12" fill="rgba(244,67,54,0.1)" stroke="#F44336" stroke-width="2"/>
+                                <text x="250" y="100" text-anchor="middle" fill="#F44336" font-size="18" font-weight="bold">Traditional Linux</text>
+                                
+                                <!-- System Layer -->
+                                <rect x="80" y="120" width="340" height="60" rx="8" fill="rgba(244,67,54,0.3)" stroke="#F44336" stroke-width="1.5"/>
+                                <text x="250" y="145" text-anchor="middle" fill="#fff" font-size="14">System Files</text>
+                                <text x="250" y="165" text-anchor="middle" fill="#fca5a5" font-size="12">✏️ Writable - Can be modified</text>
+                                
+                                <!-- Problems -->
+                                <text x="250" y="210" text-anchor="middle" fill="#fb923c" font-size="14" font-weight="bold">Common Issues:</text>
+                                <text x="250" y="235" text-anchor="middle" fill="#fca5a5" font-size="12">❌ Updates can break system</text>
+                                <text x="250" y="255" text-anchor="middle" fill="#fca5a5" font-size="12">❌ Dependency conflicts</text>
+                                <text x="250" y="275" text-anchor="middle" fill="#fca5a5" font-size="12">❌ Difficult rollback</text>
+                                <text x="250" y="295" text-anchor="middle" fill="#fca5a5" font-size="12">❌ System drift over time</text>
+                                <text x="250" y="315" text-anchor="middle" fill="#fca5a5" font-size="12">❌ Security vulnerabilities</text>
+                            </g>
+                            
+                            <!-- Arrow -->
+                            <g>
+                                <line x1="460" y1="210" x2="530" y2="210" stroke="#ff8a5c" stroke-width="3" marker-end="url(#arrow-compare)"/>
+                                <text x="495" y="200" text-anchor="middle" fill="#ff8a5c" font-size="12" font-weight="bold">vs</text>
+                            </g>
+                            
+                            <!-- ShaniOS -->
+                            <g>
+                                <rect x="550" y="70" width="400" height="280" rx="12" fill="rgba(76,175,80,0.1)" stroke="#4CAF50" stroke-width="2"/>
+                                <text x="750" y="100" text-anchor="middle" fill="#4CAF50" font-size="18" font-weight="bold">ShaniOS (Immutable)</text>
+                                
+                                <!-- System Layer -->
+                                <rect x="580" y="120" width="340" height="60" rx="8" fill="rgba(76,175,80,0.3)" stroke="#4CAF50" stroke-width="1.5"/>
+                                <text x="750" y="145" text-anchor="middle" fill="#fff" font-size="14">System Files</text>
+                                <text x="750" y="165" text-anchor="middle" fill="#86efac" font-size="12">🔒 Read-Only - Protected</text>
+                                
+                                <!-- Benefits -->
+                                <text x="750" y="210" text-anchor="middle" fill="#4ade80" font-size="14" font-weight="bold">Advantages:</text>
+                                <text x="750" y="235" text-anchor="middle" fill="#86efac" font-size="12">✅ Atomic updates (all or nothing)</text>
+                                <text x="750" y="255" text-anchor="middle" fill="#86efac" font-size="12">✅ Instant rollback capability</text>
+                                <text x="750" y="275" text-anchor="middle" fill="#86efac" font-size="12">✅ Zero-downtime updates</text>
+                                <text x="750" y="295" text-anchor="middle" fill="#86efac" font-size="12">✅ Consistent system state</text>
+                                <text x="750" y="315" text-anchor="middle" fill="#86efac" font-size="12">✅ Enhanced security</text>
+                            </g>
+                            
+                            <defs>
+                                <marker id="arrow-compare" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                    <polygon points="0 0, 10 3, 0 6" fill="#ff8a5c"/>
+                                </marker>
+                            </defs>
+                        </svg>
+                        <p class="caption">Immutable systems protect core files from modification, ensuring reliability and security</p>
+                    </div>
+
+                    <h4>What's Included</h4>
+                    <p>ShaniOS comes pre-configured with everything you need:</p>
+                    <ul>
+                        <li><strong>Base:</strong> Arch Linux foundation, Btrfs filesystem, systemd-boot</li>
+                        <li><strong>Desktop:</strong> GNOME or KDE Plasma (chosen at download)</li>
+                        <li><strong>Applications:</strong> Vivaldi Browser, OnlyOffice, Gear Lever</li>
+                        <li><strong>Containers:</strong> Podman, Distrobox, LXC, systemd-nspawn, Pods GUI</li>
+                        <li><strong>Android:</strong> Waydroid pre-installed and configured</li>
+                        <li><strong>Drivers:</strong> Intel/AMD/NVIDIA graphics, CUPS printing, SANE scanning</li>
+                        <li><strong>Fonts:</strong> Complete multilingual support including Indian languages and CJK</li>
+                        <li><strong>Security:</strong> AppArmor, firewalld, LUKS2 encryption (optional)</li>
+                        <li><strong>Shell:</strong> Zsh as default user shell with enhanced features</li>
+                    </ul>
+
+                    <h4>Default User Groups</h4>
+                    <p>The primary user is automatically added to these groups for hardware and system access:</p>
+                    <ul>
+                        <li><strong>wheel:</strong> Administrative privileges via sudo</li>
+                        <li><strong>input:</strong> Direct input device access</li>
+                        <li><strong>realtime:</strong> Real-time process scheduling (audio/video)</li>
+                        <li><strong>video:</strong> GPU and video hardware access</li>
+                        <li><strong>sys:</strong> System hardware monitoring</li>
+                        <li><strong>cups & lp:</strong> Printer management</li>
+                        <li><strong>libvirt & kvm:</strong> Virtual machine management</li>
+                        <li><strong>scanner:</strong> Scanner device access</li>
+                    </ul>
+
+                    <h4>Pre-configured Firewall Rules</h4>
+                    <p>ShaniOS configures firewall rules during installation for essential services:</p>
+                    <ul>
+                        <li><strong>KDE Connect/GSConnect:</strong> Ports automatically opened in public zone for device synchronization</li>
+                        <li><strong>Waydroid:</strong> DNS (port 53/udp, 67/udp), packet forwarding, and waydroid0 interface added to trusted zone</li>
+                    </ul>
+                </div>
+
+                <div id="system-optimizations">
+                    <h3>System Optimizations</h3>
+                    <p>ShaniOS includes extensive performance, gaming, and reliability optimizations out of the box, eliminating the need for manual tweaking. These enterprise-grade optimizations are pre-configured and active from first boot.</p>
+
+                    <h4>Memory & Storage Management</h4>
+                    <ul>
+                        <li><strong>ZRAM Compression:</strong> Automatic RAM compression using the zstd algorithm (configured to use full RAM size) provides improved memory efficiency without requiring swap partitions. The system dynamically allocates compressed swap in RAM, reducing disk I/O and extending SSD lifespan.</li>
+                        <li><strong>Optimized Swappiness:</strong> Tuned to 133 for balanced memory management on modern systems. This value encourages the kernel to use compressed ZRAM swap before evicting clean page cache, maintaining system responsiveness under memory pressure.</li>
+                        <li><strong>Btrfs Maintenance:</strong> Automated filesystem maintenance runs in the background, including periodic scrubbing for data integrity, balance operations to optimize storage layout, and defragmentation for improved performance. These operations are scheduled to minimize impact on system usage.</li>
+                        <li><strong>Profile Sync Daemon:</strong> Browser profiles are stored in tmpfs (RAM) for dramatically faster load times and reduced disk writes. Changes are periodically synchronized back to persistent storage, combining speed with data safety. This reduces SSD wear while improving browser responsiveness.</li>
+                        <li><strong>Optimized Page Lock Unfairness:</strong> Set to 1 to reduce lock contention and improve multi-threaded application performance, particularly beneficial for databases and high-concurrency workloads.</li>
+                    </ul>
+
+                    <h4>Gaming & Performance Optimizations</h4>
+                    <p>ShaniOS is optimized for gaming performance with multiple layers of system tuning:</p>
+                    
+                    <p><strong>Gaming Hardware Support:</strong></p>
+                    <ul>
+                        <li><strong>game-devices-udev Package:</strong> Comprehensive udev rules for gaming peripherals with user-grade permissions, including:
+                            <ul>
+                                <li><strong>Controllers:</strong> 8BitDo, PlayStation (DualShock 3/4, DualSense, DualSense Edge), Xbox (360, One, Series), Nintendo (Switch Pro, Joy-Cons, GameCube adapter), Google Stadia, NVIDIA Shield, Razer, Nacon, Hori, PowerA, PDP, Mad Catz, Astro C40, and more</li>
+                                <li><strong>Fight Sticks & Arcade:</strong> Razer Panthera, Mad Catz FightStick, Hit Box, and arcade-style controllers</li>
+                                <li><strong>VR Equipment:</strong> HTC Vive, PlayStation VR, Valve Index/SteamVR devices with full hardware access</li>
+                                <li><strong>Flight Sticks & Sim:</strong> VKBSim Gladiator, Logitech F310/F710, and other simulation controllers</li>
+                                <li><strong>uinput Support:</strong> Early creation of /dev/uinput for virtual device emulation (gamepad mappers, streaming tools)</li>
+                            </ul>
+                        </li>
+                        <li><strong>Additional RGB & Peripheral Support:</strong> OpenRGB udev rules (60-openrgb.rules) for comprehensive RGB control:
+                            <ul>
+                                <li><strong>RGB Keyboards:</strong> ASUS Aura, Corsair, Razer, SteelSeries, Logitech G-series, MSI Mystic Light, Cooler Master, NZXT, and dozens more</li>
+                                <li><strong>RGB Mice:</strong> Gaming mice from all major manufacturers with LED control</li>
+                                <li><strong>RGB Mousepads:</strong> Corsair, Razer, SteelSeries, and other illuminated mousepads</li>
+                                <li><strong>RGB Accessories:</strong> Headset stands, mouse docks, PC case lighting, AIO coolers, and more</li>
+                            </ul>
+                        </li>
+                        <li><strong>Racing Wheel Support:</strong> Full force feedback and configuration access:
+                            <ul>
+                                <li><strong>Logitech wheels</strong> (99-logitech-wheel-perms.rules): G29, G920, G923, G PRO, and legacy wheels (G25, G27, Driving Force, MOMO) with range, gain, LED, and force feedback tuning</li>
+                                <li><strong>Thrustmaster wheels</strong> (99-thrustmaster-wheel-perms.rules): T150, T300RS, T500RS, T248, TS-XW, TS-PC with spring, damper, and friction control</li>
+                                <li><strong>Fanatec wheels</strong> (99-fanatec-wheel-perms.rules): Full hardware access with deadzone removal via evdev-joystick</li>
+                            </ul>
+                        </li>
+                        <li><strong>Game Input Utilities:</strong>
+                            <ul>
+                                <li><strong>AntiMicroX:</strong> Gamepad to keyboard/mouse mapper with uinput access (60-antimicrox-uinput.rules)</li>
+                                <li><strong>Steam Controller support:</strong> Native hardware access for Valve's gaming ecosystem</li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <p><strong>Kernel-Level Gaming Optimizations:</strong></p>
+                    <ul>
+                        <li><strong>Game Compatibility Kernel Parameters:</strong> Pre-configured for maximum compatibility:
+                            <ul>
+                                <li><strong>Increased PID limit</strong> (65535) supports complex games with many processes</li>
+                                <li><strong>Expanded memory map areas</strong> (2147483642) accommodates large game worlds and high-resolution texture streaming</li>
+                                <li><strong>Enhanced inotify limits</strong> (1024 instances, 524288 watches) for games with extensive file monitoring</li>
+                            </ul>
+                        </li>
+                        <li><strong>Network Optimization:</strong> TCP FIN timeout reduced to 5 seconds (from default 60s) enables games to quickly reuse network ports when restarting. This Valve SteamOS optimization prevents "address already in use" errors in multiplayer games.</li>
+                        <li><strong>CPU Scheduler Tuning:</strong> Multiple scheduler optimizations for gaming performance:
+                            <ul>
+                                <li><strong>CFS bandwidth slice:</strong> 3000μs for improved interactivity and reduced input latency</li>
+                                <li><strong>Base slice:</strong> 3000000ns (3ms) for consistent frame times</li>
+                                <li><strong>Migration cost:</strong> 500000ns to prevent excessive CPU migration overhead</li>
+                                <li><strong>Migration limit:</strong> 8 tasks per balance operation for optimal multi-core utilization</li>
+                                <li><strong>Child runs first:</strong> Disabled (0) to prevent priority inversion in gaming scenarios</li>
+                                <li><strong>Autogroup scheduling:</strong> Enabled (1) to automatically group related processes for better desktop responsiveness</li>
+                            </ul>
+                        </li>
+                        <li><strong>Advanced Memory Management:</strong>
+                            <ul>
+                                <li><strong>MGLRU (Multi-Gen LRU)</strong> enabled with aggressive settings for intelligent memory reclaim that preserves recently accessed game data</li>
+                                <li><strong>Transparent Hugepage</strong> set to <code>madvise</code> for selective large page usage, improving performance for games that explicitly request it</li>
+                                <li><strong>Optimized watermark scaling</strong> (500) and minimum free memory (1MB) for consistent response times under load</li>
+                                <li><strong>Reduced compaction proactiveness</strong> (0) minimizes latency spikes during memory allocation</li>
+                                <li><strong>Watermark boost factor:</strong> Set to 1 (minimal) to reduce aggressive memory reclaim</li>
+                                <li><strong>Zone reclaim disabled</strong> (0) prevents unnecessary NUMA overhead on multi-socket systems</li>
+                            </ul>
+                        </li>
+                        <li><strong>GameMode Integration:</strong> GameMode daemon enabled globally for all users, providing automatic performance optimizations when gaming. GameMode dynamically adjusts CPU governor, process priorities, I/O scheduling, and GPU performance levels. Games are automatically detected and optimized without manual configuration.</li>
+                        <li><strong>High-Precision Timers:</strong> HPET and RTC frequencies increased to 3072 Hz (from default 64 Hz) for superior timing accuracy. This reduces input lag and improves frame pacing in games requiring precise timing, particularly beneficial for rhythm games and competitive shooters.</li>
+                    </ul>
+
+                    <h4>Process Management & Responsiveness</h4>
+                    <p>ShaniOS enables several system services for intelligent resource management:</p>
+                    <ul>
+                        <li><strong>Ananicy-cpp:</strong> Automatic process priority management service with game-aware rules (enabled by default). Background tasks are automatically deprioritized when games or media applications are active, ensuring smooth performance without manual nice/renice commands.</li>
+                        <li><strong>systemd-oomd:</strong> System-wide OOM (Out-Of-Memory) daemon enabled by default prevents system freezes. When memory pressure is detected, systemd-oomd selectively terminates low-priority processes based on memory usage patterns and process priorities, keeping critical services and active applications running.</li>
+                        <li><strong>IRQBalance:</strong> Service enabled to optimize interrupt distribution across CPU cores, preventing a single core from becoming overwhelmed with hardware interrupts. This is particularly important for systems with high-bandwidth network cards or NVMe drives, ensuring balanced load across all cores.</li>
+                        <li><strong>Increased File & Process Limits:</strong> Default limits raised to 1,048,576 for both open files (NOFILE) and processes (NPROC). This prevents "too many open files" errors in development environments, containerized workloads, and servers running multiple services.</li>
+                        <li><strong>Fast Shutdown:</strong> Reduced timeout values (10s for stop, 10s for abort) ensure quick system shutdowns without waiting for unresponsive services. Services that fail to stop gracefully are automatically killed after the timeout.</li>
+                    </ul>
+
+                    <h4>Security Hardening</h4>
+                    <ul>
+                        <li><strong>AppArmor Mandatory Access Control:</strong>
+                            <ul>
+                                <li><strong>AppArmor (apparmor.service):</strong> Enabled by default to confine system services and applications with security profiles</li>
+                            </ul>
+                        </li>
+                        <li><strong>Firewall Protection:</strong>
+                            <ul>
+                                <li><strong>firewalld:</strong> Active firewall enabled by default, denying inbound connections while allowing essential services</li>
+                                <li><strong>Pre-configured rules:</strong> Automatic firewall configuration for KDE Connect/GSConnect and Waydroid during installation</li>
+                            </ul>
+                        </li>
+                        <li><strong>Kernel Hardening:</strong>
+                            <ul>
+                                <li><strong>NMI watchdog disabled</strong> for faster boot times and reduced CPU overhead (this is safe on modern systems with other hang detection mechanisms)</li>
+                                <li><strong>Unprivileged user namespaces enabled</strong> for secure containerization (required for Podman, Flatpak sandboxing, and Distrobox)</li>
+                                <li><strong>Magic SysRq keys enabled</strong> for emergency recovery (Alt+SysRq+REISUB sequence for safe reboots during system hangs)</li>
+                            </ul>
+                        </li>
+                        <li><strong>Hardware Access Controls:</strong> The <code>realtime</code> group receives permission to access HPET and RTC devices directly. This is essential for professional audio production, real-time multimedia applications, and low-latency gaming. Users in the <code>realtime</code> group can run applications with real-time scheduling priorities.</li>
+                        <li><strong>Blacklisted Kernel Modules:</strong>
+                            <ul>
+                                <li><strong>PC speaker</strong> (pcspkr) disabled to eliminate annoying beeps</li>
+                                <li><strong>Intel Management Engine</strong> (mei, mei_me) disabled for enhanced privacy and security, removing Intel's remote management interface</li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <h4>Boot & System Efficiency</h4>
+                    <ul>
+                        <li><strong>Plymouth (BGRT Theme):</strong> Smooth graphical boot experience with the BGRT (Boot Graphics Resource Table) theme enabled by default. Plymouth provides a polished boot animation while hiding technical boot messages, presenting a clean interface for password entry during LUKS unlock. The BGRT theme displays your manufacturer's logo for a seamless firmware-to-OS transition.</li>
+                        <li><strong>Journal Size Limit:</strong> SystemD journal capped at 50MB to prevent excessive disk usage from log accumulation. This is particularly important on systems with limited storage, while still maintaining sufficient logs for troubleshooting recent issues.</li>
+                        <li><strong>Reduced Kernel Messages:</strong> Console printk level set to 3 (errors and critical messages only) for cleaner boot output. This eliminates informational noise while preserving important error messages needed for diagnostics.</li>
+                        <li><strong>Optimized Service Startup:</strong> Parallel service initialization with optimized dependencies reduces boot time. Non-critical services are delayed or started on-demand, prioritizing services required for desktop readiness.</li>
+                        <li><strong>Time Synchronization:</strong> systemd-timesyncd enabled by default for automatic network time protocol (NTP) synchronization, ensuring accurate system time without requiring a full NTP daemon.</li>
+                        <li><strong>Socket Activation:</strong> Many services use socket activation for on-demand startup, reducing boot time and memory usage:
+                            <ul>
+                                <li><strong>pcscd.socket:</strong> Smart card daemon (PC/SC) starts only when smart cards are accessed</li>
+                                <li><strong>lircd.socket:</strong> Linux Infrared Remote Control daemon for IR remote support</li>
+                                <li><strong>gpsd.socket:</strong> GPS daemon for location services and navigation hardware</li>
+                                <li><strong>cups.socket:</strong> Printing service starts on-demand when print jobs are sent</li>
+                                <li><strong>avahi-daemon.socket:</strong> Network service discovery (mDNS/DNS-SD) for zero-configuration networking</li>
+                                <li><strong>saned.socket:</strong> Scanner daemon starts when scanning is needed</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    
+                    <h4>Hardware & Peripheral Support</h4>
+                    <p>ShaniOS enables comprehensive hardware support services by default:</p>
+                    <ul>
+                        <li><strong>Printing:</strong>
+                            <ul>
+                                <li><strong>CUPS (cups.socket):</strong> Common UNIX Printing System for all printer support</li>
+                                <li><strong>cups-browsed:</strong> Automatic printer discovery on the network</li>
+                                <li><strong>ipp-usb:</strong> IPP-over-USB support for modern driverless printers</li>
+                                <li><strong>Avahi (avahi-daemon.socket):</strong> Network printer discovery via Bonjour/mDNS</li>
+                            </ul>
+                        </li>
+                        <li><strong>Scanning:</strong>
+                            <ul>
+                                <li><strong>SANE (saned.socket):</strong> Scanner Access Now Easy for scanner support</li>
+                                <li><strong>ipp-usb:</strong> Also provides driverless scanning support</li>
+                            </ul>
+                        </li>
+                        <li><strong>Biometric Authentication:</strong>
+                            <ul>
+                                <li><strong>fprintd:</strong> Fingerprint reader support for login and authentication</li>
+                            </ul>
+                        </li>
+                        <li><strong>Bluetooth:</strong>
+                            <ul>
+                                <li><strong>bluetooth.service:</strong> Full Bluetooth stack for wireless peripherals, audio, and file transfer</li>
+                            </ul>
+                        </li>
+                        <li><strong>Mobile Devices:</strong>
+                            <ul>
+                                <li><strong>usbmuxd:</strong> iOS device support for iPhone/iPad connectivity, file transfer, and tethering</li>
+                            </ul>
+                        </li>
+                        <li><strong>Networking:</strong>
+                            <ul>
+                                <li><strong>NetworkManager:</strong> Intelligent network connection management for wired, wireless, VPN, and mobile connections</li>
+                                <li><strong>ModemManager:</strong> Mobile broadband modem support (3G/4G/5G)</li>
+                            </ul>
+                        </li>
+                        <li><strong>Gaming Peripherals:</strong>
+                            <ul>
+                                <li><strong>ratbagd:</strong> Gaming mouse configuration daemon for DPI, button mapping, and LED control (libratbag)</li>
+                                <li><strong>inputattach:</strong> Serial input device support (legacy joysticks, game controllers)</li>
+                            </ul>
+                        </li>
+                        <li><strong>Location Services:</strong>
+                            <ul>
+                                <li><strong>geoclue:</strong> Geolocation service for applications requiring location data</li>
+                                <li><strong>gpsd.socket:</strong> GPS hardware support</li>
+                            </ul>
+                        </li>
+                        <li><strong>Thunderbolt Security:</strong>
+                            <ul>
+                                <li><strong>bolt:</strong> Thunderbolt 3 device authorization and management</li>
+                            </ul>
+                        </li>
+                        <li><strong>Power Management:</strong>
+                            <ul>
+                                <li><strong>apcupsd:</strong> APC UPS monitoring and management for battery backup systems</li>
+                                <li><strong>power-profiles-daemon:</strong> System power profile management (performance, balanced, power-saver)</li>
+                                <li><strong>switcheroo-control:</strong> Hybrid graphics switching for laptops with dual GPUs (Intel + NVIDIA/AMD)</li>
+                            </ul>
+                        </li>
+                        <li><strong>Firmware Updates:</strong>
+                            <ul>
+                                <li><strong>fwupd:</strong> Linux Vendor Firmware Service for automatic firmware updates</li>
+                                <li><strong>fwupd-refresh.timer:</strong> Periodic firmware update checks</li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <h4>Enhanced Shell Experience</h4>
+                    <p>ShaniOS provides a modern, feature-rich shell environment that rivals the best developer setups:</p>
+                    <ul>
+                        <li><strong>Zsh as Default Shell:</strong> Powerful shell with advanced completion, globbing, and command-line editing. Zsh provides better defaults than Bash while maintaining compatibility with Bash scripts.</li>
+                        <li><strong>Fish-Style Features:</strong>
+                            <ul>
+                                <li><strong>Syntax highlighting</strong> shows valid/invalid commands in real-time as you type</li>
+                                <li><strong>Autosuggestions</strong> suggests commands from history with ghost text completion</li>
+                                <li><strong>History substring search</strong> allows arrow-up/down to search through history based on what you've typed</li>
+                            </ul>
+                        </li>
+                        <li><strong>Starship Prompt:</strong> Fast, minimal, and infinitely customizable prompt with intelligent git integration, showing branch status, ahead/behind commits, and repository state. The prompt adapts to display context-relevant information (Python virtualenv, Node.js version, Rust toolchain, etc.).</li>
+                        <li><strong>McFly:</strong> Neural network-powered command history search learns from your usage patterns. McFly prioritizes frequently used commands in relevant directories and contexts, providing smarter suggestions than traditional reverse-i-search.</li>
+                        <li><strong>FZF (Fuzzy Finder):</strong> Integrated fuzzy finding for files, command history, and directory navigation. Ctrl+R searches history, Ctrl+T inserts file paths, and Alt+C changes directories—all with fuzzy matching and preview windows.</li>
+                        <li><strong>Multiple Shell Support:</strong> Bash and Fish shells included with completion support. Switch shells anytime with <code>chsh</code> while maintaining consistent functionality across all options.</li>
+                    </ul>
+
+                    <h4>Automated Maintenance</h4>
+                    <p>ShaniOS performs regular background maintenance to keep your system healthy without manual intervention. These systemd timers and services are enabled by default:</p>
+                    <ul>
+                        <li><strong>btrfs-scrub.timer:</strong> Monthly scrubbing to detect and repair data corruption using filesystem checksums</li>
+                        <li><strong>btrfs-balance.timer:</strong> Periodic filesystem balancing redistributes data across drives for optimal performance</li>
+                        <li><strong>btrfs-defrag.timer:</strong> Automatic defragmentation runs on fragmented files to improve read performance</li>
+                        <li><strong>btrfs-trim.timer:</strong> Regular TRIM operations for SSD optimization and lifespan extension</li>
+                        <li><strong>profile-sync-daemon (psd):</strong> Browser cache synchronization from RAM to disk happens automatically (enabled globally for all users)</li>
+                        <li><strong>systemd-timesyncd:</strong> Automatic time synchronization keeps system clock accurate</li>
+                        <li><strong>ZRAM compression/decompression:</strong> Transparently handles memory pressure without user interaction</li>
+                    </ul>
+                    <p>All maintenance operations are scheduled during low-usage periods and use minimal system resources to avoid impacting active work.</p>
+
+                    <div class="note-box" role="note">
+                        <div class="note-icon"><i class="fas fa-check-circle"></i></div>
+                        <div class="note-content">
+                            <p><strong>Note:</strong> All these optimizations are pre-configured and active from first boot. No manual configuration, tweaking, or performance tuning required. ShaniOS provides enterprise-grade optimization out of the box.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="key-concepts">
+                    <h3>Key Concepts</h3>
+                    
+                    <h4>1. Immutability</h4>
+                    <p>The root filesystem (/) is mounted read-only, preventing any modifications to system files. This ensures:</p>
+                    <ul>
+                        <li>Malware cannot modify system binaries</li>
+                        <li>Updates cannot partially fail and corrupt the system</li>
+                        <li>System always boots to a known-good state</li>
+                        <li>Configuration changes are isolated and manageable</li>
+                    </ul>
+
+                    <h4>2. Blue-Green Deployment</h4>
+                    <p>ShaniOS maintains two complete system images (@blue and @green). While one is active, updates are applied to the inactive one. On next boot, you switch to the updated system. If it fails, automatic rollback occurs.</p>
+
+                    <h4>3. Atomic Updates</h4>
+                    <p>Updates either succeed completely or fail safely—no partial updates that leave your system in a broken state. This is achieved through:</p>
+                    <ul>
+                        <li>Updating the inactive system image</li>
+                        <li>Switching boot target only after successful update</li>
+                        <li>Automatic rollback on boot failure</li>
+                    </ul>
+
+                    <h4>4. Selective Persistence</h4>
+                    <p>While the system is immutable, user data and configurations persist:</p>
+                    <ul>
+                        <li><strong>/home:</strong> Your personal files and settings</li>
+                        <li><strong>/etc:</strong> System configuration (via overlay filesystem)</li>
+                        <li><strong>Service data:</strong> Application states, databases, containers</li>
+                    </ul>
+                </div>
+
+                <div id="understanding-immutability">
+                    <h3>Understanding Immutability</h3>
+                    <p>ShaniOS's immutability fundamentally changes how you interact with the system. Understanding this concept is key to using ShaniOS effectively.</p>
+
+                    <h4>What You CAN Do</h4>
+                    <ul>
+                        <li>✅ Install applications via Flatpak</li>
+                        <li>✅ Edit configuration files in /etc</li>
+                        <li>✅ Create and modify files in /home</li>
+                        <li>✅ Run containers (Podman, Distrobox, LXC)</li>
+                        <li>✅ Update the entire system atomically</li>
+                        <li>✅ Store data in /data and persistent subvolumes</li>
+                    </ul>
+
+                    <h4>What You CANNOT Do</h4>
+                    <ul>
+                        <li>❌ Use pacman to install traditional packages</li>
+                        <li>❌ Modify files in / (root filesystem)</li>
+                        <li>❌ Edit files in /usr, /bin, /lib directly</li>
+                        <li>❌ Install software that requires system-level changes</li>
+                    </ul>
+
+                    <h4>Why This Design?</h4>
+                    <div class="card-container">
+                        <article class="card">
+                            <div class="card-icon"><i class="fas fa-shield-alt"></i></div>
+                            <h4>Security</h4>
+                            <p>Malware cannot modify system files or persist across reboots</p>
+                        </article>
+                        <article class="card">
+                            <div class="card-icon"><i class="fas fa-sync-alt"></i></div>
+                            <h4>Reliability</h4>
+                            <p>Updates are atomic - they either work completely or fail safely</p>
+                        </article>
+                        <article class="card">
+                            <div class="card-icon"><i class="fas fa-undo"></i></div>
+                            <h4>Rollback</h4>
+                            <p>Instant recovery from failed updates or system issues</p>
+                        </article>
+                        <article class="card">
+                            <div class="card-icon"><i class="fas fa-check-double"></i></div>
+                            <h4>Consistency</h4>
+                            <p>System state is always predictable and reproducible</p>
+                        </article>
+                    </div>
+                </div>
+
+                <div id="blue-green">
+                    <h3>Blue-Green Deployment</h3>
+                    <p>ShaniOS implements blue-green deployment using Btrfs subvolumes—a strategy adapted from DevOps for desktop Linux.</p>
+                    
+                    <div class="blue-green-diagram">
+                        <svg viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg" style="max-width: 100%; height: auto;">
+                            <rect width="800" height="400" fill="#0b0618"/>
+                            
+                            <text x="400" y="30" text-anchor="middle" fill="#ff8a5c" font-size="20" font-weight="bold">Blue-Green Deployment Model</text>
+                            
+                            <!-- Blue System -->
+                            <g>
+                                <rect x="50" y="80" width="300" height="240" rx="12" fill="#1e3a8a" opacity="0.3" stroke="#3b82f6" stroke-width="2"/>
+                                <text x="200" y="110" text-anchor="middle" fill="#60a5fa" font-size="20" font-weight="bold">@blue (Active)</text>
+                                <text x="200" y="140" text-anchor="middle" fill="#93c5fd" font-size="14">Currently Running</text>
+                                <circle cx="200" cy="200" r="40" fill="#3b82f6" opacity="0.5"/>
+                                <text x="200" y="210" text-anchor="middle" fill="#fff" font-size="16">System</text>
+                                <text x="200" y="280" text-anchor="middle" fill="#93c5fd" font-size="12">Mounted as /</text>
+                            </g>
+                            
+                            <!-- Green System -->
+                            <g>
+                                <rect x="450" y="80" width="300" height="240" rx="12" fill="#166534" opacity="0.3" stroke="#22c55e" stroke-width="2"/>
+                                <text x="600" y="110" text-anchor="middle" fill="#4ade80" font-size="20" font-weight="bold">@green (Inactive)</text>
+                                <text x="600" y="140" text-anchor="middle" fill="#86efac" font-size="14">Ready for Update</text>
+                                <circle cx="600" cy="200" r="40" fill="#22c55e" opacity="0.5"/>
+                                <text x="600" y="210" text-anchor="middle" fill="#fff" font-size="16">System</text>
+                                <text x="600" y="280" text-anchor="middle" fill="#86efac" font-size="12">Standby Mode</text>
+                            </g>
+                            
+                            <!-- Arrow -->
+                            <g>
+                                <line x1="350" y1="200" x2="430" y2="200" stroke="#ff8a5c" stroke-width="3" marker-end="url(#arrowhead)"/>
+                                <text x="390" y="190" text-anchor="middle" fill="#ff8a5c" font-size="14">Update Flow</text>
+                            </g>
+                            
+                            <defs>
+                                <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                    <polygon points="0 0, 10 3, 0 6" fill="#ff8a5c"/>
+                                </marker>
+                            </defs>
+                        </svg>
+                        <p class="caption">Two complete system images with only one active at a time</p>
+                    </div>
+                    
+                    <h4>How It Works</h4>
+                    <ol>
+                        <li>System maintains @blue and @green subvolumes</li>
+                        <li>One subvolume is active (mounted as /), the other inactive</li>
+                        <li>Updates apply to inactive subvolume</li>
+                        <li>Bootloader updated to point to updated subvolume</li>
+                        <li>Reboot switches to updated system</li>
+                        <li>Previous version remains available for instant rollback</li>
+                    </ol>
+                    
+                    <h4>Advantages</h4>
+                    <ul>
+                        <li><strong>Atomic Updates:</strong> All-or-nothing updates</li>
+                        <li><strong>Zero Downtime:</strong> Active system never modified</li>
+                        <li><strong>Instant Rollback:</strong> Boot into previous version anytime</li>
+                        <li><strong>Safe Testing:</strong> Validate updates before committing</li>
+                    </ul>
+                </div>
+
+                <div id="atomic-updates">
+                    <h3>Atomic Updates</h3>
+                    <p>ShaniOS uses an intelligent multi-layered update system with automatic checking, user notifications, and the <code>shani-deploy</code> tool for atomic system updates.</p>
+
+                    <div class="update-flow-diagram">
+                        <svg viewBox="0 0 1000 500" xmlns="http://www.w3.org/2000/svg" style="max-width: 100%; height: auto;">
+                            <rect width="1000" height="500" fill="#0b0618"/>
+                            
+                            <text x="500" y="30" text-anchor="middle" fill="#ff8a5c" font-size="22" font-weight="bold">Update Process Flow</text>
+                            
+                            <!-- Step 1 -->
+                            <g>
+                                <circle cx="150" cy="100" r="40" fill="#2196F3" opacity="0.3" stroke="#2196F3" stroke-width="2"/>
+                                <text x="150" y="85" text-anchor="middle" fill="#fff" font-size="24">1</text>
+                                <text x="150" y="110" text-anchor="middle" fill="#fff" font-size="12">Check</text>
+                                <text x="150" y="160" text-anchor="middle" fill="#93c5fd" font-size="11">Auto checker runs</text>
+                                <text x="150" y="175" text-anchor="middle" fill="#93c5fd" font-size="11">Finds new release</text>
+                            </g>
+                            
+                            <line x1="190" y1="100" x2="260" y2="100" stroke="#ff8a5c" stroke-width="2" marker-end="url(#arrow-update)"/>
+                            
+                            <!-- Step 2 -->
+                            <g>
+                                <circle cx="300" cy="100" r="40" fill="#9C27B0" opacity="0.3" stroke="#9C27B0" stroke-width="2"/>
+                                <text x="300" y="85" text-anchor="middle" fill="#fff" font-size="24">2</text>
+                                <text x="300" y="110" text-anchor="middle" fill="#fff" font-size="12">Notify</text>
+                                <text x="300" y="160" text-anchor="middle" fill="#d8b4fe" font-size="11">GUI notification</text>
+                                <text x="300" y="175" text-anchor="middle" fill="#d8b4fe" font-size="11">User approval</text>
+                            </g>
+                            
+                            <line x1="340" y1="100" x2="410" y2="100" stroke="#ff8a5c" stroke-width="2" marker-end="url(#arrow-update)"/>
+                            
+                            <!-- Step 3 -->
+                            <g>
+                                <circle cx="450" cy="100" r="40" fill="#FF9800" opacity="0.3" stroke="#FF9800" stroke-width="2"/>
+                                <text x="450" y="85" text-anchor="middle" fill="#fff" font-size="24">3</text>
+                                <text x="450" y="110" text-anchor="middle" fill="#fff" font-size="12">Download</text>
+                                <text x="450" y="160" text-anchor="middle" fill="#fbbf24" font-size="11">Mirror discovery</text>
+                                <text x="450" y="175" text-anchor="middle" fill="#fbbf24" font-size="11">Resume support</text>
+                            </g>
+                            
+                            <line x1="490" y1="100" x2="560" y2="100" stroke="#ff8a5c" stroke-width="2" marker-end="url(#arrow-update)"/>
+                            
+                            <!-- Step 4 -->
+                            <g>
+                                <circle cx="600" cy="100" r="40" fill="#F44336" opacity="0.3" stroke="#F44336" stroke-width="2"/>
+                                <text x="600" y="85" text-anchor="middle" fill="#fff" font-size="24">4</text>
+                                <text x="600" y="110" text-anchor="middle" fill="#fff" font-size="12">Verify</text>
+                                <text x="600" y="160" text-anchor="middle" fill="#fca5a5" font-size="11">SHA256 checksum</text>
+                                <text x="600" y="175" text-anchor="middle" fill="#fca5a5" font-size="11">GPG signature</text>
+                            </g>
+                            
+                            <line x1="640" y1="100" x2="710" y2="100" stroke="#ff8a5c" stroke-width="2" marker-end="url(#arrow-update)"/>
+                            
+                            <!-- Step 5 -->
+                            <g>
+                                <circle cx="750" cy="100" r="40" fill="#4CAF50" opacity="0.3" stroke="#4CAF50" stroke-width="2"/>
+                                <text x="750" y="85" text-anchor="middle" fill="#fff" font-size="24">5</text>
+                                <text x="750" y="110" text-anchor="middle" fill="#fff" font-size="12">Deploy</text>
+                                <text x="750" y="160" text-anchor="middle" fill="#86efac" font-size="11">Extract to inactive</text>
+                                <text x="750" y="175" text-anchor="middle" fill="#86efac" font-size="11">Update bootloader</text>
+                            </g>
+                            
+                            <!-- Current State -->
+                            <g>
+                                <rect x="50" y="250" width="400" height="200" rx="10" fill="rgba(33,150,243,0.1)" stroke="#2196F3" stroke-width="2"/>
+                                <text x="250" y="280" text-anchor="middle" fill="#2196F3" font-size="16" font-weight="bold">Before Update</text>
+                                
+                                <rect x="100" y="300" width="140" height="60" rx="6" fill="#2196F3" opacity="0.5"/>
+                                <text x="170" y="320" text-anchor="middle" fill="#fff" font-size="13">@blue</text>
+                                <text x="170" y="340" text-anchor="middle" fill="#fff" font-size="11">✅ Active (Booted)</text>
+                                
+                                <rect x="260" y="300" width="140" height="60" rx="6" fill="rgba(76,175,80,0.3)" stroke="#4CAF50" stroke-width="1"/>
+                                <text x="330" y="320" text-anchor="middle" fill="#fff" font-size="13">@green</text>
+                                <text x="330" y="340" text-anchor="middle" fill="#86efac" font-size="11">⏸️ Inactive (Old)</text>
+                                
+                                <text x="250" y="395" text-anchor="middle" fill="#93c5fd" font-size="12">shani-deploy runs while booted into @blue</text>
+                                <text x="250" y="420" text-anchor="middle" fill="#93c5fd" font-size="12">Update is written to @green</text>
+                            </g>
+                            
+                            <!-- After State -->
+                            <g>
+                                <rect x="550" y="250" width="400" height="200" rx="10" fill="rgba(76,175,80,0.1)" stroke="#4CAF50" stroke-width="2"/>
+                                <text x="750" y="280" text-anchor="middle" fill="#4CAF50" font-size="16" font-weight="bold">After Reboot</text>
+                                
+                                <rect x="600" y="300" width="140" height="60" rx="6" fill="rgba(33,150,243,0.3)" stroke="#2196F3" stroke-width="1"/>
+                                <text x="670" y="320" text-anchor="middle" fill="#fff" font-size="13">@blue</text>
+                                <text x="670" y="340" text-anchor="middle" fill="#93c5fd" font-size="11">⏸️ Inactive (Rollback)</text>
+                                
+                                <rect x="760" y="300" width="140" height="60" rx="6" fill="#4CAF50" opacity="0.5"/>
+                                <text x="830" y="320" text-anchor="middle" fill="#fff" font-size="13">@green</text>
+                                <text x="830" y="340" text-anchor="middle" fill="#fff" font-size="11">✅ Active (Updated!)</text>
+                                
+                                <text x="750" y="395" text-anchor="middle" fill="#86efac" font-size="12">System boots into @green with new version</text>
+                                <text x="750" y="420" text-anchor="middle" fill="#86efac" font-size="12">@blue remains as instant rollback option</text>
+                            </g>
+                            
+                            <defs>
+                                <marker id="arrow-update" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                    <polygon points="0 0, 10 3, 0 6" fill="#ff8a5c"/>
+                                </marker>
+                            </defs>
+                        </svg>
+                        <p class="caption">Zero-downtime update process with automatic rollback capability</p>
+                    </div>
+                </div>
+
+                <div id="persistence">
+                    <h3>Persistence Strategy</h3>
+                    <p>ShaniOS selectively persists data across immutable system updates through bind mounts and dedicated subvolumes.</p>
+
+                    <div class="persistence-diagram">
+                        <svg viewBox="0 0 900 350" xmlns="http://www.w3.org/2000/svg" style="max-width: 100%; height: auto;">
+                            <rect width="900" height="350" fill="#0b0618"/>
+                            
+                            <text x="450" y="30" text-anchor="middle" fill="#ff8a5c" font-size="20" font-weight="bold">What Persists Across Updates?</text>
+                            
+                            <!-- Immutable -->
+                            <g>
+                                <rect x="50" y="70" width="250" height="240" rx="10" fill="rgba(244,67,54,0.15)" stroke="#F44336" stroke-width="2"/>
+                                <text x="175" y="100" text-anchor="middle" fill="#F44336" font-size="16" font-weight="bold">❌ Immutable (Replaced)</text>
+                                
+                                <text x="175" y="135" text-anchor="middle" fill="#fca5a5" font-size="13">/ (root filesystem)</text>
+                                <text x="175" y="160" text-anchor="middle" fill="#fca5a5" font-size="13">/usr (programs)</text>
+                                <text x="175" y="185" text-anchor="middle" fill="#fca5a5" font-size="13">/bin, /sbin (binaries)</text>
+                                <text x="175" y="210" text-anchor="middle" fill="#fca5a5" font-size="13">/lib (libraries)</text>
+                                <text x="175" y="235" text-anchor="middle" fill="#fca5a5" font-size="13">/opt (optional software)</text>
+                                
+                                <text x="175" y="275" text-anchor="middle" fill="#fb923c" font-size="12" font-style="italic">Gets new version on update</text>
+                            </g>
+                            
+                            <!-- Persistent -->
+                            <g>
+                                <rect x="350" y="70" width="250" height="240" rx="10" fill="rgba(76,175,80,0.15)" stroke="#4CAF50" stroke-width="2"/>
+                                <text x="475" y="100" text-anchor="middle" fill="#4CAF50" font-size="16" font-weight="bold">✅ Persistent (Kept)</text>
+                                
+                                <text x="475" y="135" text-anchor="middle" fill="#86efac" font-size="13">/home (your files)</text>
+                                <text x="475" y="160" text-anchor="middle" fill="#86efac" font-size="13">/etc (configurations)</text>
+                                <text x="475" y="185" text-anchor="middle" fill="#86efac" font-size="13">/var/log (system logs)</text>
+                                <text x="475" y="210" text-anchor="middle" fill="#86efac" font-size="13">/data (app data)</text>
+                                <text x="475" y="235" text-anchor="middle" fill="#86efac" font-size="13">Flatpak apps</text>
+                                <text x="475" y="260" text-anchor="middle" fill="#86efac" font-size="13">Containers & VMs</text>
+                                
+                                <text x="475" y="290" text-anchor="middle" fill="#4ade80" font-size="12" font-style="italic">Survives all updates</text>
+                            </g>
+                            
+                            <!-- Volatile -->
+                            <g>
+                                <rect x="650" y="70" width="200" height="240" rx="10" fill="rgba(156,39,176,0.15)" stroke="#9C27B0" stroke-width="2"/>
+                                <text x="750" y="100" text-anchor="middle" fill="#9C27B0" font-size="16" font-weight="bold">🔄 Volatile (Temporary)</text>
+                                
+                                <text x="750" y="135" text-anchor="middle" fill="#d8b4fe" font-size="13">/var (tmpfs)</text>
+                                <text x="750" y="160" text-anchor="middle" fill="#d8b4fe" font-size="13">/tmp (temporary)</text>
+                                <text x="750" y="185" text-anchor="middle" fill="#d8b4fe" font-size="13">/run (runtime)</text>
+                                
+                                <text x="750" y="230" text-anchor="middle" fill="#c084fc" font-size="12" font-style="italic">Cleared on reboot</text>
+                                <text x="750" y="250" text-anchor="middle" fill="#c084fc" font-size="12" font-style="italic">(except bind-mounted)</text>
+                                <text x="750" y="270" text-anchor="middle" fill="#c084fc" font-size="12" font-style="italic">service data)</text>
+                            </g>
+                        </svg>
+                        <p class="caption">ShaniOS intelligently separates immutable system files from persistent user data</p>
+                    </div>
+
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Location</th>
+                                    <th>Type</th>
+                                    <th>Behavior</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">/</th>
+                                    <td>Read-only</td>
+                                    <td>Immutable system files</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">/etc</th>
+                                    <td>Overlay</td>
+                                    <td>Writable, persists in @data</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">/var</th>
+                                    <td>tmpfs</td>
+                                    <td>Volatile, cleared on reboot</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">/var/log</th>
+                                    <td>Btrfs @log</td>
+                                    <td>Persistent logs</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">/var/lib/*</th>
+                                    <td>Bind mount</td>
+                                    <td>Selective persistence from @data/varlib</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">/var/spool/*</th>
+                                    <td>Bind mount</td>
+                                    <td>Selective persistence from @data/varspool</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">/home</th>
+                                    <td>Btrfs @home</td>
+                                    <td>Persistent user data</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                                       
+                    <h4>Bind-Mounted Service State</h4>
+                    <p>Critical service data is bind-mounted from @data subvolume:</p>
+                    
+                    <div class="code-block">
+                        <pre><code># Example bind mounts from fstab
+
+# Network configuration
+/data/varlib/NetworkManager /var/lib/NetworkManager none bind,nofail 0 0
+
+# Bluetooth pairings
+/data/varlib/bluetooth /var/lib/bluetooth none bind,nofail 0 0
+
+# systemd state
+/data/varlib/systemd /var/lib/systemd none bind,nofail 0 0</code></pre>
+                    </div>
+                    
+                    <h4>What Persists</h4>
+                    <ul>
+                        <li><strong>Core:</strong> dbus, systemd, NetworkManager</li>
+                        <li><strong>Authentication:</strong> AccountsService, fprint, bluetooth, boltd</li>
+                        <li><strong>Display:</strong> gdm, sddm</li>
+                        <li><strong>Hardware:</strong> colord, upower, cups, sane</li>
+                        <li><strong>Security:</strong> firewalld</li>
+                        <li><strong>Networking:</strong> geoclue, samba, nfs</li>
+                    </ul>
+
+                    <h4>Bind Mount Handling</h4>
+                    <p>ShaniOS intelligently handles bind mounts during configuration:</p>
+                    <ul>
+                        <li><strong>Source check:</strong> Only mounts if source directory exists in @data</li>
+                        <li><strong>Target check:</strong> Only mounts if service is installed in the system</li>
+                        <li><strong>Graceful skipping:</strong> Missing services (e.g., sddm on GNOME) don't cause errors</li>
+                        <li><strong>Optional services:</strong> Services not present in base system are automatically skipped</li>
+                    </ul>
+
+                    <h4>Spool Directory Persistence</h4>
+                    <p>In addition to /var/lib, some /var/spool directories are also persisted:</p>
+                    <ul>
+                        <li><strong>anacron:</strong> Scheduled job state</li>
+                        <li><strong>cron:</strong> Cron job state</li>
+                        <li><strong>cups:</strong> Print queue</li>
+                        <li><strong>samba:</strong> Samba print queue</li>
+                    </ul>
+                </div>
+            </section>
 
             <!-- INSTALLATION -->
             <section id="installation" class="wiki-section">
@@ -325,765 +1088,10 @@
                         <li>Customizing appearance settings</li>
                     </ul>
                     <p>This approach keeps installation fast while personalizing the system on first use.</p>
-
-
                 </div>
             </section>
 
-            <!-- GETTING STARTED -->
-            <section id="getting-started" class="wiki-section">
-                <h2>Getting Started</h2>
-                
-                <div id="what-is-shanios">
-                    <h3>What is ShaniOS?</h3>
-                    <p>ShaniOS is an immutable Linux distribution that brings enterprise DevOps practices to desktop computing. Built on Arch Linux with Btrfs filesystem, it provides atomic updates, instant rollback, and system integrity by design.</p>
-
-                    <div class="immutability-diagram">
-                        <svg viewBox="0 0 1000 400" xmlns="http://www.w3.org/2000/svg" style="max-width: 100%; height: auto;">
-                            <!-- Background -->
-                            <rect width="1000" height="400" fill="#0b0618"/>
-                            
-                            <!-- Title -->
-                            <text x="500" y="30" text-anchor="middle" fill="#ff8a5c" font-size="22" font-weight="bold">Traditional vs Immutable OS</text>
-                            
-                            <!-- Traditional OS -->
-                            <g>
-                                <rect x="50" y="70" width="400" height="280" rx="12" fill="rgba(244,67,54,0.1)" stroke="#F44336" stroke-width="2"/>
-                                <text x="250" y="100" text-anchor="middle" fill="#F44336" font-size="18" font-weight="bold">Traditional Linux</text>
-                                
-                                <!-- System Layer -->
-                                <rect x="80" y="120" width="340" height="60" rx="8" fill="rgba(244,67,54,0.3)" stroke="#F44336" stroke-width="1.5"/>
-                                <text x="250" y="145" text-anchor="middle" fill="#fff" font-size="14">System Files</text>
-                                <text x="250" y="165" text-anchor="middle" fill="#fca5a5" font-size="12">✏️ Writable - Can be modified</text>
-                                
-                                <!-- Problems -->
-                                <text x="250" y="210" text-anchor="middle" fill="#fb923c" font-size="14" font-weight="bold">Common Issues:</text>
-                                <text x="250" y="235" text-anchor="middle" fill="#fca5a5" font-size="12">❌ Updates can break system</text>
-                                <text x="250" y="255" text-anchor="middle" fill="#fca5a5" font-size="12">❌ Dependency conflicts</text>
-                                <text x="250" y="275" text-anchor="middle" fill="#fca5a5" font-size="12">❌ Difficult rollback</text>
-                                <text x="250" y="295" text-anchor="middle" fill="#fca5a5" font-size="12">❌ System drift over time</text>
-                                <text x="250" y="315" text-anchor="middle" fill="#fca5a5" font-size="12">❌ Security vulnerabilities</text>
-                            </g>
-                            
-                            <!-- Arrow -->
-                            <g>
-                                <line x1="460" y1="210" x2="530" y2="210" stroke="#ff8a5c" stroke-width="3" marker-end="url(#arrow-compare)"/>
-                                <text x="495" y="200" text-anchor="middle" fill="#ff8a5c" font-size="12" font-weight="bold">vs</text>
-                            </g>
-                            
-                            <!-- ShaniOS -->
-                            <g>
-                                <rect x="550" y="70" width="400" height="280" rx="12" fill="rgba(76,175,80,0.1)" stroke="#4CAF50" stroke-width="2"/>
-                                <text x="750" y="100" text-anchor="middle" fill="#4CAF50" font-size="18" font-weight="bold">ShaniOS (Immutable)</text>
-                                
-                                <!-- System Layer -->
-                                <rect x="580" y="120" width="340" height="60" rx="8" fill="rgba(76,175,80,0.3)" stroke="#4CAF50" stroke-width="1.5"/>
-                                <text x="750" y="145" text-anchor="middle" fill="#fff" font-size="14">System Files</text>
-                                <text x="750" y="165" text-anchor="middle" fill="#86efac" font-size="12">🔒 Read-Only - Protected</text>
-                                
-                                <!-- Benefits -->
-                                <text x="750" y="210" text-anchor="middle" fill="#4ade80" font-size="14" font-weight="bold">Advantages:</text>
-                                <text x="750" y="235" text-anchor="middle" fill="#86efac" font-size="12">✅ Atomic updates (all or nothing)</text>
-                                <text x="750" y="255" text-anchor="middle" fill="#86efac" font-size="12">✅ Instant rollback capability</text>
-                                <text x="750" y="275" text-anchor="middle" fill="#86efac" font-size="12">✅ Zero-downtime updates</text>
-                                <text x="750" y="295" text-anchor="middle" fill="#86efac" font-size="12">✅ Consistent system state</text>
-                                <text x="750" y="315" text-anchor="middle" fill="#86efac" font-size="12">✅ Enhanced security</text>
-                            </g>
-                            
-                            <defs>
-                                <marker id="arrow-compare" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
-                                    <polygon points="0 0, 10 3, 0 6" fill="#ff8a5c"/>
-                                </marker>
-                            </defs>
-                        </svg>
-                        <p class="caption">Immutable systems protect core files from modification, ensuring reliability and security</p>
-                    </div>
-                </div>
-
-                <div id="key-concepts">
-                    <h3>Key Concepts</h3>
-                    
-                    <h4>1. Immutability</h4>
-                    <p>The root filesystem (/) is mounted read-only, preventing any modifications to system files. This ensures:</p>
-                    <ul>
-                        <li>Malware cannot modify system binaries</li>
-                        <li>Updates cannot partially fail and corrupt the system</li>
-                        <li>System always boots to a known-good state</li>
-                        <li>Configuration changes are isolated and manageable</li>
-                    </ul>
-
-                <div id="understanding-immutability">
-                    <h3>Understanding Immutability</h3>
-                    <p>ShaniOS's immutability fundamentally changes how you interact with the system. Understanding this concept is key to using ShaniOS effectively.</p>
-
-                    <h4>What You CAN Do</h4>
-                    <ul>
-                        <li>✅ Install applications via Flatpak</li>
-                        <li>✅ Edit configuration files in /etc</li>
-                        <li>✅ Create and modify files in /home</li>
-                        <li>✅ Run containers (Podman, Distrobox, LXC)</li>
-                        <li>✅ Update the entire system atomically</li>
-                        <li>✅ Store data in /data and persistent subvolumes</li>
-                    </ul>
-
-                    <h4>What You CANNOT Do</h4>
-                    <ul>
-                        <li>❌ Use pacman to install traditional packages</li>
-                        <li>❌ Modify files in / (root filesystem)</li>
-                        <li>❌ Edit files in /usr, /bin, /lib directly</li>
-                        <li>❌ Install software that requires system-level changes</li>
-                    </ul>
-
-                    <h4>Why This Design?</h4>
-                    <div class="card-container">
-                        <article class="card">
-                            <div class="card-icon"><i class="fas fa-shield-alt"></i></div>
-                            <h4>Security</h4>
-                            <p>Malware cannot modify system files or persist across reboots</p>
-                        </article>
-                        <article class="card">
-                            <div class="card-icon"><i class="fas fa-sync-alt"></i></div>
-                            <h4>Reliability</h4>
-                            <p>Updates are atomic - they either work completely or fail safely</p>
-                        </article>
-                        <article class="card">
-                            <div class="card-icon"><i class="fas fa-undo"></i></div>
-                            <h4>Rollback</h4>
-                            <p>Instant recovery from failed updates or system issues</p>
-                        </article>
-                        <article class="card">
-                            <div class="card-icon"><i class="fas fa-check-double"></i></div>
-                            <h4>Consistency</h4>
-                            <p>System state is always predictable and reproducible</p>
-                        </article>
-                    </div>
-
-                    <h4>2. Blue-Green Deployment</h4>
-                    <p>ShaniOS maintains two complete system images (@blue and @green). While one is active, updates are applied to the inactive one. On next boot, you switch to the updated system. If it fails, automatic rollback occurs.</p>
-
-                <div id="blue-green">
-                    <h3>Blue-Green Deployment</h3>
-                    <p>ShaniOS implements blue-green deployment using Btrfs subvolumes—a strategy adapted from DevOps for desktop Linux.</p>
-                    
-                    <div class="blue-green-diagram">
-                        <svg viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg" style="max-width: 100%; height: auto;">
-                            <rect width="800" height="400" fill="#0b0618"/>
-                            
-                            <text x="400" y="30" text-anchor="middle" fill="#ff8a5c" font-size="20" font-weight="bold">Blue-Green Deployment Model</text>
-                            
-                            <!-- Blue System -->
-                            <g>
-                                <rect x="50" y="80" width="300" height="240" rx="12" fill="#1e3a8a" opacity="0.3" stroke="#3b82f6" stroke-width="2"/>
-                                <text x="200" y="110" text-anchor="middle" fill="#60a5fa" font-size="20" font-weight="bold">@blue (Active)</text>
-                                <text x="200" y="140" text-anchor="middle" fill="#93c5fd" font-size="14">Currently Running</text>
-                                <circle cx="200" cy="200" r="40" fill="#3b82f6" opacity="0.5"/>
-                                <text x="200" y="210" text-anchor="middle" fill="#fff" font-size="16">System</text>
-                                <text x="200" y="280" text-anchor="middle" fill="#93c5fd" font-size="12">Mounted as /</text>
-                            </g>
-                            
-                            <!-- Green System -->
-                            <g>
-                                <rect x="450" y="80" width="300" height="240" rx="12" fill="#166534" opacity="0.3" stroke="#22c55e" stroke-width="2"/>
-                                <text x="600" y="110" text-anchor="middle" fill="#4ade80" font-size="20" font-weight="bold">@green (Inactive)</text>
-                                <text x="600" y="140" text-anchor="middle" fill="#86efac" font-size="14">Ready for Update</text>
-                                <circle cx="600" cy="200" r="40" fill="#22c55e" opacity="0.5"/>
-                                <text x="600" y="210" text-anchor="middle" fill="#fff" font-size="16">System</text>
-                                <text x="600" y="280" text-anchor="middle" fill="#86efac" font-size="12">Standby Mode</text>
-                            </g>
-                            
-                            <!-- Arrow -->
-                            <g>
-                                <line x1="350" y1="200" x2="430" y2="200" stroke="#ff8a5c" stroke-width="3" marker-end="url(#arrowhead)"/>
-                                <text x="390" y="190" text-anchor="middle" fill="#ff8a5c" font-size="14">Update Flow</text>
-                            </g>
-                            
-                            <defs>
-                                <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
-                                    <polygon points="0 0, 10 3, 0 6" fill="#ff8a5c"/>
-                                </marker>
-                            </defs>
-                        </svg>
-                        <p class="caption">Two complete system images with only one active at a time</p>
-                    </div>
-                    
-                    <h4>How It Works</h4>
-                    <ol>
-                        <li>System maintains @blue and @green subvolumes</li>
-                        <li>One subvolume is active (mounted as /), the other inactive</li>
-                        <li>Updates apply to inactive subvolume</li>
-                        <li>Bootloader updated to point to updated subvolume</li>
-                        <li>Reboot switches to updated system</li>
-                        <li>Previous version remains available for instant rollback</li>
-                    </ol>
-                    
-                    <h4>Advantages</h4>
-                    <ul>
-                        <li><strong>Atomic Updates:</strong> All-or-nothing updates</li>
-                        <li><strong>Zero Downtime:</strong> Active system never modified</li>
-                        <li><strong>Instant Rollback:</strong> Boot into previous version anytime</li>
-                        <li><strong>Safe Testing:</strong> Validate updates before committing</li>
-                    </ul>
-                </div>
-
-                <div id="atomic-updates">
-                    <h4>3. Atomic Updates</h4>
-                    <p>Updates either succeed completely or fail safely—no partial updates that leave your system in a broken state. This is achieved through:</p>
-                    <ul>
-                        <li>Updating the inactive system image</li>
-                        <li>Switching boot target only after successful update</li>
-                        <li>Automatic rollback on boot failure</li>
-                    </ul>
-
-                    <p>ShaniOS uses an intelligent multi-layered update system with automatic checking, user notifications, and the <code>shani-deploy</code> tool for atomic system updates.</p>
-
-                    <div class="update-flow-diagram">
-                        <svg viewBox="0 0 1000 500" xmlns="http://www.w3.org/2000/svg" style="max-width: 100%; height: auto;">
-                            <rect width="1000" height="500" fill="#0b0618"/>
-                            
-                            <text x="500" y="30" text-anchor="middle" fill="#ff8a5c" font-size="22" font-weight="bold">Update Process Flow</text>
-                            
-                            <!-- Step 1 -->
-                            <g>
-                                <circle cx="150" cy="100" r="40" fill="#2196F3" opacity="0.3" stroke="#2196F3" stroke-width="2"/>
-                                <text x="150" y="85" text-anchor="middle" fill="#fff" font-size="24">1</text>
-                                <text x="150" y="110" text-anchor="middle" fill="#fff" font-size="12">Check</text>
-                                <text x="150" y="160" text-anchor="middle" fill="#93c5fd" font-size="11">Auto checker runs</text>
-                                <text x="150" y="175" text-anchor="middle" fill="#93c5fd" font-size="11">Finds new release</text>
-                            </g>
-                            
-                            <line x1="190" y1="100" x2="260" y2="100" stroke="#ff8a5c" stroke-width="2" marker-end="url(#arrow-update)"/>
-                            
-                            <!-- Step 2 -->
-                            <g>
-                                <circle cx="300" cy="100" r="40" fill="#9C27B0" opacity="0.3" stroke="#9C27B0" stroke-width="2"/>
-                                <text x="300" y="85" text-anchor="middle" fill="#fff" font-size="24">2</text>
-                                <text x="300" y="110" text-anchor="middle" fill="#fff" font-size="12">Notify</text>
-                                <text x="300" y="160" text-anchor="middle" fill="#d8b4fe" font-size="11">GUI notification</text>
-                                <text x="300" y="175" text-anchor="middle" fill="#d8b4fe" font-size="11">User approval</text>
-                            </g>
-                            
-                            <line x1="340" y1="100" x2="410" y2="100" stroke="#ff8a5c" stroke-width="2" marker-end="url(#arrow-update)"/>
-                            
-                            <!-- Step 3 -->
-                            <g>
-                                <circle cx="450" cy="100" r="40" fill="#FF9800" opacity="0.3" stroke="#FF9800" stroke-width="2"/>
-                                <text x="450" y="85" text-anchor="middle" fill="#fff" font-size="24">3</text>
-                                <text x="450" y="110" text-anchor="middle" fill="#fff" font-size="12">Download</text>
-                                <text x="450" y="160" text-anchor="middle" fill="#fbbf24" font-size="11">Mirror discovery</text>
-                                <text x="450" y="175" text-anchor="middle" fill="#fbbf24" font-size="11">Resume support</text>
-                            </g>
-                            
-                            <line x1="490" y1="100" x2="560" y2="100" stroke="#ff8a5c" stroke-width="2" marker-end="url(#arrow-update)"/>
-                            
-                            <!-- Step 4 -->
-                            <g>
-                                <circle cx="600" cy="100" r="40" fill="#F44336" opacity="0.3" stroke="#F44336" stroke-width="2"/>
-                                <text x="600" y="85" text-anchor="middle" fill="#fff" font-size="24">4</text>
-                                <text x="600" y="110" text-anchor="middle" fill="#fff" font-size="12">Verify</text>
-                                <text x="600" y="160" text-anchor="middle" fill="#fca5a5" font-size="11">SHA256 checksum</text>
-                                <text x="600" y="175" text-anchor="middle" fill="#fca5a5" font-size="11">GPG signature</text>
-                            </g>
-                            
-                            <line x1="640" y1="100" x2="710" y2="100" stroke="#ff8a5c" stroke-width="2" marker-end="url(#arrow-update)"/>
-                            
-                            <!-- Step 5 -->
-                            <g>
-                                <circle cx="750" cy="100" r="40" fill="#4CAF50" opacity="0.3" stroke="#4CAF50" stroke-width="2"/>
-                                <text x="750" y="85" text-anchor="middle" fill="#fff" font-size="24">5</text>
-                                <text x="750" y="110" text-anchor="middle" fill="#fff" font-size="12">Deploy</text>
-                                <text x="750" y="160" text-anchor="middle" fill="#86efac" font-size="11">Extract to inactive</text>
-                                <text x="750" y="175" text-anchor="middle" fill="#86efac" font-size="11">Update bootloader</text>
-                            </g>
-                            
-                            <!-- Current State -->
-                            <g>
-                                <rect x="50" y="250" width="400" height="200" rx="10" fill="rgba(33,150,243,0.1)" stroke="#2196F3" stroke-width="2"/>
-                                <text x="250" y="280" text-anchor="middle" fill="#2196F3" font-size="16" font-weight="bold">Before Update</text>
-                                
-                                <rect x="100" y="300" width="140" height="60" rx="6" fill="#2196F3" opacity="0.5"/>
-                                <text x="170" y="320" text-anchor="middle" fill="#fff" font-size="13">@blue</text>
-                                <text x="170" y="340" text-anchor="middle" fill="#fff" font-size="11">✅ Active (Booted)</text>
-                                
-                                <rect x="260" y="300" width="140" height="60" rx="6" fill="rgba(76,175,80,0.3)" stroke="#4CAF50" stroke-width="1"/>
-                                <text x="330" y="320" text-anchor="middle" fill="#fff" font-size="13">@green</text>
-                                <text x="330" y="340" text-anchor="middle" fill="#86efac" font-size="11">⏸️ Inactive (Old)</text>
-                                
-                                <text x="250" y="395" text-anchor="middle" fill="#93c5fd" font-size="12">shani-deploy runs while booted into @blue</text>
-                                <text x="250" y="420" text-anchor="middle" fill="#93c5fd" font-size="12">Update is written to @green</text>
-                            </g>
-                            
-                            <!-- After State -->
-                            <g>
-                                <rect x="550" y="250" width="400" height="200" rx="10" fill="rgba(76,175,80,0.1)" stroke="#4CAF50" stroke-width="2"/>
-                                <text x="750" y="280" text-anchor="middle" fill="#4CAF50" font-size="16" font-weight="bold">After Reboot</text>
-                                
-                                <rect x="600" y="300" width="140" height="60" rx="6" fill="rgba(33,150,243,0.3)" stroke="#2196F3" stroke-width="1"/>
-                                <text x="670" y="320" text-anchor="middle" fill="#fff" font-size="13">@blue</text>
-                                <text x="670" y="340" text-anchor="middle" fill="#93c5fd" font-size="11">⏸️ Inactive (Rollback)</text>
-                                
-                                <rect x="760" y="300" width="140" height="60" rx="6" fill="#4CAF50" opacity="0.5"/>
-                                <text x="830" y="320" text-anchor="middle" fill="#fff" font-size="13">@green</text>
-                                <text x="830" y="340" text-anchor="middle" fill="#fff" font-size="11">✅ Active (Updated!)</text>
-                                
-                                <text x="750" y="395" text-anchor="middle" fill="#86efac" font-size="12">System boots into @green with new version</text>
-                                <text x="750" y="420" text-anchor="middle" fill="#86efac" font-size="12">@blue remains as instant rollback option</text>
-                            </g>
-                            
-                            <defs>
-                                <marker id="arrow-update" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
-                                    <polygon points="0 0, 10 3, 0 6" fill="#ff8a5c"/>
-                                </marker>
-                            </defs>
-                        </svg>
-                        <p class="caption">Zero-downtime update process with automatic rollback capability</p>
-                    </div>
-                </div>
-
-                    <h4>4. Selective Persistence</h4>
-                    <p>While the system is immutable, user data and configurations persist:</p>
-                    <ul>
-                        <li><strong>/home:</strong> Your personal files and settings</li>
-                        <li><strong>/etc:</strong> System configuration (via overlay filesystem)</li>
-                        <li><strong>Service data:</strong> Application states, databases, containers</li>
-                    </ul>
-
-                    <div class="persistence-diagram">
-                        <svg viewBox="0 0 900 350" xmlns="http://www.w3.org/2000/svg" style="max-width: 100%; height: auto;">
-                            <rect width="900" height="350" fill="#0b0618"/>
-                            
-                            <text x="450" y="30" text-anchor="middle" fill="#ff8a5c" font-size="20" font-weight="bold">What Persists Across Updates?</text>
-                            
-                            <!-- Immutable -->
-                            <g>
-                                <rect x="50" y="70" width="250" height="240" rx="10" fill="rgba(244,67,54,0.15)" stroke="#F44336" stroke-width="2"/>
-                                <text x="175" y="100" text-anchor="middle" fill="#F44336" font-size="16" font-weight="bold">❌ Immutable (Replaced)</text>
-                                
-                                <text x="175" y="135" text-anchor="middle" fill="#fca5a5" font-size="13">/ (root filesystem)</text>
-                                <text x="175" y="160" text-anchor="middle" fill="#fca5a5" font-size="13">/usr (programs)</text>
-                                <text x="175" y="185" text-anchor="middle" fill="#fca5a5" font-size="13">/bin, /sbin (binaries)</text>
-                                <text x="175" y="210" text-anchor="middle" fill="#fca5a5" font-size="13">/lib (libraries)</text>
-                                <text x="175" y="235" text-anchor="middle" fill="#fca5a5" font-size="13">/opt (optional software)</text>
-                                
-                                <text x="175" y="275" text-anchor="middle" fill="#fb923c" font-size="12" font-style="italic">Gets new version on update</text>
-                            </g>
-                            
-                            <!-- Persistent -->
-                            <g>
-                                <rect x="350" y="70" width="250" height="240" rx="10" fill="rgba(76,175,80,0.15)" stroke="#4CAF50" stroke-width="2"/>
-                                <text x="475" y="100" text-anchor="middle" fill="#4CAF50" font-size="16" font-weight="bold">✅ Persistent (Kept)</text>
-                                
-                                <text x="475" y="135" text-anchor="middle" fill="#86efac" font-size="13">/home (your files)</text>
-                                <text x="475" y="160" text-anchor="middle" fill="#86efac" font-size="13">/etc (configurations)</text>
-                                <text x="475" y="185" text-anchor="middle" fill="#86efac" font-size="13">/var/log (system logs)</text>
-                                <text x="475" y="210" text-anchor="middle" fill="#86efac" font-size="13">/data (app data)</text>
-                                <text x="475" y="235" text-anchor="middle" fill="#86efac" font-size="13">Flatpak apps</text>
-                                <text x="475" y="260" text-anchor="middle" fill="#86efac" font-size="13">Containers & VMs</text>
-                                
-                                <text x="475" y="290" text-anchor="middle" fill="#4ade80" font-size="12" font-style="italic">Survives all updates</text>
-                            </g>
-                            
-                            <!-- Volatile -->
-                            <g>
-                                <rect x="650" y="70" width="200" height="240" rx="10" fill="rgba(156,39,176,0.15)" stroke="#9C27B0" stroke-width="2"/>
-                                <text x="750" y="100" text-anchor="middle" fill="#9C27B0" font-size="16" font-weight="bold">🔄 Volatile (Temporary)</text>
-                                
-                                <text x="750" y="135" text-anchor="middle" fill="#d8b4fe" font-size="13">/var (tmpfs)</text>
-                                <text x="750" y="160" text-anchor="middle" fill="#d8b4fe" font-size="13">/tmp (temporary)</text>
-                                <text x="750" y="185" text-anchor="middle" fill="#d8b4fe" font-size="13">/run (runtime)</text>
-                                
-                                <text x="750" y="230" text-anchor="middle" fill="#c084fc" font-size="12" font-style="italic">Cleared on reboot</text>
-                                <text x="750" y="250" text-anchor="middle" fill="#c084fc" font-size="12" font-style="italic">(except bind-mounted)</text>
-                                <text x="750" y="270" text-anchor="middle" fill="#c084fc" font-size="12" font-style="italic">service data)</text>
-                            </g>
-                        </svg>
-                        <p class="caption">ShaniOS intelligently separates immutable system files from persistent user data</p>
-                    </div>
-                </div>
-
-                <div id="persistence">
-                    <h3>Persistence Strategy</h3>
-                    <p>ShaniOS selectively persists data across immutable system updates through bind mounts and dedicated subvolumes.</p>
-
-                                       
-                    <h4>Bind-Mounted Service State</h4>
-                    <p>Critical service data is bind-mounted from @data subvolume:</p>
-                    
-                    <div class="code-block">
-                        <pre><code># Example bind mounts from fstab
-
-# Network configuration
-/data/varlib/NetworkManager /var/lib/NetworkManager none bind,nofail 0 0
-
-# Bluetooth pairings
-/data/varlib/bluetooth /var/lib/bluetooth none bind,nofail 0 0
-
-# systemd state
-/data/varlib/systemd /var/lib/systemd none bind,nofail 0 0</code></pre>
-                    </div>
-                    
-                    <h4>What Persists</h4>
-                    <ul>
-                        <li><strong>Core:</strong> dbus, systemd, NetworkManager</li>
-                        <li><strong>Authentication:</strong> AccountsService, fprint, bluetooth, boltd</li>
-                        <li><strong>Display:</strong> gdm, sddm</li>
-                        <li><strong>Hardware:</strong> colord, upower, cups, sane</li>
-                        <li><strong>Security:</strong> firewalld</li>
-                        <li><strong>Networking:</strong> geoclue, samba, nfs</li>
-                    </ul>
-
-                    <h4>Bind Mount Handling</h4>
-                    <p>ShaniOS intelligently handles bind mounts during configuration:</p>
-                    <ul>
-                        <li><strong>Source check:</strong> Only mounts if source directory exists in @data</li>
-                        <li><strong>Target check:</strong> Only mounts if service is installed in the system</li>
-                        <li><strong>Graceful skipping:</strong> Missing services (e.g., sddm on GNOME) don't cause errors</li>
-                        <li><strong>Optional services:</strong> Services not present in base system are automatically skipped</li>
-                    </ul>
-
-                    <h4>Spool Directory Persistence</h4>
-                    <p>In addition to /var/lib, some /var/spool directories are also persisted:</p>
-                    <ul>
-                        <li><strong>anacron:</strong> Scheduled job state</li>
-                        <li><strong>cron:</strong> Cron job state</li>
-                        <li><strong>cups:</strong> Print queue</li>
-                        <li><strong>samba:</strong> Samba print queue</li>
-                    </ul>
-                </div>
-                    
-                    <div class="table-wrapper">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Location</th>
-                                    <th>Type</th>
-                                    <th>Behavior</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <th scope="row">/</th>
-                                    <td>Read-only</td>
-                                    <td>Immutable system files</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">/etc</th>
-                                    <td>Overlay</td>
-                                    <td>Writable, persists in @data</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">/var</th>
-                                    <td>tmpfs</td>
-                                    <td>Volatile, cleared on reboot</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">/var/log</th>
-                                    <td>Btrfs @log</td>
-                                    <td>Persistent logs</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">/var/lib/*</th>
-                                    <td>Bind mount</td>
-                                    <td>Selective persistence from @data/varlib</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">/var/spool/*</th>
-                                    <td>Bind mount</td>
-                                    <td>Selective persistence from @data/varspool</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">/home</th>
-                                    <td>Btrfs @home</td>
-                                    <td>Persistent user data</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>     
-                    
-                <div id="security-features">
-                    <h3>Security Features</h3>
-                    <p>ShaniOS implements defense-in-depth security:</p>
-                    
-                    <div class="card-container">
-                        <article class="card">
-                            <div class="card-icon">🔒</div>
-                            <h4>Immutable Root</h4>
-                            <p>Read-only filesystem prevents malware from modifying system files</p>
-                        </article>
-                        <article class="card">
-                            <div class="card-icon">🔐</div>
-                            <h4>Full-Disk Encryption</h4>
-                            <p>LUKS2 with argon2id protects data at rest</p>
-                        </article>
-                        <article class="card">
-                            <div class="card-icon">📦</div>
-                            <h4>App Sandboxing</h4>
-                            <p>Flatpak provides application isolation and permission control</p>
-                        </article>
-                        <article class="card">
-                            <div class="card-icon">🛡️</div>
-                            <h4>AppArmor MAC</h4>
-                            <p>Mandatory access control confines system services</p>
-                        </article>
-                        <article class="card">
-                            <div class="card-icon">🔥</div>
-                            <h4>Active Firewall</h4>
-                            <p>firewalld denies inbound connections by default</p>
-                        </article>
-                    </div>
-                    <h4>What's Included</h4>
-                    <p>ShaniOS comes pre-configured with everything you need:</p>
-                    <ul>
-                        <li><strong>Base:</strong> Arch Linux foundation, Btrfs filesystem, systemd-boot</li>
-                        <li><strong>Desktop:</strong> GNOME or KDE Plasma (chosen at download)</li>
-                        <li><strong>Applications:</strong> Vivaldi Browser, OnlyOffice, Gear Lever</li>
-                        <li><strong>Containers:</strong> Podman, Distrobox, LXC, systemd-nspawn, Pods GUI</li>
-                        <li><strong>Android:</strong> Waydroid pre-installed and configured</li>
-                        <li><strong>Drivers:</strong> Intel/AMD/NVIDIA graphics, CUPS printing, SANE scanning</li>
-                        <li><strong>Fonts:</strong> Complete multilingual support including Indian languages and CJK</li>
-                        <li><strong>Security:</strong> AppArmor, firewalld, LUKS2 encryption (optional)</li>
-                        <li><strong>Shell:</strong> Zsh as default user shell with enhanced features</li>
-                    </ul>
-
-                    <h4>Default User Groups</h4>
-                    <p>The primary user is automatically added to these groups for hardware and system access:</p>
-                    <ul>
-                        <li><strong>wheel:</strong> Administrative privileges via sudo</li>
-                        <li><strong>input:</strong> Direct input device access</li>
-                        <li><strong>realtime:</strong> Real-time process scheduling (audio/video)</li>
-                        <li><strong>video:</strong> GPU and video hardware access</li>
-                        <li><strong>sys:</strong> System hardware monitoring</li>
-                        <li><strong>cups & lp:</strong> Printer management</li>
-                        <li><strong>libvirt & kvm:</strong> Virtual machine management</li>
-                        <li><strong>scanner:</strong> Scanner device access</li>
-                    </ul>
-
-                    <h4>Pre-configured Firewall Rules</h4>
-                    <p>ShaniOS configures firewall rules during installation for essential services:</p>
-                    <ul>
-                        <li><strong>KDE Connect/GSConnect:</strong> Ports automatically opened in public zone for device synchronization</li>
-                        <li><strong>Waydroid:</strong> DNS (port 53/udp, 67/udp), packet forwarding, and waydroid0 interface added to trusted zone</li>
-                    </ul>
-                </div>
-
-
-                <div id="secure-boot">
-                    <h3>Secure Boot Setup</h3>
-                    <p>ShaniOS supports UEFI Secure Boot via Machine Owner Keys (MOK).</p>
-                    
-                    <h4>Automatic Secure Boot Enrollment (If Enabled During Install)</h4>
-                    <p>If you enabled Secure Boot during installation:</p>
-                    <ol>
-                        <li>On first reboot, MOK Manager will appear automatically</li>
-                        <li>Select "Enroll MOK"</li>
-                        <li>Enter the password: <code>shanios</code></li>
-                        <li>Reboot to complete the enrollment</li>
-                        <li>Secure Boot will be active with ShaniOS keys enrolled</li>
-                    </ol>
-                    
-                    <div class="note-box" role="note">
-                        <div class="note-icon"><i class="fas fa-info-circle"></i></div>
-                        <div class="note-content">
-                            <p><strong>MOK (Machine Owner Key):</strong> This allows ShaniOS's signed bootloader and kernel to boot with Secure Boot enabled. The password "shanios" is only used during the one-time enrollment process and is not stored.</p>
-                        </div>
-                    </div>
-                    
-                    <h4>Manual Secure Boot Enablement</h4>
-                    <p>To enable Secure Boot after installation:</p>
-                    
-                    <div class="steps-container">
-                        <article class="step">
-                            <div class="step-number">1</div>
-                            <div class="step-content">
-                                <h4>Import MOK Key</h4>
-                                <div class="code-block">
-                                    <pre><code>sudo mokutil --import /etc/secureboot/keys/MOK.der</code></pre>
-                                </div>
-                                <p>Set a one-time password when prompted</p>
-                            </div>
-                        </article>
-                        
-                        <article class="step">
-                            <div class="step-number">2</div>
-                            <div class="step-content">
-                                <h4>Reboot and Enroll</h4>
-                                <p>MOK Manager appears on reboot. Select "Enroll MOK" and enter your password</p>
-                            </div>
-                        </article>
-                        
-                        <article class="step">
-                            <div class="step-number">3</div>
-                            <div class="step-content">
-                                <h4>Enable in BIOS</h4>
-                                <p>Enter BIOS/UEFI settings and enable Secure Boot if still disabled</p>
-                            </div>
-                        </article>
-                        
-                        <article class="step">
-                            <div class="step-number">4</div>
-                            <div class="step-content">
-                                <h4>Verify Enrollment</h4>
-                                <div class="code-block">
-                                    <pre><code>sudo mokutil --list-enrolled</code></pre>
-                                </div>
-                            </div>
-                        </article>
-                    </div>
-                    
-                    <div class="note-box" role="note">
-                        <div class="note-icon"><i class="fas fa-info-circle"></i></div>
-                        <div class="note-content">
-                            <p><strong>Note:</strong> If MOK Manager doesn't appear, repeat step 1 and reboot. It only triggers when a key is pending enrollment.</p>
-                        </div>
-                    </div>
-                </div>
-
-                    <h3>Encryption Methods</h3>
-                    
-                    <h4>Password-based (Default)</h4>
-                    <p>If you provide a password during installation, LUKS will be unlocked with your password at boot.</p>
-                
-                <div id="tpm-encryption">
-                    <h4>TPM-Based Encryption</h4>
-                    <p>Enroll your LUKS encryption key to TPM 2.0 for automatic unlocking.</p>
-                    
-                    <h4>Prerequisites</h4>
-                    <ul>
-                        <li>TPM 2.0 hardware module (enabled in BIOS/UEFI)</li>
-                        <li>LUKS2 encryption enabled during installation</li>
-                        <li><strong>Recommended:</strong> Secure Boot enabled for maximum security</li>
-                    </ul>
-                    
-                    <div class="warning-box" role="alert">
-                        <div class="warning-icon"><i class="fas fa-exclamation-triangle"></i></div>
-                        <div class="warning-content">
-                            <p><strong>Security Warning:</strong> Without Secure Boot, attackers with physical access can replace your bootloader to steal the encryption key. With Secure Boot, TPM refuses to unlock if the system is tampered with.</p>
-                        </div>
-                    </div>
-                    
-                    <h4>Enrollment Process</h4>
-                    
-                    <div class="steps-container">
-                        <article class="step">
-                            <div class="step-number">1</div>
-                            <div class="step-content">
-                                <h4>Verify TPM</h4>
-                                <div class="code-block">
-                                    <pre><code>systemd-cryptenroll --tpm2-device=list</code></pre>
-                                </div>
-                            </div>
-                        </article>
-                        
-                        <article class="step">
-                            <div class="step-number">2</div>
-                            <div class="step-content">
-                                <h4>Check Secure Boot Status</h4>
-                                <div class="code-block">
-                                    <pre><code>mokutil --sb-state</code></pre>
-                                </div>
-                                <p>If disabled, consider enabling Secure Boot first</p>
-                            </div>
-                        </article>
-                        
-                        <article class="step">
-                            <div class="step-number">3</div>
-                            <div class="step-content">
-                                <h4>Find Your LUKS Device</h4>
-                                <p>ShaniOS uses <code>/dev/mapper/shani_root</code> as the unlocked LUKS mapping. To find the underlying encrypted device:</p>
-                                <div class="code-block">
-                                    <pre><code># Get the physical encrypted device
-LUKS_DEVICE=$(sudo cryptsetup status shani_root | grep 'device:' | awk '{print $2}')
-echo "Your encrypted device is: $LUKS_DEVICE"
-
-# Example output: /dev/sda2 or /dev/nvme0n1p2</code></pre>
-                                </div>
-                            </div>
-                        </article>
-                        
-                        <article class="step">
-                            <div class="step-number">4</div>
-                            <div class="step-content">
-                                <h4>Enroll Encryption Key</h4>
-                                <p><strong>With Secure Boot (recommended):</strong></p>
-                                <div class="code-block">
-                                    <pre><code>LUKS_DEVICE=$(sudo cryptsetup status shani_root | grep 'device:' | awk '{print $2}')
-sudo systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=0+7 "$LUKS_DEVICE"</code></pre>
-                                </div>
-                                <p><strong>Without Secure Boot:</strong></p>
-                                <div class="code-block">
-                                    <pre><code>LUKS_DEVICE=$(sudo cryptsetup status shani_root | grep 'device:' | awk '{print $2}')
-sudo systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=0 "$LUKS_DEVICE"</code></pre>
-                                </div>
-                                <p>Enter your LUKS password when prompted</p>
-                            </div>
-                        </article>
-                        
-                        <article class="step">
-                            <div class="step-number">5</div>
-                            <div class="step-content">
-                                <h4>Regenerate Boot Images</h4>
-                                <p>Both @blue and @green must be updated:</p>
-                                <div class="code-block">
-                                    <pre><code>sudo gen-efi configure blue
-sudo gen-efi configure green</code></pre>
-                                </div>
-                            </div>
-                        </article>
-                        
-                        <article class="step">
-                            <div class="step-number">6</div>
-                            <div class="step-content">
-                                <h4>Test & Verify</h4>
-                                <p>Reboot. System should unlock automatically.</p>
-                                <div class="code-block">
-                                    <pre><code># Verify enrollment
-LUKS_DEVICE=$(sudo cryptsetup status shani_root | grep 'device:' | awk '{print $2}')
-sudo cryptsetup luksDump "$LUKS_DEVICE" | grep systemd-tpm2</code></pre>
-                                </div>
-                            </div>
-                        </article>
-                    </div>
-                    
-                    <h4>Remove TPM Enrollment</h4>
-                    <p>To restore password-only unlocking:</p>
-                    <div class="code-block">
-                        <pre><code>LUKS_DEVICE=$(sudo cryptsetup status shani_root | grep 'device:' | awk '{print $2}')
-sudo systemd-cryptenroll --wipe-slot=tpm2 "$LUKS_DEVICE"
-sudo gen-efi configure blue
-sudo gen-efi configure green</code></pre>
-                    </div>
-                    
-                    <h4>Re-enroll After Enabling Secure Boot</h4>
-                    <p>If you enable Secure Boot after TPM enrollment:</p>
-                    <div class="code-block">
-                        <pre><code># Get the device
-LUKS_DEVICE=$(sudo cryptsetup status shani_root | grep 'device:' | awk '{print $2}')
-
-# Remove old enrollment
-sudo systemd-cryptenroll --wipe-slot=tpm2 "$LUKS_DEVICE"
-
-# Re-enroll with Secure Boot protection
-sudo systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=0+7 "$LUKS_DEVICE"
-
-# Update boot images
-sudo gen-efi configure blue
-sudo gen-efi configure green</code></pre>
-                    </div>
-                    
-                    <div class="note-box" role="note">
-                        <div class="note-icon"><i class="fas fa-info-circle"></i></div>
-                        <div class="note-content">
-                            <p><strong>Important:</strong></p>
-                            <ul>
-                                <li>Your LUKS password remains valid as fallback</li>
-                                <li>Firmware changes break TPM unlock (password required)</li>
-                                <li>Both boot images must be regenerated</li>
-                                <li>Keep LUKS password secure for recovery</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
+            <!-- ARCHITECTURE -->
             <section id="architecture" class="wiki-section">
                 <h2>Architecture</h2>
                                 
@@ -1173,7 +1181,7 @@ compress=zstd,space_cache=v2,autodefrag</code></pre>
                     </ul>
                 </div>
 
-                    <div id="filesystem">
+                <div id="filesystem">
                     <h3>Filesystem Structure</h3>
                     <p>ShaniOS uses Btrfs with a sophisticated subvolume layout:</p>
 
@@ -1336,8 +1344,6 @@ compress=zstd,space_cache=v2,autodefrag</code></pre>
                     </div>
                 </div>
 
-
-              
                 <div id="overlay-fs">
                     <h3>Overlay Filesystem</h3>
                     <p>OverlayFS enables writable /etc on read-only root.</p>
@@ -1412,8 +1418,8 @@ ls -la /data/overlay/etc/upper
 # Compare with base system
 diff -r /etc /data/overlay/etc/upper</code></pre>
                     </div>
+                </div>
 
-               
                 <div id="boot-process">
                     <h3>Boot Process</h3>
                     <p>Understanding how ShaniOS boots:</p>
@@ -1480,9 +1486,8 @@ diff -r /etc /data/overlay/etc/upper</code></pre>
                         </svg>
                         <p class="caption">Six-stage boot process from firmware to desktop</p>
                     </div>
-                </div>
-                
-                        <div class="note-box" role="note">
+
+                    <div class="note-box" role="note">
                         <div class="note-icon"><i class="fas fa-info-circle"></i></div>
                         <div class="note-content">
                             <p><strong>Important Notes:</strong></p>
@@ -1493,6 +1498,7 @@ diff -r /etc /data/overlay/etc/upper</code></pre>
                             </ul>
                         </div>
                     </div>
+
                     <h4>Bootloader Configuration</h4>
                     <p>ShaniOS uses systemd-boot with Unified Kernel Images (UKI):</p>
                     <ul>
@@ -1584,8 +1590,256 @@ systemd.volatile=state
                             <p><strong>Disk Space for Swapfile:</strong> If available disk space is less than RAM size, swapfile creation is skipped and the system uses zram for swap instead. Hibernation will not be available in this case.</p>
                         </div>
                     </div>
-           
+                </div>
+            </section>
 
+            <!-- SECURITY -->
+            <section id="security" class="wiki-section">
+                <h2>Security</h2>
+                
+                <div id="security-features">
+                    <h3>Security Features</h3>
+                    <p>ShaniOS implements defense-in-depth security:</p>
+                    
+                    <div class="card-container">
+                        <article class="card">
+                            <div class="card-icon">🔒</div>
+                            <h4>Immutable Root</h4>
+                            <p>Read-only filesystem prevents malware from modifying system files</p>
+                        </article>
+                        <article class="card">
+                            <div class="card-icon">🔐</div>
+                            <h4>Full-Disk Encryption</h4>
+                            <p>LUKS2 with argon2id protects data at rest</p>
+                        </article>
+                        <article class="card">
+                            <div class="card-icon">📦</div>
+                            <h4>App Sandboxing</h4>
+                            <p>Flatpak provides application isolation and permission control</p>
+                        </article>
+                        <article class="card">
+                            <div class="card-icon">🛡️</div>
+                            <h4>AppArmor MAC</h4>
+                            <p>Mandatory access control confines system services</p>
+                        </article>
+                        <article class="card">
+                            <div class="card-icon">🔥</div>
+                            <h4>Active Firewall</h4>
+                            <p>firewalld denies inbound connections by default</p>
+                        </article>
+                    </div>
+                </div>
+
+                <div id="secure-boot">
+                    <h3>Secure Boot Setup</h3>
+                    <p>ShaniOS supports UEFI Secure Boot via Machine Owner Keys (MOK).</p>
+                    
+                    <h4>Automatic Secure Boot Enrollment (If Enabled During Install)</h4>
+                    <p>If you enabled Secure Boot during installation:</p>
+                    <ol>
+                        <li>On first reboot, MOK Manager will appear automatically</li>
+                        <li>Select "Enroll MOK"</li>
+                        <li>Enter the password: <code>shanios</code></li>
+                        <li>Reboot to complete the enrollment</li>
+                        <li>Secure Boot will be active with ShaniOS keys enrolled</li>
+                    </ol>
+                    
+                    <div class="note-box" role="note">
+                        <div class="note-icon"><i class="fas fa-info-circle"></i></div>
+                        <div class="note-content">
+                            <p><strong>MOK (Machine Owner Key):</strong> This allows ShaniOS's signed bootloader and kernel to boot with Secure Boot enabled. The password "shanios" is only used during the one-time enrollment process and is not stored.</p>
+                        </div>
+                    </div>
+                    
+                    <h4>Manual Secure Boot Enablement</h4>
+                    <p>To enable Secure Boot after installation:</p>
+                    
+                    <div class="steps-container">
+                        <article class="step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h4>Import MOK Key</h4>
+                                <div class="code-block">
+                                    <pre><code>sudo mokutil --import /etc/secureboot/keys/MOK.der</code></pre>
+                                </div>
+                                <p>Set a one-time password when prompted</p>
+                            </div>
+                        </article>
+                        
+                        <article class="step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h4>Reboot and Enroll</h4>
+                                <p>MOK Manager appears on reboot. Select "Enroll MOK" and enter your password</p>
+                            </div>
+                        </article>
+                        
+                        <article class="step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h4>Enable in BIOS</h4>
+                                <p>Enter BIOS/UEFI settings and enable Secure Boot if still disabled</p>
+                            </div>
+                        </article>
+                        
+                        <article class="step">
+                            <div class="step-number">4</div>
+                            <div class="step-content">
+                                <h4>Verify Enrollment</h4>
+                                <div class="code-block">
+                                    <pre><code>sudo mokutil --list-enrolled</code></pre>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                    
+                    <div class="note-box" role="note">
+                        <div class="note-icon"><i class="fas fa-info-circle"></i></div>
+                        <div class="note-content">
+                            <p><strong>Note:</strong> If MOK Manager doesn't appear, repeat step 1 and reboot. It only triggers when a key is pending enrollment.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tpm-encryption">
+                    <h3>TPM-Based Encryption</h3>
+                    <p>Enroll your LUKS encryption key to TPM 2.0 for automatic unlocking.</p>
+                    
+                    <h4>Prerequisites</h4>
+                    <ul>
+                        <li>TPM 2.0 hardware module (enabled in BIOS/UEFI)</li>
+                        <li>LUKS2 encryption enabled during installation</li>
+                        <li><strong>Recommended:</strong> Secure Boot enabled for maximum security</li>
+                    </ul>
+                    
+                    <div class="warning-box" role="alert">
+                        <div class="warning-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                        <div class="warning-content">
+                            <p><strong>Security Warning:</strong> Without Secure Boot, attackers with physical access can replace your bootloader to steal the encryption key. With Secure Boot, TPM refuses to unlock if the system is tampered with.</p>
+                        </div>
+                    </div>
+                    
+                    <h4>Enrollment Process</h4>
+                    
+                    <div class="steps-container">
+                        <article class="step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h4>Verify TPM</h4>
+                                <div class="code-block">
+                                    <pre><code>systemd-cryptenroll --tpm2-device=list</code></pre>
+                                </div>
+                            </div>
+                        </article>
+                        
+                        <article class="step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h4>Check Secure Boot Status</h4>
+                                <div class="code-block">
+                                    <pre><code>mokutil --sb-state</code></pre>
+                                </div>
+                                <p>If disabled, consider enabling Secure Boot first</p>
+                            </div>
+                        </article>
+                        
+                        <article class="step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h4>Find Your LUKS Device</h4>
+                                <p>ShaniOS uses <code>/dev/mapper/shani_root</code> as the unlocked LUKS mapping. To find the underlying encrypted device:</p>
+                                <div class="code-block">
+                                    <pre><code># Get the physical encrypted device
+LUKS_DEVICE=$(sudo cryptsetup status shani_root | grep 'device:' | awk '{print $2}')
+echo "Your encrypted device is: $LUKS_DEVICE"
+
+# Example output: /dev/sda2 or /dev/nvme0n1p2</code></pre>
+                                </div>
+                            </div>
+                        </article>
+                        
+                        <article class="step">
+                            <div class="step-number">4</div>
+                            <div class="step-content">
+                                <h4>Enroll Encryption Key</h4>
+                                <p><strong>With Secure Boot (recommended):</strong></p>
+                                <div class="code-block">
+                                    <pre><code>LUKS_DEVICE=$(sudo cryptsetup status shani_root | grep 'device:' | awk '{print $2}')
+sudo systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=0+7 "$LUKS_DEVICE"</code></pre>
+                                </div>
+                                <p><strong>Without Secure Boot:</strong></p>
+                                <div class="code-block">
+                                    <pre><code>LUKS_DEVICE=$(sudo cryptsetup status shani_root | grep 'device:' | awk '{print $2}')
+sudo systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=0 "$LUKS_DEVICE"</code></pre>
+                                </div>
+                                <p>Enter your LUKS password when prompted</p>
+                            </div>
+                        </article>
+                        
+                        <article class="step">
+                            <div class="step-number">5</div>
+                            <div class="step-content">
+                                <h4>Regenerate Boot Images</h4>
+                                <p>Both @blue and @green must be updated:</p>
+                                <div class="code-block">
+                                    <pre><code>sudo gen-efi configure blue
+sudo gen-efi configure green</code></pre>
+                                </div>
+                            </div>
+                        </article>
+                        
+                        <article class="step">
+                            <div class="step-number">6</div>
+                            <div class="step-content">
+                                <h4>Test & Verify</h4>
+                                <p>Reboot. System should unlock automatically.</p>
+                                <div class="code-block">
+                                    <pre><code># Verify enrollment
+LUKS_DEVICE=$(sudo cryptsetup status shani_root | grep 'device:' | awk '{print $2}')
+sudo cryptsetup luksDump "$LUKS_DEVICE" | grep systemd-tpm2</code></pre>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                    
+                    <h4>Remove TPM Enrollment</h4>
+                    <p>To restore password-only unlocking:</p>
+                    <div class="code-block">
+                        <pre><code>LUKS_DEVICE=$(sudo cryptsetup status shani_root | grep 'device:' | awk '{print $2}')
+sudo systemd-cryptenroll --wipe-slot=tpm2 "$LUKS_DEVICE"
+sudo gen-efi configure blue
+sudo gen-efi configure green</code></pre>
+                    </div>
+                    
+                    <h4>Re-enroll After Enabling Secure Boot</h4>
+                    <p>If you enable Secure Boot after TPM enrollment:</p>
+                    <div class="code-block">
+                        <pre><code># Get the device
+LUKS_DEVICE=$(sudo cryptsetup status shani_root | grep 'device:' | awk '{print $2}')
+
+# Remove old enrollment
+sudo systemd-cryptenroll --wipe-slot=tpm2 "$LUKS_DEVICE"
+
+# Re-enroll with Secure Boot protection
+sudo systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=0+7 "$LUKS_DEVICE"
+
+# Update boot images
+sudo gen-efi configure blue
+sudo gen-efi configure green</code></pre>
+                    </div>
+                    
+                    <div class="note-box" role="note">
+                        <div class="note-icon"><i class="fas fa-info-circle"></i></div>
+                        <div class="note-content">
+                            <p><strong>Important:</strong></p>
+                            <ul>
+                                <li>Your LUKS password remains valid as fallback</li>
+                                <li>Firmware changes break TPM unlock (password required)</li>
+                                <li>Both boot images must be regenerated</li>
+                                <li>Keep LUKS password secure for recovery</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </section>
 
@@ -1750,8 +2004,7 @@ fwupdmgr update</code></pre>
                             <p><strong>No pacman:</strong> Traditional package management via pacman is not supported. The base system is immutable. Use Flatpak, containers, or AppImages for applications.</p>
                         </div>
                     </div>
-                </div>
-                    
+
                     <h4>Installing Flatpak Applications</h4>
                     <div class="code-block">
                         <pre><code># Search for applications
@@ -1826,7 +2079,6 @@ podman compose up -d</code></pre>
                     <h4>Android Applications</h4>
                     <p>Waydroid is pre-installed. Launch from Applications menu and complete setup wizard.</p>
 
-
                     <h4>Editing System Configuration</h4>
                     <p>The /etc directory uses overlay filesystem, allowing modifications:</p>
                     <div class="code-block">
@@ -1836,11 +2088,8 @@ sudo nano /etc/some-config-file
 # Changes are stored in /data/overlay/etc/upper
 # and persist across system updates</code></pre>
                     </div>
-
-
-
-                
-
+                </div>
+            </section>
 
             <!-- WEBHOSTING -->
             <section id="webhosting" class="wiki-section">
