@@ -62,6 +62,8 @@
                     </a>
                     <ul class="submenu">
                         <li><a href="#what-is-shanios">What is ShaniOS?</a></li>
+                        <li><a href="#whats-included">What's Included</a></li>
+                        <li><a href="#user-configuration">User Configuration</a></li>
                         <li><a href="#system-optimizations">System Optimizations</a></li>
                         <li><a href="#key-concepts">Key Concepts</a></li>
                         <li><a href="#understanding-immutability">Understanding Immutability</a></li>
@@ -219,47 +221,162 @@
                         </svg>
                         <p class="caption">Immutable systems protect core files from modification, ensuring reliability and security</p>
                     </div>
-
-                    <h4>What's Included</h4>
-                    <p>ShaniOS comes pre-configured with everything you need:</p>
+                  <div id="whats-included">
+                    <h2>1. What's Included</h2>
+                    <p>ShaniOS comes fully equipped with a comprehensive software stack, carefully curated for desktop computing, development, gaming, and professional workloads. Everything works out of the box—no configuration required.</p>
+                    
+                    <h3>System Foundation</h3>
                     <ul>
-                        <li><strong>Base:</strong> Arch Linux foundation, Btrfs filesystem, systemd-boot</li>
-                        <li><strong>Desktop:</strong> GNOME or KDE Plasma (chosen at download)</li>
-                        <li><strong>Applications:</strong> Vivaldi Browser, OnlyOffice, Gear Lever</li>
-                        <li><strong>Containers:</strong> Podman, Distrobox, LXC, systemd-nspawn, Pods GUI</li>
-                        <li><strong>Android:</strong> Waydroid pre-installed and configured</li>
-                        <li><strong>Drivers:</strong> Intel/AMD/NVIDIA graphics, CUPS printing, SANE scanning</li>
-                        <li><strong>Fonts:</strong> Complete multilingual support including Indian languages and CJK</li>
-                        <li><strong>Security:</strong> AppArmor, firewalld, LUKS2 encryption (optional)</li>
-                        <li><strong>Shell:</strong> Zsh as default user shell with enhanced features</li>
+                        <li><strong>Base:</strong> Arch Linux with rolling release updates, latest stable kernel with Intel/AMD microcode</li>
+                        <li><strong>Firmware:</strong> Comprehensive collection (linux-firmware, broadcom-wl, SOF audio, ALSA firmware)</li>
+                        <li><strong>Bootloader:</strong> systemd-boot with UEFI and Secure Boot support (Shim, sbctl, mokutil, sbsigntools)</li>
+                        <li><strong>Boot Graphics:</strong> Plymouth with BGRT theme (displays manufacturer logo)</li>
+                        <li><strong>Initramfs:</strong> dracut with boot management tools (efibootmgr, efitools, edk2-shell)</li>
+                        <li><strong>Filesystem:</strong> Btrfs with compression, CoW snapshots, automated maintenance (scrubbing, balancing, defrag, TRIM)</li>
+                        <li><strong>Volume Management:</strong> LVM2, software RAID (mdadm, dmraid)</li>
+                        <li><strong>Encryption:</strong> LUKS2 (cryptsetup), fscrypt, ecryptfs-utils, gocryptfs</li>
+                        <li><strong>Additional Filesystems:</strong> ext4, XFS, F2FS, exFAT, NTFS (full read/write), FAT</li>
+                        <li><strong>Network Storage:</strong> NFS client/server, Samba/CIFS, SSHFS</li>
+                        <li><strong>Advanced Storage:</strong> nvme-cli, ndctl (persistent memory), quota-tools, squashfs-tools, fuse-overlayfs, nbd, duperemove, compsize</li>
+                        <li><strong>Updates:</strong> Atomic deployment via shani-deploy with automatic rollback, GUI notifications (yad)</li>
+                        <li><strong>Firmware Updates:</strong> fwupd with automatic checks for UEFI, Thunderbolt, storage, peripherals</li>
                     </ul>
 
-                    <h4>Default User Groups</h4>
-                    <p>The primary user is automatically added to these groups for hardware and system access:</p>
+                    <h3>Security</h3>
                     <ul>
-                        <li><strong>wheel:</strong> Administrative privileges via sudo</li>
-                        <li><strong>input:</strong> Direct input device access</li>
-                        <li><strong>realtime:</strong> Real-time process scheduling (audio/video)</li>
+                        <li><strong>Access Control:</strong> AppArmor MAC enabled by default</li>
+                        <li><strong>Firewall:</strong> firewalld active with pre-configured rules for KDE Connect/GSConnect and Waydroid</li>
+                        <li><strong>Intrusion Prevention:</strong> fail2ban available</li>
+                        <li><strong>TPM:</strong> tpm2-tools and tpm2-tss for hardware security</li>
+                        <li><strong>Network Security:</strong> OpenSSH, Tailscale mesh VPN, cloudflared tunnels</li>
+                    </ul>
+
+                    <h3>Desktop & Applications</h3>
+                    <ul>
+                        <li><strong>Desktop Environment:</strong> GNOME or KDE Plasma (chosen at download), Wayland with X11 compatibility</li>
+                        <li><strong>Pre-installed Apps:</strong> Vivaldi browser (full codecs), OnlyOffice suite, Gear Lever (Flatpak GUI)</li>
+                        <li><strong>Package Formats:</strong> Flatpak (primary, auto-updates)</li>
+                        <li><strong>Containers:</strong> Podman with Docker compatibility (podman-docker, podman-compose), Pods GUI, Distrobox, LXC, systemd-nspawn, fuse-overlayfs</li>
+                        <li><strong>Android:</strong> Waydroid pre-configured with firewall rules, android-tools (adb, fastboot), android-udev</li>
+                        <li><strong>VM Guest Tools:</strong> spice-vdagent, qemu-guest-agent, virtualbox-guest-utils, open-vm-tools</li>
+                    </ul>
+
+                    <h3>Multimedia</h3>
+                    <ul>
+                        <li><strong>Audio:</strong> PipeWire with ALSA/JACK/PulseAudio compatibility (pipewire-alsa, pipewire-jack, pipewire-pulse), plugins (V4L2, libcamera, Zeroconf), WirePlumber session manager, realtime-privileges</li>
+                        <li><strong>Video:</strong> Complete GStreamer plugins (base, good, bad, ugly) with hardware acceleration (VA-API, PipeWire, libcamera), speech synthesis (espeak)</li>
+                    </ul>
+
+                    <h3>Graphics Drivers</h3>
+                    <ul>
+                        <li><strong>OpenGL:</strong> Mesa 3D latest stack</li>
+                        <li><strong>Vulkan:</strong> Intel (vulkan-intel), AMD (vulkan-radeon), NVIDIA (vulkan-nouveau), software (vulkan-swrast), VMs (vulkan-virtio), DirectX (vulkan-dzn), Qualcomm (vulkan-freedreno), Apple Silicon (vulkan-asahi), Android (vulkan-gfxstream), debugging (vulkan-mesa-layers)</li>
+                        <li><strong>Hardware Acceleration:</strong> Intel (libva-intel-driver, intel-media-driver, vpl-gpu-rt), NVIDIA (nvidia-open, nvidia-utils, nvidia-prime, libva-nvidia-driver), generic (libvdpau-va-gl)</li>
+                        <li><strong>Hybrid Graphics:</strong> nvidia-prime, switcheroo-control for dual-GPU laptops</li>
+                        <li><strong>Power:</strong> power-profiles-daemon (performance/balanced/power-saver)</li>
+                    </ul>
+
+                    <h3>Printing & Scanning</h3>
+                    <ul>
+                        <li><strong>Print System:</strong> CUPS with filters, PDF printer (cups-pdf), network browsing (cups-browsed), PolicyKit (cups-pk-helper), ipp-usb (driverless), Avahi (auto-discovery), ghostscript, a2ps</li>
+                        <li><strong>Drivers:</strong> Foomatic databases, Gutenprint, HP (hplip-minimal), Epson (epson-inkjet-printer-escpr2), Brother (brlaser), Canon (cnijfilter2), generic (foo2zjs-nightly, splix)</li>
+                        <li><strong>Scanning:</strong> SANE with network support (sane-airscan), color management (colord-sane, argyllcms)</li>
+                    </ul>
+
+                    <h3>Networking</h3>
+                    <ul>
+                        <li><strong>Connection Management:</strong> NetworkManager with GUI (nm-connection-editor), ModemManager (3G/4G/5G), wpa_supplicant, wireless-regdb, wireless_tools, usb_modeswitch</li>
+                        <li><strong>VPN:</strong> OpenVPN, WireGuard, L2TP, PPTP, strongSwan (IPsec), OpenConnect (Cisco), SSTP, Fortinet (openfortivpn)</li>
+                        <li><strong>DNS & Services:</strong> dnsmasq, openresolv, nss-mdns, Avahi, bind, pacrunner, openldap</li>
+                        <li><strong>Web Server:</strong> Caddy with auto-HTTPS</li>
+                        <li><strong>Diagnostics:</strong> nmap, tcpdump, iperf3, mtr, iftop, ethtool, traceroute, whois</li>
+                        <li><strong>Utilities:</strong> curl, wget, aria2, rsync, zsync, bridge-utils, openbsd-netcat, net-tools, inetutils</li>
+                    </ul>
+
+                    <h3>Gaming Hardware</h3>
+                    <ul>
+                        <li><strong>Controllers:</strong> game-devices-udev (8BitDo, PlayStation DS3/DS4/DualSense/Edge, Xbox 360/One/Series, Nintendo Switch Pro/Joy-Cons/GameCube, Stadia, Shield, Steam, Razer, Nacon, Hori, PowerA, PDP, Mad Catz, Astro C40), fight sticks, VR (Vive, PSVR, Index/SteamVR), flight sticks, uinput for mappers</li>
+                        <li><strong>Racing Wheels:</strong> Logitech (G29/G920/G923/PRO/G25/G27/Driving Force/MOMO), Thrustmaster (T150/T300RS/T500RS/T248/TS-XW/TS-PC), Fanatec with force feedback and deadzone removal</li>
+                        <li><strong>RGB Peripherals:</strong> OpenRGB udev rules for keyboards, mice, mousepads, accessories (ASUS, Corsair, Razer, SteelSeries, Logitech, MSI, Cooler Master, NZXT)</li>
+                        <li><strong>Gaming Mice:</strong> libratbag (ratbagd) for DPI, buttons, LEDs</li>
+                        <li><strong>Input Mapping:</strong> AntiMicroX with uinput access</li>
+                        <li><strong>Legacy:</strong> linuxconsole (joysticks), inputattach (serial devices)</li>
+                    </ul>
+
+                    <h3>Wireless & Connectivity</h3>
+                    <ul>
+                        <li><strong>Bluetooth:</strong> Complete Bluez stack (bluez-utils, bluez-hid2hci, bluez-cups, bluez-plugins, bluez-obex, bluez-mesh, bluez-tools)</li>
+                        <li><strong>Biometrics:</strong> fprintd (fingerprint readers)</li>
+                        <li><strong>Smart Cards:</strong> opensc, ccid, acsccid, libnfc (NFC), libfido2 (FIDO2 keys)</li>
+                        <li><strong>Mobile:</strong> usbmuxd (iOS connectivity/tethering)</li>
+                        <li><strong>Sensors:</strong> iio-sensor-proxy (accelerometer, ambient light), geoclue (geolocation), gpsd (GPS), lirc (IR remotes)</li>
+                        <li><strong>Advanced:</strong> bolt (Thunderbolt authorization), apcupsd (UPS monitoring), libdvdcss (encrypted DVD)</li>
+                    </ul>
+
+                    <h3>Development Tools</h3>
+                    <ul>
+                        <li><strong>Version Control:</strong> Git, Subversion, Mercurial</li>
+                        <li><strong>Editors:</strong> Vim, Vi, Nano, Micro, ed, Tmux (multiplexer)</li>
+                        <li><strong>Languages:</strong> Python with pip, full Arch ecosystem access</li>
+                        <li><strong>Debugging:</strong> strace, lsof, elfutils</li>
+                        <li><strong>Graphics Dev:</strong> vulkan-tools, mesa-utils, clinfo (OpenCL)</li>
+                    </ul>
+
+                    <h3>System Utilities</h3>
+                    <ul>
+                        <li><strong>Core Tools:</strong> sudo, which, less, diffutils, patch, time, gnupg, man-db, plocate, grep, sed, awk</li>
+                        <li><strong>Compression:</strong> 7zip, zip/unzip, unrar, unarchiver, unace, arj, lrzip, lzop</li>
+                        <li><strong>Monitoring:</strong> htop, inxi, dmidecode, tree, ncdu, sysstat</li>
+                        <li><strong>Automation:</strong> cronie, logrotate, expect, dialog, pv, jq</li>
+                        <li><strong>Misc:</strong> bc, words, lynx, bsd-games, texinfo</li>
+                    </ul>
+
+                    <h3>Shell Experience</h3>
+                    <ul>
+                        <li><strong>Default:</strong> Zsh with fish-style syntax highlighting, autosuggestions, history substring search</li>
+                        <li><strong>Prompt:</strong> Starship (git integration, environment detection for Python/Node.js/Rust)</li>
+                        <li><strong>Smart Search:</strong> McFly (neural network command history)</li>
+                        <li><strong>Fuzzy Finder:</strong> FZF (Ctrl+R history, Ctrl+T files, Alt+C directories)</li>
+                        <li><strong>Alternatives:</strong> Bash and Fish with full feature parity</li>
+                    </ul>
+
+                    <h3>Fonts & Accessibility</h3>
+                    <ul>
+                        <li><strong>Fonts:</strong> Noto Sans/Serif/Mono, CJK (70-noto-cjk.conf), Emoji (75-noto-color-emoji.conf), Indian languages (90-indian-fonts.conf)</li>
+                        <li><strong>Input Methods:</strong> IBus with typing-booster, Chinese (ibus-libpinyin), Japanese (ibus-anthy), Korean (ibus-hangul), Vietnamese (ibus-unikey)</li>
+                        <li><strong>Accessibility:</strong> Orca (screen reader), espeakup (console speech), brltty (braille displays)</li>
+                        <li><strong>Localization:</strong> glibc-locales, lsb-release</li>
+                    </ul>
+                  </div>
+                    
+                  <div id="user-configuration">
+                    <h2>2. User Configuration</h2>
+                    <p>The primary user is automatically configured with appropriate permissions during installation.</p>
+
+                    <h3>User Groups</h3>
+                    <ul>
+                        <li><strong>wheel:</strong> Sudo privileges for system administration</li>
+                        <li><strong>input:</strong> Direct input device access (keyboards, mice, controllers)</li>
+                        <li><strong>realtime:</strong> Real-time scheduling, HPET/RTC access for audio production and low-latency gaming</li>
                         <li><strong>video:</strong> GPU and video hardware access</li>
-                        <li><strong>sys:</strong> System hardware monitoring</li>
-                        <li><strong>cups & lp:</strong> Printer management</li>
-                        <li><strong>libvirt & kvm:</strong> Virtual machine management</li>
+                        <li><strong>sys:</strong> Hardware monitoring and sensor access</li>
+                        <li><strong>cups, lp:</strong> Printer management and job submission</li>
+                        <li><strong>libvirt, kvm:</strong> Virtual machine management</li>
                         <li><strong>scanner:</strong> Scanner device access</li>
                     </ul>
 
-                    <h4>Pre-configured Firewall Rules</h4>
-                    <p>ShaniOS configures firewall rules during installation for essential services:</p>
+                    <h3>Firewall Rules</h3>
                     <ul>
-                        <li><strong>KDE Connect/GSConnect:</strong> Ports automatically opened in public zone for device synchronization</li>
-                        <li><strong>Waydroid:</strong> DNS (port 53/udp, 67/udp), packet forwarding, and waydroid0 interface added to trusted zone</li>
+                        <li><strong>KDE Connect/GSConnect:</strong> Ports opened in public zone for device pairing, file transfer, notifications, remote control</li>
+                        <li><strong>Waydroid:</strong> DNS (53/udp, 67/udp), packet forwarding enabled, waydroid0 in trusted zone</li>
                     </ul>
                 </div>
-
+            </div>
                 <div id="system-optimizations">
-                    <h3>System Optimizations</h3>
+                    <h2>3. System Optimizations</h2>
                     <p>ShaniOS includes extensive performance, gaming, and reliability optimizations out of the box, eliminating the need for manual tweaking. These enterprise-grade optimizations are pre-configured and active from first boot.</p>
 
-                    <h4>Memory & Storage Management</h4>
+                    <h3>Memory & Storage Management</h3>
                     <ul>
                         <li><strong>ZRAM Compression:</strong> Automatic RAM compression using the zstd algorithm (configured to use full RAM size) provides improved memory efficiency without requiring swap partitions. The system dynamically allocates compressed swap in RAM, reducing disk I/O and extending SSD lifespan.</li>
                         <li><strong>Optimized Swappiness:</strong> Tuned to 133 for balanced memory management on modern systems. This value encourages the kernel to use compressed ZRAM swap before evicting clean page cache, maintaining system responsiveness under memory pressure.</li>
@@ -268,7 +385,7 @@
                         <li><strong>Optimized Page Lock Unfairness:</strong> Set to 1 to reduce lock contention and improve multi-threaded application performance, particularly beneficial for databases and high-concurrency workloads.</li>
                     </ul>
 
-                    <h4>Gaming & Performance Optimizations</h4>
+                    <h3>Gaming & Performance Optimizations</h3>
                     <p>ShaniOS is optimized for gaming performance with multiple layers of system tuning:</p>
                     
                     <p><strong>Gaming Hardware Support:</strong></p>
@@ -339,7 +456,7 @@
                         <li><strong>High-Precision Timers:</strong> HPET and RTC frequencies increased to 3072 Hz (from default 64 Hz) for superior timing accuracy. This reduces input lag and improves frame pacing in games requiring precise timing, particularly beneficial for rhythm games and competitive shooters.</li>
                     </ul>
 
-                    <h4>Process Management & Responsiveness</h4>
+                    <h3>Process Management & Responsiveness</h3>
                     <p>ShaniOS enables several system services for intelligent resource management:</p>
                     <ul>
                         <li><strong>Ananicy-cpp:</strong> Automatic process priority management service with game-aware rules (enabled by default). Background tasks are automatically deprioritized when games or media applications are active, ensuring smooth performance without manual nice/renice commands.</li>
@@ -349,7 +466,7 @@
                         <li><strong>Fast Shutdown:</strong> Reduced timeout values (10s for stop, 10s for abort) ensure quick system shutdowns without waiting for unresponsive services. Services that fail to stop gracefully are automatically killed after the timeout.</li>
                     </ul>
 
-                    <h4>Security Hardening</h4>
+                    <h3>Security Hardening</h3>
                     <ul>
                         <li><strong>AppArmor Mandatory Access Control:</strong>
                             <ul>
@@ -378,7 +495,7 @@
                         </li>
                     </ul>
 
-                    <h4>Boot & System Efficiency</h4>
+                    <h3>Boot & System Efficiency</h3>
                     <ul>
                         <li><strong>Plymouth (BGRT Theme):</strong> Smooth graphical boot experience with the BGRT (Boot Graphics Resource Table) theme enabled by default. Plymouth provides a polished boot animation while hiding technical boot messages, presenting a clean interface for password entry during LUKS unlock. The BGRT theme displays your manufacturer's logo for a seamless firmware-to-OS transition.</li>
                         <li><strong>Journal Size Limit:</strong> SystemD journal capped at 50MB to prevent excessive disk usage from log accumulation. This is particularly important on systems with limited storage, while still maintaining sufficient logs for troubleshooting recent issues.</li>
@@ -397,7 +514,7 @@
                         </li>
                     </ul>
                     
-                    <h4>Hardware & Peripheral Support</h4>
+                    <h3>Hardware & Peripheral Support</h3>
                     <p>ShaniOS enables comprehensive hardware support services by default:</p>
                     <ul>
                         <li><strong>Printing:</strong>
@@ -467,7 +584,7 @@
                         </li>
                     </ul>
 
-                    <h4>Enhanced Shell Experience</h4>
+                    <h3>Enhanced Shell Experience</h3>
                     <p>ShaniOS provides a modern, feature-rich shell environment that rivals the best developer setups:</p>
                     <ul>
                         <li><strong>Zsh as Default Shell:</strong> Powerful shell with advanced completion, globbing, and command-line editing. Zsh provides better defaults than Bash while maintaining compatibility with Bash scripts.</li>
@@ -484,7 +601,7 @@
                         <li><strong>Multiple Shell Support:</strong> Bash and Fish shells included with completion support. Switch shells anytime with <code>chsh</code> while maintaining consistent functionality across all options.</li>
                     </ul>
 
-                    <h4>Automated Maintenance</h4>
+                    <h3>Automated Maintenance</h3>
                     <p>ShaniOS performs regular background maintenance to keep your system healthy without manual intervention. These systemd timers and services are enabled by default:</p>
                     <ul>
                         <li><strong>btrfs-scrub.timer:</strong> Monthly scrubbing to detect and repair data corruption using filesystem checksums</li>
