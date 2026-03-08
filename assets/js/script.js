@@ -17,29 +17,41 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* =====================================================
-   SIDEBAR + MOBILE NAV (Overlay, Escape, Focus Trap)
-===================================================== */
+ *  SIDEBAR + MOBILE NAV (Overlay, Escape, Focus Trap)
+ = *==================================================== */
 function initNavigation() {
   const sidebar = document.querySelector('.sidebar');
   const container = document.querySelector('.wiki-container');
   if (!sidebar || !container) return;
 
   /* ---------- Dropdowns ---------- */
-  document.querySelectorAll('.dropdown-link').forEach(link => {
+  const dropdownLinks = document.querySelectorAll('.dropdown-link');
+
+  dropdownLinks.forEach(link => {
     link.setAttribute('aria-expanded', 'false');
 
     link.addEventListener('click', e => {
       e.preventDefault();
-      const expanded = link.getAttribute('aria-expanded') === 'true';
-      link.setAttribute('aria-expanded', String(!expanded));
 
       const submenu = link.nextElementSibling;
-      if (!submenu) return;
+      const expanded = link.getAttribute('aria-expanded') === 'true';
 
-      submenu.classList.toggle('active');
-      submenu.style.height = submenu.classList.contains('active')
-        ? `${submenu.scrollHeight}px`
-        : '0px';
+      /* close all menus */
+      document.querySelectorAll('.dropdown-link').forEach(l => {
+        l.setAttribute('aria-expanded', 'false');
+      });
+
+      document.querySelectorAll('.submenu').forEach(menu => {
+        menu.classList.remove('active');
+        menu.style.height = '0px';
+      });
+
+      /* open selected */
+      if (!expanded && submenu) {
+        link.setAttribute('aria-expanded', 'true');
+        submenu.classList.add('active');
+        submenu.style.height = submenu.scrollHeight + 'px';
+      }
     });
   });
 
@@ -73,9 +85,9 @@ function initNavigation() {
     toggle.querySelector('i')?.classList.replace('fa-times', 'fa-bars');
   };
 
-  toggle.addEventListener('click', () =>
-    sidebar.classList.contains('active') ? closeMenu() : openMenu()
-  );
+  toggle.addEventListener('click', () => {
+    sidebar.classList.contains('active') ? closeMenu() : openMenu();
+  });
 
   overlay.addEventListener('click', closeMenu);
 
@@ -106,8 +118,8 @@ function initNavigation() {
 }
 
 /* =====================================================
-   SEARCH (Wiki Headings)
-===================================================== */
+ *  SEARCH (Wiki Headings)
+ = *==================================================== */
 function initSearch() {
   const box = document.querySelector('.search-box');
   if (!box) return;
@@ -124,6 +136,7 @@ function initSearch() {
   input.addEventListener('input', () => {
     clearTimeout(debounce);
     const q = input.value.trim().toLowerCase();
+
     if (q.length < 2) {
       results.style.display = 'none';
       return;
@@ -131,24 +144,25 @@ function initSearch() {
 
     debounce = setTimeout(() => {
       const matches = [];
+
       document
-        .querySelectorAll('.wiki-section h2, .wiki-section h3, .wiki-section h4')
-        .forEach(h => {
-          if (h.textContent.toLowerCase().includes(q)) {
-            const section = h.closest('[id]');
-            if (section?.id) {
-              matches.push({ text: h.textContent, id: section.id });
-            }
+      .querySelectorAll('.wiki-section h2, .wiki-section h3, .wiki-section h4')
+      .forEach(h => {
+        if (h.textContent.toLowerCase().includes(q)) {
+          const section = h.closest('[id]');
+          if (section?.id) {
+            matches.push({ text: h.textContent, id: section.id });
           }
-        });
+        }
+      });
 
       results.innerHTML = matches.length
-        ? `<ul>${matches
-            .map(m => `<li><a href="#${m.id}">${m.text}</a></li>`)
-            .join('')}</ul>`
+      ? `<ul>${matches
+        .map(m => `<li><a href="#${m.id}">${m.text}</a></li>`)
+        .join('')}</ul>`
         : `<p style="padding:8px">No results</p>`;
 
-      results.style.display = 'block';
+        results.style.display = 'block';
     }, 200);
   });
 
@@ -156,12 +170,12 @@ function initSearch() {
     if (!box.contains(e.target)) results.style.display = 'none';
   });
 
-  button?.addEventListener('click', e => e.preventDefault());
+    button?.addEventListener('click', e => e.preventDefault());
 }
 
 /* =====================================================
-   FAQ ACCORDION
-===================================================== */
+ *  FAQ ACCORDION
+ = *==================================================== */
 function initFAQ() {
   document.querySelectorAll('.faq-item').forEach(item => {
     const q = item.querySelector('.faq-question');
@@ -176,8 +190,7 @@ function initFAQ() {
       item.setAttribute('aria-expanded', String(!open));
       item.classList.toggle('active');
       a.style.maxHeight = open ? '0' : `${a.scrollHeight}px`;
-      
-      // Toggle icon
+
       if (icon) {
         if (open) {
           icon.classList.replace('fa-minus', 'fa-plus');
@@ -190,22 +203,24 @@ function initFAQ() {
 }
 
 /* =====================================================
-   SCROLLSPY (Improved thresholds)
-===================================================== */
+ *  SCROLLSPY
+ = *==================================================== */
 function initScrollSpy() {
   const sections = document.querySelectorAll('.wiki-section[id]');
   const links = document.querySelectorAll('.nav-links a[href^="#"]');
+
   if (!sections.length || !links.length) return;
 
   const observer = new IntersectionObserver(
     entries => {
       entries.forEach(entry => {
         if (!entry.isIntersecting) return;
+
         links.forEach(link =>
-          link.classList.toggle(
-            'active',
-            link.getAttribute('href') === `#${entry.target.id}`
-          )
+        link.classList.toggle(
+          'active',
+          link.getAttribute('href') === `#${entry.target.id}`
+        )
         );
       });
     },
@@ -214,10 +229,10 @@ function initScrollSpy() {
 
   sections.forEach(s => observer.observe(s));
 
-  /* Smooth scroll with header offset */
   links.forEach(link => {
     link.addEventListener('click', e => {
       e.preventDefault();
+
       const target = document.querySelector(link.getAttribute('href'));
       if (!target) return;
 
@@ -229,7 +244,6 @@ function initScrollSpy() {
         behavior: 'smooth'
       });
 
-      // Close mobile menu if open
       const sidebar = document.querySelector('.sidebar');
       if (sidebar?.classList.contains('active')) {
         document.querySelector('.menu-overlay')?.click();
@@ -239,32 +253,31 @@ function initScrollSpy() {
 }
 
 /* =====================================================
-   RESPONSIVE ENHANCEMENTS
-===================================================== */
+ *  RESPONSIVE ENHANCEMENTS
+ = *==================================================== */
 function initResponsiveEnhancements() {
   document.querySelectorAll('table').forEach(t => {
     if (t.parentElement.classList.contains('table-responsive')) return;
+
     const wrap = document.createElement('div');
     wrap.className = 'table-responsive';
+
     t.before(wrap);
     wrap.appendChild(t);
   });
 
   document.querySelectorAll('img').forEach(img => {
     img.classList.add('img-fluid');
-    if (!img.getAttribute('alt')) {
-      img.setAttribute('alt', '');
-    }
+    if (!img.getAttribute('alt')) img.setAttribute('alt', '');
   });
 }
 
 /* =====================================================
-   BACK TO TOP (Unified behavior)
-===================================================== */
+ *  BACK TO TOP
+ = *==================================================== */
 function initBackToTop() {
   let btn = document.querySelector('.back-to-top');
-  
-  // If button already exists in HTML, use it
+
   if (!btn) {
     btn = document.createElement('button');
     btn.className = 'back-to-top';
@@ -279,25 +292,26 @@ function initBackToTop() {
   });
 
   btn.addEventListener('click', () =>
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+  window.scrollTo({ top: 0, behavior: 'smooth' })
   );
 }
 
 /* =====================================================
-   SYNTAX HIGHLIGHTING
-===================================================== */
+ *  SYNTAX HIGHLIGHTING
+ = *==================================================== */
 function initSyntaxHighlighting() {
   if (window.hljs) hljs.highlightAll();
 }
 
 /* =====================================================
-   PRINT SUPPORT
-===================================================== */
+ *  PRINT SUPPORT
+ = *==================================================== */
 function initPrintSupport() {
   const header = document.querySelector('.header');
   if (!header) return;
 
   let actions = document.querySelector('.header-actions');
+
   if (!actions) {
     actions = document.createElement('div');
     actions.className = 'header-actions';
@@ -307,19 +321,21 @@ function initPrintSupport() {
   const btn = document.createElement('button');
   btn.innerHTML = '<i class="fas fa-print"></i> Print';
   btn.setAttribute('aria-label', 'Print page');
+
   actions.appendChild(btn);
 
   btn.addEventListener('click', () => window.print());
 }
 
 /* =====================================================
-   THEME SWITCHER
-===================================================== */
+ *  THEME SWITCHER
+ = *==================================================== */
 function initThemeSwitcher() {
   const iconSun = '<i class="fas fa-sun"></i>';
   const iconMoon = '<i class="fas fa-moon"></i>';
 
   let btn = document.querySelector('.theme-switcher');
+
   if (!btn) {
     btn = document.createElement('button');
     btn.className = 'theme-switcher';
@@ -333,35 +349,30 @@ function initThemeSwitcher() {
 
   document.documentElement.setAttribute('data-theme', theme);
   btn.innerHTML = theme === 'dark' ? iconSun : iconMoon;
-  btn.setAttribute('aria-label', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
 
   btn.addEventListener('click', () => {
     const next =
-      document.documentElement.getAttribute('data-theme') === 'dark'
-        ? 'light'
-        : 'dark';
+    document.documentElement.getAttribute('data-theme') === 'dark'
+    ? 'light'
+    : 'dark';
 
     document.documentElement.setAttribute('data-theme', next);
     localStorage.setItem('shanios-theme', next);
+
     btn.innerHTML = next === 'dark' ? iconSun : iconMoon;
-    btn.setAttribute('aria-label', next === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
   });
 }
 
 /* =====================================================
-   COPYRIGHT YEAR (ROBUST + SAFE)
-===================================================== */
+ *  COPYRIGHT YEAR
+ = *==================================================== */
 function initCopyrightYear() {
   const year = new Date().getFullYear();
 
-  // Preferred modern selector (if you add later)
   document.querySelectorAll('[data-current-year]').forEach(el => {
     el.textContent = year;
   });
 
-  // Current footer (ID-based)
   const legacy = document.getElementById('copyright-year');
-  if (legacy) {
-    legacy.textContent = year;
-  }
+  if (legacy) legacy.textContent = year;
 }

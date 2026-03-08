@@ -189,10 +189,6 @@ code {
   transition: height var(--transition);
 }
 
-.submenu.active {
-  height: auto;
-}
-
 .submenu li {
   margin-bottom: 0.25rem;
 }
