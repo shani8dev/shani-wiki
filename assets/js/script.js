@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 /* =====================================================
  *  SIDEBAR + MOBILE NAV (Overlay, Escape, Focus Trap)
- = *==================================================== */
+ * = *==================================================== */
 function initNavigation() {
   const sidebar = document.querySelector('.sidebar');
   const container = document.querySelector('.wiki-container');
@@ -119,7 +119,7 @@ function initNavigation() {
 
 /* =====================================================
  *  SEARCH (Wiki Headings)
- = *==================================================== */
+ * = *==================================================== */
 function initSearch() {
   const box = document.querySelector('.search-box');
   if (!box) return;
@@ -175,7 +175,7 @@ function initSearch() {
 
 /* =====================================================
  *  FAQ ACCORDION
- = *==================================================== */
+ * = *==================================================== */
 function initFAQ() {
   document.querySelectorAll('.faq-item').forEach(item => {
     const q = item.querySelector('.faq-question');
@@ -204,7 +204,7 @@ function initFAQ() {
 
 /* =====================================================
  *  SCROLLSPY
- = *==================================================== */
+ * = *==================================================== */
 function initScrollSpy() {
   const sections = document.querySelectorAll('.wiki-section[id]');
   const links = document.querySelectorAll('.nav-links a[href^="#"]');
@@ -254,7 +254,7 @@ function initScrollSpy() {
 
 /* =====================================================
  *  RESPONSIVE ENHANCEMENTS
- = *==================================================== */
+ * = *==================================================== */
 function initResponsiveEnhancements() {
   document.querySelectorAll('table').forEach(t => {
     if (t.parentElement.classList.contains('table-responsive')) return;
@@ -274,7 +274,7 @@ function initResponsiveEnhancements() {
 
 /* =====================================================
  *  BACK TO TOP
- = *==================================================== */
+ * = *==================================================== */
 function initBackToTop() {
   let btn = document.querySelector('.back-to-top');
 
@@ -298,14 +298,14 @@ function initBackToTop() {
 
 /* =====================================================
  *  SYNTAX HIGHLIGHTING
- = *==================================================== */
+ * = *==================================================== */
 function initSyntaxHighlighting() {
   if (window.hljs) hljs.highlightAll();
 }
 
 /* =====================================================
  *  PRINT SUPPORT
- = *==================================================== */
+ * = *==================================================== */
 function initPrintSupport() {
   const header = document.querySelector('.header');
   if (!header) return;
@@ -329,7 +329,7 @@ function initPrintSupport() {
 
 /* =====================================================
  *  THEME SWITCHER
- = *==================================================== */
+ * = *==================================================== */
 function initThemeSwitcher() {
   const iconSun = '<i class="fas fa-sun"></i>';
   const iconMoon = '<i class="fas fa-moon"></i>';
@@ -365,7 +365,7 @@ function initThemeSwitcher() {
 
 /* =====================================================
  *  COPYRIGHT YEAR
- = *==================================================== */
+ * = *==================================================== */
 function initCopyrightYear() {
   const year = new Date().getFullYear();
 

@@ -32,10 +32,11 @@
     <!-- Main CSS -->
     <link rel="stylesheet" href="assets/css/style.css">
 
-    <script src="assets/js/script.js"></script>
-
-    <!-- Font Awesome -->
+    <!-- Font Awesome — loaded before script.js so icons are available when JS runs -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js" defer></script>
+
+    <!-- Wiki JS — deferred so DOM is ready, runs after Font Awesome -->
+    <script src="assets/js/script.js" defer></script>
 </head>
 <body>
     <div class="wiki-container">
@@ -110,7 +111,8 @@
                         <li><a href="#security-features">Security Features</a></li>
                         <li><a href="#secure-boot">Secure Boot</a></li>
                         <li><a href="#luks-keyfile">LUKS After Installation</a></li>
-                        <li><a href="#tpm-encryption">TPM Encryption</a></li>
+                        <li><a href="#tpm-encryption">TPM2 Enrollment</a></li>
+                        <li><a href="#gen-efi-reference">gen-efi Reference</a></li>
                     </ul>
                 </li>
                 <li>
@@ -1518,23 +1520,41 @@
                     <h4>Downloading &amp; Verifying the ISO</h4>
                     <p>Download the Shanios ISO from <a href="https://shani.dev" target="_blank" rel="noopener noreferrer">shani.dev</a> or directly from SourceForge:</p>
                     <ul>
-                        <li><strong>GNOME Edition</strong> (2026.03.10, ~5.4 GB): <a href="https://sourceforge.net/projects/shanios/files/gnome/20260310/signed_shanios-gnome-2026.03.10-x86_64.iso/download" target="_blank" rel="noopener noreferrer">Download GNOME ISO</a> · <a href="https://sourceforge.net/projects/shanios/files/gnome/20260310/signed_shanios-gnome-2026.03.10-x86_64.iso.sha256/download" target="_blank" rel="noopener noreferrer">Download SHA256</a></li>
-                        <li><strong>KDE Plasma Edition</strong> (2026.03.10, ~7.6 GB): <a href="https://sourceforge.net/projects/shanios/files/plasma/20260310/signed_shanios-plasma-2026.03.10-x86_64.iso/download" target="_blank" rel="noopener noreferrer">Download KDE ISO</a> · <a href="https://sourceforge.net/projects/shanios/files/plasma/20260310/signed_shanios-plasma-2026.03.10-x86_64.iso.sha256/download" target="_blank" rel="noopener noreferrer">Download SHA256</a></li>
+                        <li><strong>GNOME Edition</strong> (2026.03.10, ~5.4 GB):
+                            <a href="https://sourceforge.net/projects/shanios/files/gnome/20260310/signed_shanios-gnome-2026.03.10-x86_64.iso/download" target="_blank" rel="noopener noreferrer">ISO</a> ·
+                            <a href="https://sourceforge.net/projects/shanios/files/gnome/20260310/signed_shanios-gnome-2026.03.10-x86_64.iso.sha256/download" target="_blank" rel="noopener noreferrer">SHA256</a> ·
+                            <a href="https://sourceforge.net/projects/shanios/files/gnome/20260310/signed_shanios-gnome-2026.03.10-x86_64.iso.asc/download" target="_blank" rel="noopener noreferrer">GPG signature</a> ·
+                            <a href="https://sourceforge.net/projects/shanios/files/gnome/20260310/signed_shanios-gnome-2026.03.10-x86_64.iso.torrent/download" target="_blank" rel="noopener noreferrer">Torrent</a>
+                        </li>
+                        <li><strong>KDE Plasma Edition</strong> (2026.03.10, ~7.6 GB):
+                            <a href="https://sourceforge.net/projects/shanios/files/plasma/20260310/signed_shanios-plasma-2026.03.10-x86_64.iso/download" target="_blank" rel="noopener noreferrer">ISO</a> ·
+                            <a href="https://sourceforge.net/projects/shanios/files/plasma/20260310/signed_shanios-plasma-2026.03.10-x86_64.iso.sha256/download" target="_blank" rel="noopener noreferrer">SHA256</a> ·
+                            <a href="https://sourceforge.net/projects/shanios/files/plasma/20260310/signed_shanios-plasma-2026.03.10-x86_64.iso.asc/download" target="_blank" rel="noopener noreferrer">GPG signature</a> ·
+                            <a href="https://sourceforge.net/projects/shanios/files/plasma/20260310/signed_shanios-plasma-2026.03.10-x86_64.iso.torrent/download" target="_blank" rel="noopener noreferrer">Torrent</a>
+                        </li>
                     </ul>
 
                     <div class="note-box" role="note">
                         <div class="note-icon"><i class="fas fa-shield-alt"></i></div>
                         <div class="note-content">
-                            <p><strong>Always verify before writing.</strong> Every Shanios ISO is SHA256 + GPG signed. Verifying the checksum confirms the file downloaded completely and hasn't been tampered with. Place the <code>.iso</code> and its <code>.sha256</code> file in the same directory before running the commands below.</p>
+                            <p><strong>Always verify before writing.</strong> Every Shanios ISO is SHA256 checksummed and GPG signed. The torrent includes webseeds from both the R2 CDN and SourceForge for fast, resumable downloads. Verifying the checksum confirms the file downloaded completely and hasn't been tampered with. Place the <code>.iso</code>, <code>.sha256</code>, and <code>.asc</code> files in the same directory before running the commands below.</p>
                         </div>
                     </div>
 
-                    <h5>Linux / macOS</h5>
+                    <h5>Linux / macOS — verify SHA256 + GPG</h5>
                     <pre><code># GNOME edition — substitute the Plasma filename for the KDE edition
-sha256sum -c signed_shanios-gnome-2026.03.10-x86_64.iso.sha256</code></pre>
-                    <p>Expected output: <code>signed_shanios-gnome-2026.03.10-x86_64.iso: OK</code>. Any other result means the download is corrupt or tampered — delete it and re-download.</p>
 
-                    <h5>Windows (PowerShell)</h5>
+# 1. Verify checksum
+sha256sum -c signed_shanios-gnome-2026.03.10-x86_64.iso.sha256
+
+# 2. Import the Shanios signing key (once)
+gpg --keyserver keys.openpgp.org --recv-keys 7B927BFFD4A9EAAA8B666B77DE217F3DA8014792
+
+# 3. Verify GPG signature
+gpg --verify signed_shanios-gnome-2026.03.10-x86_64.iso.asc signed_shanios-gnome-2026.03.10-x86_64.iso</code></pre>
+                    <p>SHA256 expected output: <code>signed_shanios-gnome-2026.03.10-x86_64.iso: OK</code>. GPG should report <code>Good signature from "Shani OS"</code>. Any other result means the download is corrupt or tampered — delete it and re-download.</p>
+
+                    <h5>Windows (PowerShell) — verify SHA256</h5>
                     <pre><code>Get-FileHash signed_shanios-gnome-2026.03.10-x86_64.iso -Algorithm SHA256</code></pre>
                     <p>Compare the output hash against the contents of the downloaded <code>.sha256</code> file — they must match exactly.</p>
 
@@ -1628,7 +1648,7 @@ sudo dd bs=4M if=signed_shanios-gnome-2026.03.10-x86_64.iso of=/dev/sdX status=p
                     <ul>
                         <li>All Btrfs subvolumes are created: <code>@root</code>, <code>@home</code>, <code>@data</code>, <code>@nix</code>, <code>@cache</code>, <code>@log</code>, <code>@flatpak</code>, <code>@snapd</code>, <code>@waydroid</code>, <code>@containers</code>, <code>@machines</code>, <code>@lxc</code>, <code>@lxd</code>, <code>@libvirt</code>, <code>@qemu</code>, <code>@swap</code></li>
                         <li>The system image is extracted into <code>shanios_base</code>, snapshotted to <code>@blue</code> (read-only), then snapshotted again to <code>@green</code>. The original <code>shanios_base</code> subvolume is deleted. The active slot is written to <code>/data/current-slot</code> (<code>blue</code>)</li>
-                        <li>The Flatpak store is extracted and snapshotted into <code>@flatpak</code>. The <code>@snapd</code> subvolume is created empty — Snap packages are installed after first boot</li>
+                        <li>The Flatpak store is extracted and snapshotted into <code>@flatpak</code>. If <code>snapfs.zst</code> was included on the ISO (present for profiles with a <code>snap-packages.txt</code>), the Snap seed is extracted and snapshotted into <code>@snapd</code>; otherwise <code>@snapd</code> is left as an empty subvolume and Snap packages can be installed after first boot</li>
                         <li>The swapfile is created in <code>@swap</code> using <code>btrfs filesystem mkswapfile</code> sized to match RAM. If available disk space is insufficient, swapfile creation is skipped and zram is used instead (no hibernation in this case)</li>
                         <li>Locale, keyboard, timezone, hostname, user account, and autologin are configured via <code>chroot</code></li>
                         <li>MOK keys are generated, Secure Boot components installed, and both UKIs (<code>shanios-blue.efi</code>, <code>shanios-green.efi</code>) are built using <code>dracut --force --uefi</code> and signed with the MOK key. The <code>loader.conf</code> sets a 5-second timeout with the editor disabled</li>
@@ -1653,7 +1673,7 @@ sudo dd bs=4M if=signed_shanios-gnome-2026.03.10-x86_64.iso of=/dev/sdX status=p
                     <ul>
                         <li><strong>Flathub is pre-configured.</strong> No <code>flatpak remote-add</code> needed — open GNOME Software or KDE Discover and browse apps immediately.</li>
                         <li><strong>Nix channel:</strong> Nix is pre-installed and running. Add a channel before installing packages: <code>nix-channel --add https://nixos.org/channels/nixpkgs-unstable nixpkgs && nix-channel --update</code>. See the <a href="#nix">Nix section</a> for full details.</li>
-                        <li><strong>TPM2 enrollment (if you enabled encryption):</strong> Enroll your LUKS key into TPM2 so the disk unlocks automatically at boot — no passphrase prompt — while remaining fully protected by hardware. With Secure Boot active, the TPM only releases the key if the firmware and kernel are unmodified. <strong>This is the recommended setup for all encrypted Shanios installs with TPM2 hardware.</strong> See the <a href="#tpm-encryption">TPM Encryption</a> section for the full procedure.</li>
+                        <li><strong>TPM2 enrollment (if you enabled encryption):</strong> Enroll your LUKS key into TPM2 so the disk unlocks automatically at boot — no passphrase prompt — while remaining fully protected by hardware. With Secure Boot active, the TPM only releases the key if the firmware and kernel are unmodified. <strong>This is the recommended setup for all encrypted Shanios installs with TPM2 hardware.</strong> See the <a href="#tpm-encryption">TPM2 Enrollment</a> section for the full procedure.</li>
                         <li><strong>Waydroid (Android apps):</strong> Waydroid is pre-installed. Run <code>sudo waydroid-helper init</code> for automatic setup. Firewall rules are already configured. See the <a href="#android">Android section</a>.</li>
                         <li><strong>Secure Boot:</strong> If your BIOS supports it, enroll the MOK key and enable Secure Boot for the strongest TPM security guarantee. See the <a href="#secure-boot">Secure Boot</a> section.</li>
                         <li><strong>Check current slot:</strong> Run <code>cat /data/current-slot</code> to confirm whether you booted into <code>@blue</code> or <code>@green</code>.</li>
@@ -2388,7 +2408,7 @@ diff -r /etc /data/overlay/etc/upper</code></pre>
                         <li><strong>shanios-blue (Active):</strong> Currently running system</li>
                         <li><strong>shanios-green (Candidate):</strong> Standby system, will be booted after next update</li>
                     </ul>
-                    <p>After each deployment, <code>shani-deploy</code> rewrites both boot entries and updates <code>loader.conf</code> — the newly updated slot is labelled "Candidate" and set as the boot default (so it loads on next reboot); the currently running slot is relabelled "Active". On reboot, the system boots into the updated slot, which then becomes the new current slot.</p>
+                    <p>After each deployment, <code>shani-deploy</code> rewrites both boot entries and updates <code>loader.conf</code> — the newly updated slot is labelled <strong>(Active)</strong> with <code>+3-0</code> boot-count tries and set as the <code>loader.conf</code> default; the currently running slot is relabelled <strong>(Candidate)</strong> as the stable fallback. <code>/data/current-slot</code> is updated to the new slot immediately (before reboot). On the next reboot systemd-boot loads the new slot; if it fails to reach <code>multi-user.target</code> within three attempts, systemd-boot automatically falls back to the Candidate slot.</p>
 
                     <h4>UEFI Boot Entry</h4>
                     <p>Shanios creates a UEFI boot entry during installation:</p>
@@ -2413,7 +2433,7 @@ Linux Kernel + Initramfs (embedded in UKI)</code></pre>
                     </div>
 
                     <h4>Kernel Command Line</h4>
-                    <p>Shanios uses these boot parameters, generated per-slot by <code>configure.sh</code> at install time and by <code>gen-efi</code> on subsequent updates. The cmdline is saved to <code>/etc/kernel/install_cmdline_&lt;slot&gt;</code> and embedded directly into the UKI by <code>dracut --force --uefi</code>. On updates, if the file already exists for a slot, <code>gen-efi</code> reuses it rather than regenerating.</p>
+                    <p>Shanios uses these boot parameters, generated per-slot by <code>configure.sh</code> at install time and by <code>gen-efi</code> on subsequent updates. The cmdline is saved to <code>/etc/kernel/install_cmdline_&lt;slot&gt;</code> and embedded directly into the UKI by <code>dracut --force --uefi</code>. On updates, <code>gen-efi</code> <strong>always regenerates</strong> the cmdline from the live disk state (LUKS UUID, swap offset, keymap) — a stale cached file would silently break boot if any of those values changed.</p>
                     <div class="code-block">
                         <pre><code>quiet splash systemd.volatile=state ro
 lsm=landlock,lockdown,yama,integrity,apparmor,bpf
@@ -2623,10 +2643,10 @@ systemctl status pcscd.socket</code></pre>
                     <div class="code-block">
                         <pre><code># Manually verify an image (shani-deploy does this automatically)
 # Fetch the public key from keyservers
-gpg --keyserver keys.openpgp.org --recv-keys 7B927BFF8014792
+gpg --keyserver keys.openpgp.org --recv-keys 7B927BFFD4A9EAAA8B666B77DE217F3DA8014792
 
 # Verify the signature file against the image
-gpg --verify shanios-image.zst.sig shanios-image.zst
+gpg --verify shanios-image.zst.asc shanios-image.zst
 
 # Verify SHA256 checksum
 sha256sum -c shanios-image.zst.sha256</code></pre>
@@ -2636,72 +2656,95 @@ sha256sum -c shanios-image.zst.sha256</code></pre>
 
                 <div id="secure-boot">
                     <h3>Secure Boot Setup</h3>
-                    <p>Shanios supports UEFI Secure Boot via Machine Owner Keys (MOK).</p>
+                    <p>Shanios supports UEFI Secure Boot via Machine Owner Keys (MOK). The installer stages key enrollment automatically — on first reboot MokManager appears and asks you to confirm. There are two ways to complete enrollment depending on your firmware.</p>
 
-                    <h4>Automatic Secure Boot Enrollment (If Enabled During Install)</h4>
-                    <p>If you enabled Secure Boot during installation:</p>
+                    <div class="note-box" role="note">
+                        <div class="note-icon"><i class="fas fa-info-circle"></i></div>
+                        <div class="note-content">
+                            <p><strong>MOK (Machine Owner Key):</strong> A per-machine key pair generated during installation. Shim (the Microsoft-signed bootloader) validates this key, which in turn signs systemd-boot and every Unified Kernel Image. The password <code>shanios</code> is used only for the one-time MokManager confirmation and is not stored anywhere on the system.</p>
+                        </div>
+                    </div>
+
+                    <h4>Path A — Password confirmation (recommended)</h4>
+                    <p>The installer runs <code>mokutil --import</code> automatically and stages enrollment using the password <code>shanios</code>. On first reboot MokManager launches and you confirm with that password.</p>
                     <ol>
-                        <li>On first reboot, MOK Manager will appear automatically</li>
-                        <li>Select "Enroll MOK"</li>
+                        <li>On first reboot, MokManager appears automatically with the title <strong>Shim UEFI key management</strong></li>
+                        <li>Select <strong>Enroll MOK</strong></li>
+                        <li>Select <strong>Continue</strong></li>
+                        <li>Select <strong>Yes</strong> to confirm enrollment</li>
                         <li>Enter the password: <code>shanios</code></li>
-                        <li>Reboot to complete the enrollment</li>
-                        <li>Secure Boot will be active with Shanios keys enrolled</li>
+                        <li>Select <strong>Reboot</strong> — Secure Boot is now active with the Shanios key enrolled</li>
+                    </ol>
+
+                    <h4>Path B — Enroll key from disk (firmware fallback)</h4>
+                    <p>If your firmware does not honour the <code>mokutil</code> pending-enrollment variable, or if MokManager appears but shows no pending key, you can enroll directly from the <code>MOK.der</code> file on the EFI partition.</p>
+                    <p>The <code>MOK.der</code> file is placed in two locations depending on context:</p>
+                    <ul>
+                        <li><strong>During live ISO / installer boot:</strong> <code>MOK.der</code> at the root of the EFI System Partition (alongside <code>shellx64.efi</code>)</li>
+                        <li><strong>On the installed system:</strong> <code>\EFI\BOOT\MOK.der</code> on the EFI System Partition (written by the installer and kept current by <code>gen-efi</code>)</li>
+                    </ul>
+                    <ol>
+                        <li>When MokManager is on screen, select <strong>Enroll key from disk</strong></li>
+                        <li><strong>Live ISO:</strong> navigate to the EFI partition root and select <strong>MOK.der</strong><br>
+                            <strong>Installed system:</strong> navigate to <strong>EFI</strong> → <strong>BOOT</strong> → select <strong>MOK.der</strong></li>
+                        <li>Select <strong>Continue</strong>, then <strong>Yes</strong> to confirm</li>
+                        <li>Enter the password: <code>shanios</code></li>
+                        <li>Select <strong>Reboot</strong></li>
                     </ol>
 
                     <div class="note-box" role="note">
                         <div class="note-icon"><i class="fas fa-info-circle"></i></div>
                         <div class="note-content">
-                            <p><strong>MOK (Machine Owner Key):</strong> This allows Shanios's signed bootloader and kernel to boot with Secure Boot enabled. The password "shanios" is only used during the one-time enrollment process and is not stored.</p>
+                            <p><strong>MokManager not appearing?</strong> It only launches when a key is pending enrollment. If it doesn't appear, re-run the import and reboot:</p>
+                            <div class="code-block">
+                                <pre><code>sudo mokutil --import /etc/secureboot/keys/MOK.der</code></pre>
+                            </div>
+                            <p>Enter a one-time password when prompted (use <code>shanios</code> or any password you'll remember for this single reboot). MokManager will appear on the next boot.</p>
                         </div>
                     </div>
 
-                    <h4>Manual Secure Boot Enablement</h4>
-                    <p>To enable Secure Boot after installation:</p>
+                    <h4>Manual Secure Boot Enablement (post-install)</h4>
+                    <p>To enable Secure Boot on an already-installed system where it was not set up during installation:</p>
 
                     <div class="steps-container">
                         <article class="step">
                             <div class="step-number">1</div>
                             <div class="step-content">
-                                <h4>Import MOK Key</h4>
+                                <h4>Stage MOK enrollment</h4>
                                 <div class="code-block">
                                     <pre><code>sudo mokutil --import /etc/secureboot/keys/MOK.der</code></pre>
                                 </div>
-                                <p>Set a one-time password when prompted</p>
+                                <p>Enter <code>shanios</code> as the one-time password when prompted</p>
                             </div>
                         </article>
 
                         <article class="step">
                             <div class="step-number">2</div>
                             <div class="step-content">
-                                <h4>Reboot and Enroll</h4>
-                                <p>MOK Manager appears on reboot. Select "Enroll MOK" and enter your password</p>
+                                <h4>Reboot and confirm in MokManager</h4>
+                                <p>MokManager appears on reboot. Use <strong>Path A</strong> (enter password <code>shanios</code>) or <strong>Path B</strong> (Enroll key from disk → <code>EFI\BOOT\MOK.der</code>) as described above</p>
                             </div>
                         </article>
 
                         <article class="step">
                             <div class="step-number">3</div>
                             <div class="step-content">
-                                <h4>Enable in BIOS</h4>
-                                <p>Enter BIOS/UEFI settings and enable Secure Boot if still disabled</p>
+                                <h4>Enable Secure Boot in BIOS/UEFI</h4>
+                                <p>Enter firmware settings and enable Secure Boot. The Shanios key is now enrolled so all signed binaries will be accepted</p>
                             </div>
                         </article>
 
                         <article class="step">
                             <div class="step-number">4</div>
                             <div class="step-content">
-                                <h4>Verify Enrollment</h4>
+                                <h4>Verify enrollment</h4>
                                 <div class="code-block">
-                                    <pre><code>sudo mokutil --list-enrolled</code></pre>
+                                    <pre><code>mokutil --sb-state
+mokutil --list-enrolled</code></pre>
                                 </div>
+                                <p>The first command confirms Secure Boot is active; the second lists enrolled keys including the Shanios MOK</p>
                             </div>
                         </article>
-                    </div>
-
-                    <div class="note-box" role="note">
-                        <div class="note-icon"><i class="fas fa-info-circle"></i></div>
-                        <div class="note-content">
-                            <p><strong>Note:</strong> If MOK Manager doesn't appear, repeat step 1 and reboot. It only triggers when a key is pending enrollment.</p>
-                        </div>
                     </div>
                 </div>
 
@@ -2712,7 +2755,7 @@ sha256sum -c shanios-image.zst.sha256</code></pre>
                     <div class="note-box" role="note">
                         <div class="note-icon"><i class="fas fa-shield-alt"></i></div>
                         <div class="note-content">
-                            <p><strong>Recommended:</strong> After installation, enroll your LUKS key into TPM2. With Secure Boot enabled, the TPM will only release the key if the firmware, bootloader, and kernel are unmodified (PCR 0+7). You get passwordless boot with hardware-backed protection. See the <a href="#tpm-encryption">TPM Encryption</a> section for the full enrollment procedure.</p>
+                            <p><strong>Recommended:</strong> After installation, enroll your LUKS key into TPM2. With Secure Boot enabled, the TPM will only release the key if the firmware, bootloader, and kernel are unmodified (PCR 0+7). You get passwordless boot with hardware-backed protection. See the <a href="#tpm-encryption">TPM2 Enrollment</a> section for the full enrollment procedure.</p>
                         </div>
                     </div>
 
@@ -2739,154 +2782,151 @@ sha256sum -c shanios-image.zst.sha256</code></pre>
                 </div>
 
                 <div id="tpm-encryption">
-                    <h3>TPM-Based Encryption</h3>
-                    <p>Enroll your LUKS encryption key to TPM 2.0 for automatic unlocking.</p>
+                    <h3>TPM2 Enrollment</h3>
+                    <p>Use <code>sudo gen-efi enroll-tpm2</code> to enroll the LUKS volume into TPM 2.0 for automatic unlocking. The command handles PCR policy selection, keyfile vs passphrase detection, and an optional TPM2 PIN — no manual <code>systemd-cryptenroll</code> invocations needed.</p>
 
                     <h4>Prerequisites</h4>
                     <ul>
-                        <li>TPM 2.0 hardware module (enabled in BIOS/UEFI)</li>
-                        <li>LUKS2 encryption enabled during installation</li>
-                        <li><strong>Recommended:</strong> Secure Boot enabled for maximum security</li>
+                        <li>TPM 2.0 hardware enabled in BIOS/UEFI (<code>systemd-cryptenroll --tpm2-device=list</code> must show a device)</li>
+                        <li>LUKS2 encryption was enabled at install time (<code>/dev/mapper/shani_root</code> must exist)</li>
+                        <li><strong>Recommended:</strong> Secure Boot enabled — with PCR 7 bound the TPM refuses to unlock if the boot chain is tampered with</li>
+                        <li>Must be run on the <strong>live booted system</strong> — not inside a chroot</li>
                     </ul>
 
                     <div class="warning-box" role="alert">
                         <div class="warning-icon"><i class="fas fa-exclamation-triangle"></i></div>
                         <div class="warning-content">
-                            <p><strong>Security Warning:</strong> Without Secure Boot, attackers with physical access can replace your bootloader to steal the encryption key. With Secure Boot, TPM refuses to unlock if the system is tampered with.</p>
+                            <p><strong>Security warning:</strong> Without Secure Boot, TPM seals against PCR 0 (firmware) only. An attacker with physical access can replace the bootloader and the TPM will still unseal. With Secure Boot active, PCR 7 additionally covers the Secure Boot state — any bootloader substitution breaks the PCR measurement and the TPM refuses.</p>
                         </div>
                     </div>
 
-                    <h4>Enrollment Process</h4>
-
-                    <div class="steps-container">
-                        <article class="step">
-                            <div class="step-number">1</div>
-                            <div class="step-content">
-                                <h4>Verify TPM</h4>
-                                <div class="code-block">
-                                    <pre><code>systemd-cryptenroll --tpm2-device=list</code></pre>
-                                </div>
-                            </div>
-                        </article>
-
-                        <article class="step">
-                            <div class="step-number">2</div>
-                            <div class="step-content">
-                                <h4>Check Secure Boot Status</h4>
-                                <div class="code-block">
-                                    <pre><code>mokutil --sb-state</code></pre>
-                                </div>
-                                <p>If disabled, consider enabling Secure Boot first</p>
-                            </div>
-                        </article>
-
-                        <article class="step">
-                            <div class="step-number">3</div>
-                            <div class="step-content">
-                                <h4>Find Your LUKS Device</h4>
-                                <p>Shanios uses <code>/dev/mapper/shani_root</code> as the unlocked LUKS mapping. To find the underlying encrypted device:</p>
-                                <div class="code-block">
-                                    <pre><code># Get the physical encrypted device
-LUKS_DEVICE=$(sudo cryptsetup status shani_root | grep 'device:' | awk '{print $2}')
-echo "Your encrypted device is: $LUKS_DEVICE"
-
-# Example output: /dev/sda2 or /dev/nvme0n1p2</code></pre>
-                                </div>
-                            </div>
-                        </article>
-
-                        <article class="step">
-                            <div class="step-number">4</div>
-                            <div class="step-content">
-                                <h4>Enroll Encryption Key</h4>
-                                <p><strong>With Secure Boot (recommended):</strong></p>
-                                <div class="code-block">
-                                    <pre><code>LUKS_DEVICE=$(sudo cryptsetup status shani_root | grep 'device:' | awk '{print $2}')
-sudo systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=0+7 "$LUKS_DEVICE"</code></pre>
-                                </div>
-                                <p><strong>Without Secure Boot:</strong></p>
-                                <div class="code-block">
-                                    <pre><code>LUKS_DEVICE=$(sudo cryptsetup status shani_root | grep 'device:' | awk '{print $2}')
-sudo systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=0 "$LUKS_DEVICE"</code></pre>
-                                </div>
-                                <p>Enter your LUKS password when prompted</p>
-                            </div>
-                        </article>
-
-                        <article class="step">
-                            <div class="step-number">5</div>
-                            <div class="step-content">
-                                <h4>Regenerate Boot Images</h4>
-                                <p><code>gen-efi configure</code> can only regenerate the UKI for the <strong>currently booted</strong> slot directly. To update both slots, use <code>shani-deploy</code> which chroots into the candidate slot automatically:</p>
-                                <div class="code-block">
-                                    <pre><code># Regenerate only the currently booted slot (e.g., if booted into @blue):
-sudo gen-efi configure blue
-
-# To regenerate the OTHER slot's UKI as well, trigger a redeployment:
-sudo shani-deploy --force</code></pre>
-                                </div>
-                                <p>Running <code>gen-efi configure green</code> while booted into <code>@blue</code> (or vice versa) will be rejected by the script to prevent generating a UKI with the wrong kernel. <code>shani-deploy --force</code> handles this correctly by chrooting into the candidate slot.</p>
-                            </div>
-                        </article>
-
-                        <article class="step">
-                            <div class="step-number">6</div>
-                            <div class="step-content">
-                                <h4>Test & Verify</h4>
-                                <p>Reboot. System should unlock automatically.</p>
-                                <div class="code-block">
-                                    <pre><code># Verify enrollment
-LUKS_DEVICE=$(sudo cryptsetup status shani_root | grep 'device:' | awk '{print $2}')
-sudo cryptsetup luksDump "$LUKS_DEVICE" | grep systemd-tpm2</code></pre>
-                                </div>
-                            </div>
-                        </article>
-                    </div>
-
-                    <h4>Remove TPM Enrollment</h4>
-                    <p>To restore password-only unlocking:</p>
+                    <h4>Enroll</h4>
                     <div class="code-block">
-                        <pre><code>LUKS_DEVICE=$(sudo cryptsetup status shani_root | grep 'device:' | awk '{print $2}')
-sudo systemd-cryptenroll --wipe-slot=tpm2 "$LUKS_DEVICE"
-
-# Regenerate UKI for the currently booted slot:
-sudo gen-efi configure blue   # if booted into @blue
-# or: sudo gen-efi configure green   # if booted into @green
-
-# To update the other slot's UKI too:
-sudo shani-deploy --force</code></pre>
+                        <pre><code>sudo gen-efi enroll-tpm2</code></pre>
                     </div>
-
-                    <h4>Re-enroll After Enabling Secure Boot</h4>
-                    <p>If you enable Secure Boot after TPM enrollment:</p>
-                    <div class="code-block">
-                        <pre><code># Get the device
-LUKS_DEVICE=$(sudo cryptsetup status shani_root | grep 'device:' | awk '{print $2}')
-
-# Remove old enrollment
-sudo systemd-cryptenroll --wipe-slot=tpm2 "$LUKS_DEVICE"
-
-# Re-enroll with Secure Boot protection
-sudo systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=0+7 "$LUKS_DEVICE"
-
-# Regenerate UKI for the currently booted slot (e.g. @blue):
-sudo gen-efi configure blue
-
-# Then force-redeploy so the other slot also gets an updated UKI:
-sudo shani-deploy --force</code></pre>
-                    </div>
+                    <p>The command automatically:</p>
+                    <ol>
+                        <li>Detects the underlying LUKS block device from <code>/dev/mapper/shani_root</code></li>
+                        <li>Checks Secure Boot state via <code>mokutil --sb-state</code> and selects PCR policy: <strong>PCR 0+7</strong> if Secure Boot is enabled, <strong>PCR 0</strong> only if not</li>
+                        <li>If the system was installed with a PIN: prompts <em>"Require a TPM2 PIN at boot? [y/N]"</em> — answering Y adds <code>--tpm2-with-pin=yes</code> for a second-factor even when PCRs match; answering N gives fully silent auto-unlock</li>
+                        <li>If the system was installed without a PIN (OEM/keyfile path): unlocks via the keyfile at <code>/etc/cryptsetup-keys.d/shani_root.bin</code> automatically, no interaction needed</li>
+                        <li>Calls <code>systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=&lt;policy&gt;</code> with the correct unlock credential</li>
+                    </ol>
 
                     <div class="note-box" role="note">
                         <div class="note-icon"><i class="fas fa-info-circle"></i></div>
                         <div class="note-content">
-                            <p><strong>Important:</strong></p>
-                            <ul>
-                                <li>Your LUKS password remains valid as fallback</li>
-                                <li>Firmware changes break TPM unlock (password required to re-enroll)</li>
-                                <li>After any TPM change, regenerate the currently booted slot's UKI with <code>gen-efi configure &lt;slot&gt;</code>, then run <code>shani-deploy --force</code> to update the other slot</li>
-                                <li>Keep LUKS password secure for recovery — it is your only fallback if TPM unlock fails</li>
-                            </ul>
+                            <p>Your LUKS passphrase (or keyfile) remains valid as a fallback at all times. TPM enrollment adds a slot — it does not replace the existing one.</p>
                         </div>
+                    </div>
+
+                    <h4>Re-enroll after firmware updates or Secure Boot changes</h4>
+                    <p>Any change that alters the PCR measurements invalidates the sealed key — firmware update, enabling/disabling Secure Boot, or enrolling/removing a MOK key. Re-enroll after such changes:</p>
+                    <div class="code-block">
+                        <pre><code># Wipe the stale TPM slot first
+LUKS_DEVICE=$(sudo cryptsetup status shani_root | grep 'device:' | awk '{print $2}')
+sudo systemd-cryptenroll --wipe-slot=tpm2 "$LUKS_DEVICE"
+
+# Re-enroll with current PCR state
+sudo gen-efi enroll-tpm2
+
+# Clean up any duplicate stale TPM slots left by previous re-enrollments
+sudo gen-efi cleanup-tpm2</code></pre>
+                    </div>
+
+                    <h4>Remove TPM enrollment (return to passphrase-only)</h4>
+                    <div class="code-block">
+                        <pre><code>LUKS_DEVICE=$(sudo cryptsetup status shani_root | grep 'device:' | awk '{print $2}')
+sudo systemd-cryptenroll --wipe-slot=tpm2 "$LUKS_DEVICE"</code></pre>
+                    </div>
+
+                    <h4>Verify enrollment</h4>
+                    <div class="code-block">
+                        <pre><code>LUKS_DEVICE=$(sudo cryptsetup status shani_root | grep 'device:' | awk '{print $2}')
+sudo cryptsetup luksDump "$LUKS_DEVICE" | grep systemd-tpm2</code></pre>
+                    </div>
+                </div>
+
+                <div id="gen-efi-reference">
+                    <h3>gen-efi — Full Command Reference</h3>
+                    <p><code>gen-efi</code> is the Shanios tool for Unified Kernel Image generation, MOK key management, and TPM2 enrollment. It lives at <code>/usr/local/bin/gen-efi</code> and must run as root (auto-escalates via <code>pkexec</code> or <code>sudo</code> if not). Most subcommands must run on the <strong>live booted system</strong> — only <code>configure</code> can run inside a chroot (which <code>shani-deploy</code> does automatically).</p>
+
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th scope="col">Command</th>
+                                    <th scope="col">What it does</th>
+                                    <th scope="col">When to use</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>gen-efi configure &lt;blue|green&gt;</code></td>
+                                    <td>Regenerates the UKI for the specified slot: updates shim/systemd-boot on the ESP if newer versions are installed, regenerates the kernel cmdline from live disk state (LUKS UUID, swap offset, keymap), rebuilds the UKI with <code>dracut --force --uefi</code>, signs with MOK key, and stages MOK enrollment if the current key is not yet enrolled in firmware.</td>
+                                    <td>After a kernel or systemd update. <strong>Can only target the currently booted slot</strong> — running it for the other slot is rejected. <code>shani-deploy</code> calls this automatically via chroot for the candidate slot on every update.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>gen-efi enroll-mok</code></td>
+                                    <td>Re-signs all EFI binaries on the ESP with the current MOK key (restoring any corrupt binaries first), copies <code>MOK.der</code> to the ESP, and stages enrollment via <code>mokutil --import</code> with password <code>shanios</code>. Does <em>not</em> rebuild UKIs. Requires MOK keys to already exist — run <code>gen-efi configure &lt;slot&gt;</code> first if keys are missing.</td>
+                                    <td>When the MOK key changed but UKIs are otherwise valid. When Secure Boot was enabled after installation. When <code>mokutil --sb-state</code> shows the key is not enrolled. Must run on live system.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>gen-efi enroll-tpm2</code></td>
+                                    <td>Enrolls the LUKS volume into TPM2. Auto-selects PCR 0+7 (with Secure Boot) or PCR 0 (without). Handles keyfile systems silently; prompts for TPM2 PIN option on passphrase systems.</td>
+                                    <td>First-time TPM enrollment after installation. Re-enroll after firmware updates, Secure Boot changes, or MOK key rotation. Must run on live system.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>gen-efi cleanup-mok</code></td>
+                                    <td>Stages deletion of enrolled MOK keys that do not match the current <code>/etc/secureboot/keys/MOK.der</code>. Requires the <em>new</em> key to already be enrolled in firmware — aborts if it is not. Uses <code>mokutil --delete</code> with the <code>shanios</code> password; confirmed in MokManager on next reboot.</td>
+                                    <td>After a MOK key rotation — once you have confirmed the new key is enrolled (reboot + MokManager), run this to remove the old key. Must run on live system.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>gen-efi cleanup-tpm2</code></td>
+                                    <td>Finds all TPM2 LUKS slots in the LUKS header and removes all but the highest-numbered (most recently enrolled), after confirming at least one healthy TPM2 slot exists.</td>
+                                    <td>After re-enrolling TPM2 — each <code>enroll-tpm2</code> call adds a new slot; stale old slots accumulate. Run this to keep the LUKS header clean. Must run on live system.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h4>MOK key enrollment flow</h4>
+                    <p><code>gen-efi configure</code> and <code>gen-efi enroll-mok</code> both call <code>_stage_mok_enrollment</code> at the end, which handles all cases automatically:</p>
+                    <ul>
+                        <li><strong>Key already enrolled</strong> — silent, nothing staged. Warns if old keys also remain (run <code>gen-efi cleanup-mok</code>)</li>
+                        <li><strong>Key not enrolled, nothing pending</strong> — stages via <code>mokutil --import</code> with password <code>shanios</code>; warns to reboot and confirm MokManager</li>
+                        <li><strong>Key not enrolled, same key already pending</strong> — already queued, just reminds to reboot</li>
+                        <li><strong>Key not enrolled, different key pending</strong> — clears the stale pending enrollment with <code>mokutil --revoke-import</code>, then re-stages the correct key</li>
+                    </ul>
+                    <p>After MokManager confirms enrollment, run <code>gen-efi cleanup-mok</code> if the old key was still enrolled from a previous rotation.</p>
+
+                    <h4>Typical workflow after a MOK key rotation</h4>
+                    <div class="code-block">
+                        <pre><code># 1. Regenerate UKI for the booted slot (re-signs with new key, stages enrollment)
+sudo gen-efi configure blue   # or green — must match booted slot
+
+# 2. Reboot and confirm MokManager prompt with password: shanios
+
+# 3. After reboot — clean up the old enrolled key
+sudo gen-efi cleanup-mok
+
+# 4. Force-redeploy so the other slot also gets a UKI signed with the new key
+sudo shani-deploy --force</code></pre>
+                    </div>
+
+                    <h4>Typical workflow after re-enrolling TPM2</h4>
+                    <div class="code-block">
+                        <pre><code># 1. Wipe stale TPM slot(s)
+LUKS_DEVICE=$(sudo cryptsetup status shani_root | grep 'device:' | awk '{print $2}')
+sudo systemd-cryptenroll --wipe-slot=tpm2 "$LUKS_DEVICE"
+
+# 2. Re-enroll
+sudo gen-efi enroll-tpm2
+
+# 3. Clean up any duplicate stale slots
+sudo gen-efi cleanup-tpm2
+
+# 4. Reboot to verify auto-unlock works</code></pre>
                     </div>
                 </div>
             </section>
@@ -2922,7 +2962,7 @@ sudo shani-deploy --force</code></pre>
                         <li>Deployment: extract new image into a temporary subvolume via <code>zstd | btrfs receive</code> (30-minute timeout), then snapshot to <code>@candidate</code> and set read-only; old candidate is only deleted <em>after</em> extraction succeeds, so a power failure during extraction leaves the previous candidate intact</li>
                         <li>Filesystem verification: ensures all required subvolumes exist; creates missing ones (including swapfile at RAM size if <code>@swap</code> is new)</li>
                         <li>UKI generation: chroots into the new candidate slot and runs <code>gen-efi configure &lt;slot&gt;</code></li>
-                        <li>Boot entry update: the newly updated slot is labelled "Candidate" and set as the <code>loader.conf</code> default (it will boot on next reboot); the currently running slot is relabelled "Active". <code>/data/current-slot</code> is updated to point to the new slot — when the machine reboots into it, it becomes the new "current" slot</li>
+                        <li>Boot entry update: the newly updated slot is labelled <strong>(Active)</strong> with <code>+3-0</code> boot-count tries and set as the <code>loader.conf</code> default; the currently running slot is relabelled <strong>(Candidate)</strong> as the stable fallback. <code>/data/current-slot</code> is updated to the new slot immediately — before reboot. On next reboot systemd-boot loads the new slot; automatic fallback to Candidate occurs if three consecutive boot attempts fail</li>
                         <li>Cleanup: keeps only the latest backup per slot, removes old download files</li>
                         <li>Storage analysis: prints filesystem usage and per-subvolume compression stats via <code>compsize</code></li>
                     </ol>
@@ -2959,10 +2999,12 @@ sudo shani-deploy --force</code></pre>
                     <p>Set your preferred channel:</p>
                     <div class="code-block">
                         <pre><code># Choose channel
+# Use once (this run only)
 sudo shani-deploy -t latest
 
-# Or set permanently
-echo "latest" | sudo tee /etc/shani-channel</code></pre>
+# Set permanently (writes to /etc/shani-channel)
+sudo shani-deploy --set-channel latest
+sudo shani-deploy --set-channel stable</code></pre>
                     </div>
 
                     <h4>Update Options</h4>
@@ -6874,7 +6916,7 @@ podman-compose -f ~/firefly/compose.yml up -d
   --name mealie \
   -p 127.0.0.1:9925:9000 \
   -e BASE_URL=https://recipes.example.com \
-  -e DEFAULT_EMAIL=admin@example.com \
+  -e <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="b6f2f3f0f7e3fae2e9f3fbf7fffa8bd7d2dbdfd8f6d3ced7dbc6dad398d5d9db">[email&#160;protected]</a> \
   -e DEFAULT_PASSWORD=changeme \
   -v /home/user/mealie/data:/app/data:Z \
   --restart unless-stopped \
@@ -7142,8 +7184,8 @@ podman-compose -f ~/authentik/compose.yml up -d
   -e SECRET_KEY=$(openssl rand -base64 32) \
   -e SITE_ROOT=https://hc.example.com \
   -e EMAIL_HOST=localhost \
-  -e DEFAULT_FROM_EMAIL=hc@example.com \
-  -e SUPERUSER_EMAIL=admin@example.com \
+  -e <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="c387868582968f979c85918c8e9c868e828a8ffeaba083a6bba2aeb3afa6eda0acae">[email&#160;protected]</a> \
+  -e <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="5605030613040305130409131b171f1a6b37323b3f3816332e373b263a337835393b">[email&#160;protected]</a> \
   -e SUPERUSER_PASSWORD=changeme \
   -v /home/user/healthchecks/data:/data:Z \
   --restart unless-stopped \
@@ -8105,12 +8147,16 @@ aria2c --enable-rpc --rpc-listen-all=false --rpc-secret=mysecret --daemon</code>
                             <p>BIOS and firmware updates change the TPM PCR values, invalidating the enrolled key. This is expected security behaviour. To fix it:</p>
                             <ol>
                                 <li>Enter your LUKS passphrase manually at the boot prompt to unlock</li>
-                                <li>Remove the old TPM enrollment:
+                                <li>Wipe the stale TPM slot:
                                     <div class="code-block"><pre><code>LUKS_DEVICE=$(sudo cryptsetup status shani_root | grep 'device:' | awk '{print $2}')
 sudo systemd-cryptenroll --wipe-slot=tpm2 "$LUKS_DEVICE"</code></pre></div>
                                 </li>
-                                <li>Re-enroll with updated PCR values (see <a href="#tpm-encryption">TPM Encryption</a> section)</li>
-                                <li>Regenerate UKI: <code>sudo gen-efi configure &lt;slot&gt;</code>, then <code>sudo shani-deploy --force</code></li>
+                                <li>Re-enroll with the current PCR state:
+                                    <div class="code-block"><pre><code>sudo gen-efi enroll-tpm2</code></pre></div>
+                                </li>
+                                <li>Clean up any duplicate stale slots:
+                                    <div class="code-block"><pre><code>sudo gen-efi cleanup-tpm2</code></pre></div>
+                                </li>
                             </ol>
                         </div>
                     </div>
@@ -8518,20 +8564,11 @@ lsblk -f
                         </div>
                         <div class="faq-answer">
                             <div class="code-block">
-                                <pre><code># Get your LUKS device
-LUKS_DEVICE=$(sudo cryptsetup status shani_root | grep device: | awk '{print $2}')
-
-# Remove TPM enrollment
+                                <pre><code># Remove TPM enrollment
+LUKS_DEVICE=$(sudo cryptsetup status shani_root | grep 'device:' | awk '{print $2}')
 sudo systemd-cryptenroll --wipe-slot=tpm2 "$LUKS_DEVICE"
 
-# Regenerate UKI for the currently booted slot only (e.g. if booted into @blue):
-sudo gen-efi configure blue
-# or: sudo gen-efi configure green   # if booted into @green
-
-# To regenerate the other slot's UKI as well, trigger a redeployment:
-sudo shani-deploy --force
-
-# Done - system will now require password on boot</code></pre>
+# System will now require your LUKS passphrase at every boot</code></pre>
                             </div>
                         </div>
                     </div>
@@ -9940,7 +9977,7 @@ sudo smartctl -a /dev/sda         # or SATA drive</code></pre>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
                         <div class="faq-answer">
-                            <p>Use TPM 2.0 enrollment. If your system has a TPM 2.0 module (enabled in BIOS), you can enroll your LUKS key into it with: <code>LUKS_DEVICE=$(sudo cryptsetup status shani_root | grep 'device:' | awk '{print $2}') && sudo systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=0+7 "$LUKS_DEVICE"</code>. With Secure Boot enabled (PCR 7), the TPM will only unlock if the bootloader hasn't been tampered with. See the TPM Encryption section for full details.</p>
+                            <p>Use <code>sudo gen-efi enroll-tpm2</code> — it auto-detects your LUKS device, selects PCR 0+7 if Secure Boot is enabled (PCR 0 otherwise), handles keyfile vs passphrase systems, and optionally adds a TPM2 PIN. See the <a href="#tpm-encryption">TPM2 Enrollment</a> section for full details.</p>
                         </div>
                     </div>
                 </div><!-- /#faq-updates -->
@@ -10096,7 +10133,7 @@ sudo shani-deploy --optimize</code></pre>
                         </div>
                         <div class="faq-answer">
                             <p>Yes. Every image is SHA256 + GPG signed. The public key (ID <code>7B927BFF...8014792</code>) is on public keyservers. To verify manually:</p>
-                            <div class="code-block"><pre><code>gpg --keyserver keys.openpgp.org --recv-keys 7B927BFF8014792
+                            <div class="code-block"><pre><code>gpg --keyserver keys.openpgp.org --recv-keys 7B927BFFD4A9EAAA8B666B77DE217F3DA8014792
 gpg --verify shanios-image.zst.sig shanios-image.zst
 sha256sum -c shanios-image.zst.sha256</code></pre></div>
                             <p><code>shani-deploy</code> does this automatically before every deployment. The build system, deploy scripts, and signing workflow are public on <a href="https://github.com/shani8dev" target="_blank" rel="noopener noreferrer">GitHub</a> — the full chain of trust is independently auditable.</p>
@@ -10596,6 +10633,7 @@ sudo btrfs balance start -dusage=50 /
                         <a href="https://shani.dev#support" class="btn" target="_blank" rel="noopener noreferrer">Donate</a>
                     </div>
                 </div>
+
 
                 <h3>Roadmap</h3>
                 <p>The hard architectural work is done. Development is built in public — every milestone tracked on GitHub.</p>
