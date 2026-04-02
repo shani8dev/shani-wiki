@@ -1652,7 +1652,7 @@ sudo dd bs=4M if=signed_shanios-gnome-2026.04.01-x86_64.iso of=/dev/sdX status=p
                         <li>The swapfile is created in <code>@swap</code> using <code>btrfs filesystem mkswapfile</code> sized to match RAM. If available disk space is insufficient, swapfile creation is skipped and zram is used instead (no hibernation in this case)</li>
                         <li>Locale, keyboard, timezone, hostname, user account, and autologin are configured via <code>chroot</code></li>
                         <li>MOK keys are generated, Secure Boot components installed, and both UKIs (<code>shanios-blue.efi</code>, <code>shanios-green.efi</code>) are built using <code>dracut --force --uefi</code> and signed with the MOK key. The <code>loader.conf</code> sets a 5-second timeout with the editor disabled</li>
-                        <li>If encryption was enabled with a PIN, <code>/etc/crypttab</code> is generated with the LUKS UUID and <code>none</code> key field — you will be prompted at boot. For OEM/unattended installs where no PIN is supplied, a keyfile is generated at <code>/boot/efi/crypto_keyfile.bin</code> and relocated to <code>/etc/cryptsetup-keys.d/shani_root.bin</code> (this path is not used in normal user installs)</li>
+                        <li><code>/etc/crypttab</code> is generated with the LUKS UUID and <code>none</code> key field — you will be prompted for your passphrase at boot. To avoid typing it on every boot, enroll into TPM2 after installation (see below).</li>
                         <li>Firewall rules for KDE Connect and Waydroid are applied via <code>firewall-offline-cmd</code></li>
                     </ul>
                     <p>On first boot, <code>beesd-setup.service</code> configures the deduplication daemon for the Btrfs volume UUID. The Initial Setup wizard then runs for user-facing personalisation.</p>
@@ -2750,7 +2750,7 @@ mokutil --list-enrolled</code></pre>
 
                 <div id="luks-keyfile">
                     <h3>LUKS Encryption — After Installation</h3>
-                    <p>When you enable full-disk encryption during installation and set a PIN, your disk is protected by that passphrase. You will be prompted for it at every boot. The recommended next step is to <strong>enroll your PIN into TPM2</strong> so the disk unlocks automatically — no typing required — while still being fully protected.</p>
+                    <p>When you enable full-disk encryption during installation, your disk is protected by the passphrase you set. You will be prompted for it at every boot. The recommended next step is to <strong>enroll your passphrase into TPM2</strong> so the disk unlocks automatically — no typing required — while still being fully protected.</p>
 
                     <div class="note-box" role="note">
                         <div class="note-icon"><i class="fas fa-shield-alt"></i></div>
@@ -2760,30 +2760,14 @@ mokutil --list-enrolled</code></pre>
                     </div>
 
                     <h4>How the installer sets up LUKS</h4>
-                    <p>The installer formats LUKS2 using your PIN as the passphrase. <code>/etc/crypttab</code> is written with the LUKS UUID and <code>none</code> as the key field — the system prompts for the passphrase at boot:</p>
+                    <p>The installer formats LUKS2 using your passphrase. <code>/etc/crypttab</code> is written with the LUKS UUID and <code>none</code> as the key field — the system prompts for the passphrase at boot:</p>
                     <pre><code>shani_root UUID=&lt;luks-uuid&gt; none luks,discard</code></pre>
                     <p>The LUKS UUID is derived from the underlying block device via <code>cryptsetup luksUUID</code> — not from a partition label — ensuring correctness regardless of device naming.</p>
-
-                    <h4>OEM / unattended installs (keyfile path)</h4>
-                    <p>If no PIN is provided to the installer (OEM / automated deployment scenario), the installer generates a random keyfile instead:</p>
-                    <ol>
-                        <li>A 4096-byte random keyfile is created at <code>/boot/efi/crypto_keyfile.bin</code> on the ESP</li>
-                        <li>LUKS2 is formatted using that keyfile</li>
-                        <li>Post-install, the keyfile is moved to <code>/etc/cryptsetup-keys.d/shani_root.bin</code> and the ESP copy is removed</li>
-                        <li><code>/etc/crypttab</code> is written pointing to the keyfile: <code>shani_root UUID=&lt;luks-uuid&gt; /etc/cryptsetup-keys.d/shani_root.bin luks,discard</code></li>
-                        <li>A dracut config at <code>/etc/dracut.conf.d/99-crypt-key.conf</code> bundles both <code>/etc/crypttab</code> and the keyfile into the UKI initramfs</li>
-                    </ol>
-                    <div class="warning-box" role="alert">
-                        <div class="warning-icon"><i class="fas fa-exclamation-triangle"></i></div>
-                        <div class="warning-content">
-                            <p><strong>Keyfile security:</strong> The keyfile is embedded in the signed UKI initramfs. Anyone who can extract and unsign the UKI can retrieve the key — this approach is only appropriate for machines that are physically secured and managed centrally. For personal machines, always use a PIN and enroll to TPM2.</p>
-                        </div>
-                    </div>
                 </div>
 
                 <div id="tpm-encryption">
                     <h3>TPM2 Enrollment</h3>
-                    <p>Use <code>sudo gen-efi enroll-tpm2</code> to enroll the LUKS volume into TPM 2.0 for automatic unlocking. The command handles PCR policy selection, keyfile vs passphrase detection, and an optional TPM2 PIN — no manual <code>systemd-cryptenroll</code> invocations needed.</p>
+                    <p>Use <code>sudo gen-efi enroll-tpm2</code> to enroll the LUKS volume into TPM 2.0 for automatic unlocking. The command handles PCR policy selection and an optional TPM2 PIN — no manual <code>systemd-cryptenroll</code> invocations needed.</p>
 
                     <h4>Prerequisites</h4>
                     <ul>
@@ -2808,15 +2792,14 @@ mokutil --list-enrolled</code></pre>
                     <ol>
                         <li>Detects the underlying LUKS block device from <code>/dev/mapper/shani_root</code></li>
                         <li>Checks Secure Boot state via <code>mokutil --sb-state</code> and selects PCR policy: <strong>PCR 0+7</strong> if Secure Boot is enabled, <strong>PCR 0</strong> only if not</li>
-                        <li>If the system was installed with a PIN: prompts <em>"Require a TPM2 PIN at boot? [y/N]"</em> — answering Y adds <code>--tpm2-with-pin=yes</code> for a second-factor even when PCRs match; answering N gives fully silent auto-unlock</li>
-                        <li>If the system was installed without a PIN (OEM/keyfile path): unlocks via the keyfile at <code>/etc/cryptsetup-keys.d/shani_root.bin</code> automatically, no interaction needed</li>
-                        <li>Calls <code>systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=&lt;policy&gt;</code> with the correct unlock credential</li>
+                        <li>Prompts <em>"Require a TPM2 PIN at boot? [y/N]"</em> — answering Y adds <code>--tpm2-with-pin=yes</code> for a second-factor even when PCRs match; answering N gives fully silent auto-unlock</li>
+                        <li>Calls <code>systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=&lt;policy&gt;</code> with your passphrase as the unlock credential</li>
                     </ol>
 
                     <div class="note-box" role="note">
                         <div class="note-icon"><i class="fas fa-info-circle"></i></div>
                         <div class="note-content">
-                            <p>Your LUKS passphrase (or keyfile) remains valid as a fallback at all times. TPM enrollment adds a slot — it does not replace the existing one.</p>
+                            <p>Your LUKS passphrase remains valid as a fallback at all times. TPM enrollment adds a slot — it does not replace the existing one.</p>
                         </div>
                     </div>
 
@@ -2873,7 +2856,7 @@ sudo cryptsetup luksDump "$LUKS_DEVICE" | grep systemd-tpm2</code></pre>
                                 </tr>
                                 <tr>
                                     <td><code>gen-efi enroll-tpm2</code></td>
-                                    <td>Enrolls the LUKS volume into TPM2. Auto-selects PCR 0+7 (with Secure Boot) or PCR 0 (without). Handles keyfile systems silently; prompts for TPM2 PIN option on passphrase systems.</td>
+                                    <td>Enrolls the LUKS volume into TPM2. Auto-selects PCR 0+7 (with Secure Boot) or PCR 0 (without). Prompts for optional TPM2 PIN.</td>
                                     <td>First-time TPM enrollment after installation. Re-enroll after firmware updates, Secure Boot changes, or MOK key rotation. Must run on live system.</td>
                                 </tr>
                                 <tr>
@@ -9977,7 +9960,7 @@ sudo smartctl -a /dev/sda         # or SATA drive</code></pre>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
                         <div class="faq-answer">
-                            <p>Use <code>sudo gen-efi enroll-tpm2</code> — it auto-detects your LUKS device, selects PCR 0+7 if Secure Boot is enabled (PCR 0 otherwise), handles keyfile vs passphrase systems, and optionally adds a TPM2 PIN. See the <a href="#tpm-encryption">TPM2 Enrollment</a> section for full details.</p>
+                            <p>Use <code>sudo gen-efi enroll-tpm2</code> — it auto-detects your LUKS device, selects PCR 0+7 if Secure Boot is enabled (PCR 0 otherwise), and optionally adds a TPM2 PIN. See the <a href="#tpm-encryption">TPM2 Enrollment</a> section for full details.</p>
                         </div>
                     </div>
                 </div><!-- /#faq-updates -->
