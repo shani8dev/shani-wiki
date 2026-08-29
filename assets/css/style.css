@@ -124,7 +124,7 @@ code {
   border-bottom: 1px solid rgba(255,255,255,0.25);
 }
 
-.sidebar-header h2 {
+.sidebar-header .sidebar-title {
   font-size: 1.8rem;
   font-weight: 700;
   color: var(--text-main);
@@ -977,4 +977,77 @@ body.scrolled .header {
     color: inherit;
     text-decoration: underline;
   }
+}
+
+
+/* ── Accessibility: reduced motion ───────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Skip link (visually hidden until focused) */
+.skip-link {
+  position: absolute;
+  top: -48px;
+  left: 8px;
+  z-index: 10000;
+  padding: 8px 16px;
+  background: var(--accent, #ff8a5c);
+  color: #120a24;
+  border-radius: 0 0 6px 6px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: top 0.2s ease;
+}
+.skip-link:focus { top: 0; }
+
+/* ── Accessibility & typography parity ───────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--accent, #ff8a5c);
+  outline-offset: 2px;
+}
+::selection {
+  background: var(--accent, #ff8a5c);
+  color: #120a24;
+}
+.content blockquote,
+main blockquote {
+  margin: 1.25em 0;
+  padding: .75em 1.1em;
+  border-left: 3px solid var(--accent, #ff8a5c);
+  background: rgba(255, 138, 92, .06);
+  border-radius: 0 8px 8px 0;
+}
+.content hr,
+main hr {
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, .12);
+  margin: 2em 0;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .content hr, main hr { transition: opacity .2s ease; }
+}
+
+
+/* ── Mobile hardening ────────────────────────────────────────────── */
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+* { -webkit-tap-highlight-color: transparent; }
+img, video, iframe, svg { max-width: 100%; height: auto; }
+
+@media (max-width: 600px) {
+  main table, .content table {
+    display: block;
+    width: max-content;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .search-box input { font-size: 16px; }
+}@media (max-width: 600px) {
+  main td, main th, .content td, .content th { word-break: break-word; }
 }

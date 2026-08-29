@@ -1,0 +1,21 @@
+# Shanios Wiki
+
+> Technical documentation for Shanios — the immutable Linux OS with atomic blue-green updates, Btrfs subvolumes, and Secure Boot. This is a single-page wiki: every section below is an anchor on the same page, not a separate URL.
+
+All content lives at https://wiki.shani.dev/ — the sections below are `#anchor` locations within that one page.
+
+## Sections
+
+- [Overview](https://wiki.shani.dev/#overview): What Shanios is, its release channel, and the five core ideas behind how it works.
+- [Introduction](https://wiki.shani.dev/#getting-started): What is Shanios, migrating from a traditional Linux distro, and what ships out of the box.
+- [Concepts](https://wiki.shani.dev/#concepts): Atomic updates, blue-green deployment, immutability, and persistence.
+- [Installation](https://wiki.shani.dev/#installation): Requirements, pre-install steps, the install process, and first boot.
+- [Architecture](https://wiki.shani.dev/#architecture): Boot process, Btrfs subvolume layout, the build pipeline, dracut module, filesystem structure, and overlay filesystem.
+- [Security](https://wiki.shani.dev/#security): AppArmor, Secure Boot, TPM2, keyring, LUKS encryption, permissions, and hardening.
+- [Updates & Config](https://wiki.shani.dev/#daily-use): Update channels, configuration, shani-health, shani-reset, and shell/user setup.
+- [Software & Apps](https://wiki.shani.dev/#software): Flatpak, containers, gaming, development tools, and package management.
+- [Networking](https://wiki.shani.dev/#webhosting): Native networking services and self-hosted networking stacks.
+- [Troubleshooting](https://wiki.shani.dev/#troubleshooting): Common problems and how to diagnose them.
+- [FAQ](https://wiki.shani.dev/#faq): Frequently asked questions.
+- [Glossary](https://wiki.shani.dev/#glossary): Terminology reference.
+- [Contribute](https://wiki.shani.dev/#contribute): How to contribute to Shanios and this wiki.

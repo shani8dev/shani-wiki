@@ -6,13 +6,16 @@
     <meta name="description" content="Shanios Technical Documentation - Comprehensive guide to the immutable Linux OS with atomic updates, blue-green deployment, and Btrfs filesystem.">
     <meta name="keywords" content="Shanios, immutable OS, Linux, Btrfs, atomic updates, blue-green deployment, Arch Linux">
     <meta name="author" content="Shanios Project">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; font-src 'self' https://cdnjs.cloudflare.com; img-src 'self'; connect-src 'self'; frame-ancestors 'none'">
 
     <!-- Open Graph Meta Tags -->
     <meta property="og:title" content="Shanios Wiki - Technical Documentation">
     <meta property="og:description" content="Comprehensive technical documentation for Shanios - The immutable Linux OS with atomic updates">
+    <meta name="twitter:card" content="summary_large_image">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://shani.dev">
-    <meta property="og:image" content="assets/images/logo.svg">
+    <meta property="og:url" content="https://wiki.shani.dev">
+    <meta property="og:image" content="https://wiki.shani.dev/assets/images/logo.svg">
+    <link rel="canonical" href="https://wiki.shani.dev/index.html">
 
     <!-- Favicons & Manifest -->
     <link rel="apple-touch-icon" sizes="180x180" href="assets/images/apple-touch-icon.png">
@@ -33,7 +36,7 @@
     <link rel="stylesheet" href="assets/css/style.css">
 
     <!-- Font Awesome — loaded before script.js so icons are available when JS runs -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js" defer></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha384-/o6I2CkkWC//PSjvWC/eYN7l3xM3tJm8ZzVkCOfp//W05QcE3mlGskpoHB6XqI+B" crossorigin="anonymous">
 
     <!-- Wiki JS — deferred so DOM is ready, runs after Font Awesome -->
     <script src="assets/js/script.js" defer></script>
@@ -43,13 +46,13 @@
         <!-- Sidebar Navigation -->
         <nav class="sidebar" role="navigation" aria-label="Main navigation">
             <div class="sidebar-header">
-                <h2>Shanios Wiki</h2>
+                <p class="sidebar-title">Shanios Wiki</p>
                 <p class="subtitle">Technical Documentation</p>
             </div>
 
             <div class="search-box" role="search">
                 <input
-                    type="text"
+                    type="search"
                     placeholder="Search documentation..."
                     aria-label="Search documentation"
                     autocomplete="off">
@@ -207,7 +210,8 @@
         </nav>
 
         <!-- Main Content -->
-        <main class="content">
+        <a class="skip-link" href="#main-content">Skip to content</a>
+  <main class="content" id="main-content">
             <!-- Header -->
             <header class="header">
                 <div class="logo">
@@ -226,7 +230,7 @@
 
                 <p>Shanios is an <strong>immutable Linux desktop</strong> built on Arch Linux. The OS core is permanently read-only — nothing running on your machine can modify it, not even root. It always keeps two complete, bootable copies of the OS on disk. You run on one; updates are prepared on the other. When you're ready, reboot into the new one. If anything goes wrong, reboot back. It ships in two editions — <strong>GNOME</strong> and <strong>KDE Plasma</strong> — and works out of the box with no post-install tweaking required.</p>
 
-                <p>Current stable release: <strong>2026.04.01</strong> · GNOME edition ~5.4 GB · KDE Plasma edition ~7.6 GB · Both SHA256 + GPG signed.</p>
+                <p>Current stable release: <strong>2026.05.18</strong> · GNOME edition ~5.4 GB · KDE Plasma edition ~7.6 GB · Both SHA256 + GPG signed.</p>
 
                 <p>Five ideas define how Shanios works:</p>
                 <ul>
@@ -366,7 +370,7 @@
                         <p class="caption">Immutable OS separates read-only system layers from writable user/config layers — every layer has a defined, auditable behaviour</p>
                     </div>
                   <div id="whats-included">
-                    <h2>1. What's Included</h2>
+                    <h3>1. What's Included</h3>
                     <p>Shanios comes fully equipped with a comprehensive software stack, carefully curated for desktop computing, development, gaming, and professional workloads. Everything works out of the box—no configuration required.</p>
 
                     <h3>System Foundation</h3>
@@ -534,7 +538,7 @@
                   </div>
 
                   <div id="user-configuration">
-                    <h2>2. User Configuration</h2>
+                    <h3>2. User Configuration</h3>
                     <p>The primary user is automatically configured with appropriate permissions during installation. Shanios also watches for newly created users: the <code>shani-user-setup.path</code> unit monitors <code>/etc/passwd</code> for changes and triggers <code>shani-user-setup.service</code> whenever a new regular user (UID 1000–59999) is detected. That service automatically adds the user to all required groups and sets their default shell to <code>/bin/zsh</code>. This means any user created post-installation via the GUI or <code>useradd</code>/<code>adduser</code> gets the same setup automatically — both of those commands are also wrapped to inject the default group list.</p>
 
                     <h3>User Groups</h3>
@@ -560,7 +564,7 @@
                 </div>
             </div>
                 <div id="system-optimizations">
-                    <h2>3. System Optimizations</h2>
+                    <h3>3. System Optimizations</h3>
                     <p>Shanios includes extensive performance, gaming, and reliability optimizations out of the box, eliminating the need for manual tweaking. These enterprise-grade optimizations are pre-configured and active from first boot.</p>
 
                     <h3>Memory & Storage Management</h3>
@@ -1520,17 +1524,17 @@
                     <h4>Downloading &amp; Verifying the ISO</h4>
                     <p>Download the Shanios ISO from <a href="https://shani.dev" target="_blank" rel="noopener noreferrer">shani.dev</a> or directly from SourceForge:</p>
                     <ul>
-                        <li><strong>GNOME Edition</strong> (2026.04.01, ~5.4 GB):
-                            <a href="https://sourceforge.net/projects/shanios/files/gnome/20260401/signed_shanios-gnome-2026.04.01-x86_64.iso/download" target="_blank" rel="noopener noreferrer">ISO</a> ·
-                            <a href="https://sourceforge.net/projects/shanios/files/gnome/20260401/signed_shanios-gnome-2026.04.01-x86_64.iso.sha256/download" target="_blank" rel="noopener noreferrer">SHA256</a> ·
-                            <a href="https://sourceforge.net/projects/shanios/files/gnome/20260401/signed_shanios-gnome-2026.04.01-x86_64.iso.asc/download" target="_blank" rel="noopener noreferrer">GPG signature</a> ·
-                            <a href="https://sourceforge.net/projects/shanios/files/gnome/20260401/signed_shanios-gnome-2026.04.01-x86_64.iso.torrent/download" target="_blank" rel="noopener noreferrer">Torrent</a>
+                        <li><strong>GNOME Edition</strong> (2026.05.18, ~5.4 GB):
+                            <a href="https://downloads.shani.dev/gnome/20260518/signed_shanios-gnome-2026.05.18-x86_64.iso" target="_blank" rel="noopener noreferrer">ISO</a> ·
+                            <a href="https://downloads.shani.dev/gnome/20260518/signed_shanios-gnome-2026.05.18-x86_64.iso.sha256" target="_blank" rel="noopener noreferrer">SHA256</a> ·
+                            <a href="https://downloads.shani.dev/gnome/20260518/signed_shanios-gnome-2026.05.18-x86_64.iso.asc" target="_blank" rel="noopener noreferrer">GPG signature</a> ·
+                            <a href="https://downloads.shani.dev/gnome/20260518/signed_shanios-gnome-2026.05.18-x86_64.iso.torrent" target="_blank" rel="noopener noreferrer">Torrent</a>
                         </li>
-                        <li><strong>KDE Plasma Edition</strong> (2026.04.01, ~7.6 GB):
-                            <a href="https://sourceforge.net/projects/shanios/files/plasma/20260401/signed_shanios-plasma-2026.04.01-x86_64.iso/download" target="_blank" rel="noopener noreferrer">ISO</a> ·
-                            <a href="https://sourceforge.net/projects/shanios/files/plasma/20260401/signed_shanios-plasma-2026.04.01-x86_64.iso.sha256/download" target="_blank" rel="noopener noreferrer">SHA256</a> ·
-                            <a href="https://sourceforge.net/projects/shanios/files/plasma/20260401/signed_shanios-plasma-2026.04.01-x86_64.iso.asc/download" target="_blank" rel="noopener noreferrer">GPG signature</a> ·
-                            <a href="https://sourceforge.net/projects/shanios/files/plasma/20260401/signed_shanios-plasma-2026.04.01-x86_64.iso.torrent/download" target="_blank" rel="noopener noreferrer">Torrent</a>
+                        <li><strong>KDE Plasma Edition</strong> (2026.05.18, ~7.6 GB):
+                            <a href="https://downloads.shani.dev/plasma/20260518/signed_shanios-plasma-2026.05.18-x86_64.iso" target="_blank" rel="noopener noreferrer">ISO</a> ·
+                            <a href="https://downloads.shani.dev/plasma/20260518/signed_shanios-plasma-2026.05.18-x86_64.iso.sha256" target="_blank" rel="noopener noreferrer">SHA256</a> ·
+                            <a href="https://downloads.shani.dev/plasma/20260518/signed_shanios-plasma-2026.05.18-x86_64.iso.asc" target="_blank" rel="noopener noreferrer">GPG signature</a> ·
+                            <a href="https://downloads.shani.dev/plasma/20260518/signed_shanios-plasma-2026.05.18-x86_64.iso.torrent" target="_blank" rel="noopener noreferrer">Torrent</a>
                         </li>
                     </ul>
 
@@ -1545,17 +1549,17 @@
                     <pre><code># GNOME edition — substitute the Plasma filename for the KDE edition
 
 # 1. Verify checksum
-sha256sum -c signed_shanios-gnome-2026.04.01-x86_64.iso.sha256
+sha256sum -c signed_shanios-gnome-2026.05.18-x86_64.iso.sha256
 
 # 2. Import the Shanios signing key (once)
 gpg --keyserver keys.openpgp.org --recv-keys 7B927BFFD4A9EAAA8B666B77DE217F3DA8014792
 
 # 3. Verify GPG signature
-gpg --verify signed_shanios-gnome-2026.04.01-x86_64.iso.asc signed_shanios-gnome-2026.04.01-x86_64.iso</code></pre>
-                    <p>SHA256 expected output: <code>signed_shanios-gnome-2026.04.01-x86_64.iso: OK</code>. GPG should report <code>Good signature from "Shani OS"</code>. Any other result means the download is corrupt or tampered — delete it and re-download.</p>
+gpg --verify signed_shanios-gnome-2026.05.18-x86_64.iso.asc signed_shanios-gnome-2026.05.18-x86_64.iso</code></pre>
+                    <p>SHA256 expected output: <code>signed_shanios-gnome-2026.05.18-x86_64.iso: OK</code>. GPG should report <code>Good signature from "Shani OS"</code>. Any other result means the download is corrupt or tampered — delete it and re-download.</p>
 
                     <h5>Windows (PowerShell) — verify SHA256</h5>
-                    <pre><code>Get-FileHash signed_shanios-gnome-2026.04.01-x86_64.iso -Algorithm SHA256</code></pre>
+                    <pre><code>Get-FileHash signed_shanios-gnome-2026.05.18-x86_64.iso -Algorithm SHA256</code></pre>
                     <p>Compare the output hash against the contents of the downloaded <code>.sha256</code> file — they must match exactly.</p>
 
                     <h4>Writing to USB</h4>
@@ -1568,7 +1572,7 @@ gpg --verify signed_shanios-gnome-2026.04.01-x86_64.iso.asc signed_shanios-gnome
 lsblk
 
 # Write (replace /dev/sdX with your actual USB device, e.g. /dev/sdb)
-sudo dd bs=4M if=signed_shanios-gnome-2026.04.01-x86_64.iso of=/dev/sdX status=progress oflag=sync</code></pre>
+sudo dd bs=4M if=signed_shanios-gnome-2026.05.18-x86_64.iso of=/dev/sdX status=progress oflag=sync</code></pre>
                     <p>Replace <code>/dev/sdX</code> with your actual USB device. Use the KDE filename for the Plasma edition. Minimum USB size: 8 GB.</p>
 
                     <div class="warning-box" role="alert">
@@ -5320,7 +5324,7 @@ nmcli connection down "MyVPN"</code></pre>
                     <p>Lightweight DNS forwarder and DHCP server for homelab setups. Use it for custom <code>.home</code> domains, split DNS (different resolution for LAN vs internet), or local ad-blocking. <strong>Not active by default.</strong></p>
 
                     <div class="code-block">
-                        <pre><code">sudo systemctl enable --now dnsmasq
+                        <pre><code>sudo systemctl enable --now dnsmasq
 
 # /etc/dnsmasq.conf — key examples:
 
@@ -5432,7 +5436,7 @@ nmcli connection show             # the modem connection will appear here
 # --- SMS (if supported by modem) ---
 mmcli -m 0 --messaging-list-sms
 mmcli -s 0                        # read SMS message 0
-mmcli -m 0 --messaging-create-sms="text=Hello&number=+1234567890"</code></pre>
+mmcli -m 0 --messaging-create-sms="text=Hello&amp;number=+1234567890"</code></pre>
                     </div>
 
 
@@ -5652,11 +5656,11 @@ cat /tmp/publickey    # share with the other peer — goes in their [Peer] Publi
 # ── Minimal /etc/wireguard/wg0.conf ─────────────────────────────────────────
 # [Interface]
 # Address = 10.0.0.1/24          ← this peer's VPN IP
-# PrivateKey = <this peer's private key>
+# PrivateKey = &lt;this peer's private key&gt;
 # ListenPort = 51820              ← UDP port to listen on (open in firewalld)
 #
 # [Peer]
-# PublicKey = <other peer's public key>
+# PublicKey = &lt;other peer's public key&gt;
 # Endpoint = 203.0.113.10:51820  ← other peer's public IP:port
 # AllowedIPs = 10.0.0.2/32       ← route only the peer's VPN IP through tunnel
 # PersistentKeepalive = 25        ← keep NAT hole open (set if behind NAT)
@@ -7017,13 +7021,13 @@ podman-compose -f ~/umami/compose.yml up -d
 #     restart: unless-stopped
 
 # /home/user/authelia/config/configuration.yml (minimal example):
-# jwt_secret: <random-string>
+# jwt_secret: &lt;random-string&gt;
 # default_redirection_url: https://auth.example.com
 # server:
 #   host: 0.0.0.0
 #   port: 9091
 # session:
-#   secret: <random-string>
+#   secret: &lt;random-string&gt;
 #   redis:
 #     host: redis
 # storage:
@@ -7474,7 +7478,7 @@ ss -tnp sport = :80                 # connections from local port 80</code></pre
 
                     <p><strong>netstat / ifconfig / arp / route — legacy net-tools:</strong></p>
                     <div class="code-block">
-                        <pre><code"># netstat (net-tools — older but widely familiar)
+                        <pre><code># netstat (net-tools — older but widely familiar)
 netstat -tlnp          # listening TCP sockets (same as ss -tlnp)
 netstat -s             # protocol statistics (TCP/UDP/IP error counters)
 netstat -r             # routing table (same as ip route show)
@@ -7775,7 +7779,7 @@ fast                                # quick download-speed test only</code></pre
 
                     <p><strong>ethtool — NIC hardware diagnostics:</strong></p>
                     <div class="code-block">
-                        <pre><code">ethtool eth0                        # link speed, duplex, auto-negotiate, link detected
+                        <pre><code>ethtool eth0                        # link speed, duplex, auto-negotiate, link detected
 ethtool -i eth0                     # kernel driver name and firmware version
 ethtool -S eth0                     # detailed NIC statistics (rx_errors, tx_drops, etc.)
 ethtool -k eth0                     # hardware offload features (TSO, GSO, GRO, LRO)
@@ -7810,7 +7814,7 @@ sudo snmptrapd -f -Lo -c /etc/snmp/snmptrapd.conf</code></pre>
 
                     <p><strong>inetutils — ftp, telnet, rsh for legacy protocol testing:</strong></p>
                     <div class="code-block">
-                        <pre><code"># FTP (for testing FTP servers — use sftp/rsync for actual transfers)
+                        <pre><code># FTP (for testing FTP servers — use sftp/rsync for actual transfers)
 ftp 192.168.1.100
 ftp -n 192.168.1.100 &lt;&lt;EOF
 quote USER anonymous
@@ -8089,7 +8093,7 @@ aria2c --enable-rpc --rpc-listen-all=false --rpc-secret=mysecret --daemon</code>
                 <h3 id="ts-boot">Boot Issues</h3>
                 <div class="faq-container">
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>System won't boot after update</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -8106,7 +8110,7 @@ aria2c --enable-rpc --rpc-listen-all=false --rpc-secret=mysecret --daemon</code>
                     </div>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>Black screen or crash after login (compositor issue)</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -8122,7 +8126,7 @@ aria2c --enable-rpc --rpc-listen-all=false --rpc-secret=mysecret --daemon</code>
                     </div>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>TPM auto-unlock stops working after a BIOS/firmware update</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -8145,7 +8149,7 @@ sudo systemd-cryptenroll --wipe-slot=tpm2 "$LUKS_DEVICE"</code></pre></div>
                     </div>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>Boot entries (@blue or @green) missing from the boot menu</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -8167,7 +8171,7 @@ ls /boot/efi/loader/entries/</code></pre>
                     </div>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>System boots but /etc overlay is not mounted (configuration not applied)</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -8195,7 +8199,7 @@ ls /data/overlay/etc/work/    # Should be an empty working dir</code></pre>
                     </div>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>LUKS password not working after TPM enrollment</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -8213,7 +8217,7 @@ ls /data/overlay/etc/work/    # Should be an empty working dir</code></pre>
                 <h3 id="ts-updates">Update Issues</h3>
                 <div class="faq-container">
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>shani-deploy fails with network error</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -8234,7 +8238,7 @@ sudo shani-deploy</code></pre>
                     </div>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>shani-deploy fails due to insufficient disk space</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -8261,7 +8265,7 @@ sudo compsize /</code></pre>
                     </div>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>shani-deploy fails with checksum or GPG signature error</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -8280,7 +8284,7 @@ sudo shani-deploy --force</code></pre>
                     </div>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>Update hangs or stalls mid-deployment</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -8305,7 +8309,7 @@ sudo shani-deploy</code></pre>
                 <h3 id="ts-apps">Application Issues</h3>
                 <div class="faq-container">
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>Flatpak app won't start</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -8334,7 +8338,7 @@ flatpak run --env=LIBGL_DEBUG=verbose org.app.Name</code></pre>
                     </div>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>Snap app won't start or snapd has issues</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -8371,7 +8375,7 @@ snap list</code></pre>
                     </div>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>Nix package or environment issues</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -8411,7 +8415,7 @@ nix-collect-garbage -d</code></pre>
                     </div>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>AppImage won't run or shows permission errors</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -8441,7 +8445,7 @@ file MyApp.AppImage   # check ELF architecture in output</code></pre>
                     </div>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>Distrobox container can't access host devices or files</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -8476,7 +8480,7 @@ distrobox enter mybox -- df -h</code></pre>
                 <h3 id="ts-config">Configuration Issues</h3>
                 <div class="faq-container">
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>A bad /etc change is causing services to fail at boot</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -8494,7 +8498,7 @@ distrobox enter mybox -- df -h</code></pre>
                     </div>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>How do I add a custom kernel module or out-of-tree driver?</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -8512,7 +8516,7 @@ distrobox enter mybox -- df -h</code></pre>
                 <h3 id="ts-luks">Encryption &amp; LUKS Issues</h3>
                 <div class="faq-container">
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>How to check if my system is encrypted</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -8541,7 +8545,7 @@ lsblk -f
                     </div>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>Remove TPM enrollment and return to password-only</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -8561,7 +8565,7 @@ sudo systemd-cryptenroll --wipe-slot=tpm2 "$LUKS_DEVICE"
                 <div class="faq-container">
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>No network connection after boot</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -8596,7 +8600,7 @@ ip addr show</code></pre>
                     </div>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>DNS resolution not working (can ping IPs but not hostnames)</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -8631,7 +8635,7 @@ cat /etc/NetworkManager/NetworkManager.conf | grep dns
                     </div>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>Caddy not starting or HTTPS certificate failing</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -8669,7 +8673,7 @@ ss -tlnp | grep caddy</code></pre>
                     </div>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>Tailscale not connecting or devices not visible</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -8708,7 +8712,7 @@ sudo tailscale up</code></pre>
                     </div>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>Cloudflared tunnel is down or failing to connect</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -8745,7 +8749,7 @@ sudo systemctl restart cloudflared</code></pre>
                     </div>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>SSH connection refused or timing out</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -8782,7 +8786,7 @@ ssh -vvv <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail
                     </div>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>NFS share not mounting or showing "access denied"</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -8815,7 +8819,7 @@ sudo journalctl -u nfs-server -n 30</code></pre>
                     </div>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>Samba share not visible on network / authentication failing</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -8852,7 +8856,7 @@ sudo systemctl restart smb nmb</code></pre>
                     </div>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>Firewall blocking a service unexpectedly</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -8885,7 +8889,7 @@ sudo nft list ruleset | grep -v "^#"</code></pre>
                     </div>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>Podman container can't reach the internet or local network</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -8921,7 +8925,7 @@ sudo firewall-cmd --reload</code></pre>
                     </div>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>VPN (WireGuard / OpenVPN) not connecting via NetworkManager</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -8961,7 +8965,7 @@ sudo systemctl restart NetworkManager</code></pre>
                 <h3 id="ts-audio">Audio Issues</h3>
                 <div class="faq-container">
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>No sound / audio device not detected</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -9003,7 +9007,7 @@ arecord -l                       # list capture devices</code></pre>
                     </div>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>Bluetooth audio (headphones) crackling or won't connect</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -9035,7 +9039,7 @@ sudo systemctl restart bluetooth</code></pre>
                     </div>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>JACK audio for pro audio / low-latency setup</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -9068,7 +9072,7 @@ pw-metadata | grep quantum</code></pre>
                 <h3 id="ts-gaming">Gaming Issues</h3>
                 <div class="faq-container">
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>Steam won't launch or Proton games crash</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -9104,7 +9108,7 @@ flatpak run com.valvesoftware.Steam steam://resetsteam</code></pre>
                     </div>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>Controller not detected in games</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -9142,7 +9146,7 @@ flatpak run org.freedesktop.Piper</code></pre>
                     </div>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>Poor gaming performance / low FPS</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -9181,7 +9185,7 @@ flatpak install flathub io.github.benjamimgois.goverlay
                 <h3 id="ts-waydroid">Waydroid / Android Issues</h3>
                 <div class="faq-container">
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>Waydroid won't start or shows "failed to start session"</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -9215,7 +9219,7 @@ waydroid show-full-ui</code></pre>
                     </div>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>Android apps show "not installed" or APK fails to install</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -9248,7 +9252,7 @@ sudo btrfs subvolume show /var/lib/waydroid   # should be @waydroid subvolume</c
                 <h3 id="ts-printing">Printing &amp; Scanning Issues</h3>
                 <div class="faq-container">
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>Printer not detected or jobs stuck in queue</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -9287,7 +9291,7 @@ hp-setup                           # run HP setup wizard</code></pre>
                     </div>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>Scanner not detected by Simple Scan / Skanlite</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -9320,7 +9324,7 @@ ls -l /dev/bus/usb/...            # check permissions</code></pre>
                 <h3 id="ts-bluetooth">Bluetooth Issues</h3>
                 <div class="faq-container">
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>Bluetooth device won't pair or connect</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -9362,7 +9366,7 @@ bluetoothctl power on</code></pre>
                         </div>
                     </div>
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>Bluetooth headset shows connected but no audio</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -9392,7 +9396,7 @@ bluetoothctl info XX:XX:XX:XX:XX:XX | grep -i codec</code></pre>
                         </div>
                     </div>
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>Xbox / DualSense / Nintendo controller won't pair over Bluetooth</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -9423,7 +9427,7 @@ sudo modprobe uinput     # load if missing (persists via /etc/modules-load.d/)</
                 <h3 id="ts-display">Display &amp; Multi-Monitor Issues</h3>
                 <div class="faq-container">
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>External monitor not detected or wrong resolution</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -9459,7 +9463,7 @@ sudo udevadm trigger --subsystem-match=drm</code></pre>
                         </div>
                     </div>
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>HiDPI / fractional scaling looks blurry or text is too small</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -9493,7 +9497,7 @@ QT_QPA_PLATFORM=wayland flatpak run org.example.App
                         </div>
                     </div>
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>NVIDIA: external display not working or primary display wrong</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -9528,7 +9532,7 @@ switcherooctl list</code></pre>
                 <h3 id="ts-power">Power &amp; Suspend Issues</h3>
                 <div class="faq-container">
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>System won't suspend, or wakes up immediately after suspend</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -9561,7 +9565,7 @@ sudo systemctl suspend -i</code></pre>
                         </div>
                     </div>
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>Lid close doesn't suspend, or suspends but display doesn't turn off</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -9586,7 +9590,7 @@ loginctl show-seat</code></pre>
                         </div>
                     </div>
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>Hibernate not working / resuming to a blank session</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -9617,7 +9621,7 @@ journalctl -b -1 | grep -i "hibernate\|resume\|swap" | tail -30</code></pre>
                         </div>
                     </div>
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>How to switch power profiles (performance / balanced / power-saver)</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -9647,7 +9651,7 @@ upower --monitor-detail</code></pre>
                 <h3 id="ts-vm">Virtual Machine Issues</h3>
                 <div class="faq-container">
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>KVM not available / "/dev/kvm" missing</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -9677,7 +9681,7 @@ virsh capabilities | grep -i kvm</code></pre>
                         </div>
                     </div>
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>VM has no internet / can't reach the network</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -9707,7 +9711,7 @@ sudo firewall-cmd --list-all --zone=libvirt
                         </div>
                     </div>
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>Windows VM has no sound or very poor performance</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -9738,7 +9742,7 @@ virsh edit windowsvm
                         </div>
                     </div>
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>virt-manager / GNOME Boxes shows "connection refused" or won't start</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -9769,7 +9773,7 @@ sudo systemctl enable --now virtlogd</code></pre>
                 <h3 id="ts-storage">Storage &amp; Btrfs Issues</h3>
                 <div class="faq-container">
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>"No space left on device" even though df shows free space</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -9800,7 +9804,7 @@ sudo btrfs fi usage /</code></pre>
                         </div>
                     </div>
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>Btrfs checksum error / data corruption detected</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -9840,7 +9844,7 @@ sudo smartctl -a /dev/sda         # or SATA drive</code></pre>
                 <div id="faq-software" class="faq-container">
                     <h3 class="faq-group-heading">Software &amp; Packages</h3>
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>Can I install traditional Arch packages with pacman?</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -9850,7 +9854,7 @@ sudo smartctl -a /dev/sda         # or SATA drive</code></pre>
                     </div>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>What happens if an update fails?</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -9860,7 +9864,7 @@ sudo smartctl -a /dev/sda         # or SATA drive</code></pre>
                     </div>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>Does Shanios support hibernation?</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -9870,7 +9874,7 @@ sudo smartctl -a /dev/sda         # or SATA drive</code></pre>
                     </div>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>How do I make persistent changes to system configuration?</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -9880,7 +9884,7 @@ sudo smartctl -a /dev/sda         # or SATA drive</code></pre>
                     </div>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>Why does Shanios need 32GB minimum storage?</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -9890,7 +9894,7 @@ sudo smartctl -a /dev/sda         # or SATA drive</code></pre>
                     </div>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>Can I use Shanios on legacy BIOS systems?</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -9900,7 +9904,7 @@ sudo smartctl -a /dev/sda         # or SATA drive</code></pre>
                     </div>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>Can I dual-boot Shanios with Windows or another Linux?</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -9912,7 +9916,7 @@ sudo smartctl -a /dev/sda         # or SATA drive</code></pre>
                     </div>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>How do I switch between @blue and @green manually?</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -9922,7 +9926,7 @@ sudo smartctl -a /dev/sda         # or SATA drive</code></pre>
                     </div>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>How do I install software that needs system-level access?</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -9935,7 +9939,7 @@ sudo smartctl -a /dev/sda         # or SATA drive</code></pre>
                 <div id="faq-updates" class="faq-container">
                     <h3 class="faq-group-heading">Updates &amp; Rollback</h3>
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>Will my WiFi passwords and Bluetooth pairings survive an update?</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -9945,7 +9949,7 @@ sudo smartctl -a /dev/sda         # or SATA drive</code></pre>
                     </div>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>How do I check which slot (@blue or @green) I'm currently running?</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -9955,7 +9959,7 @@ sudo smartctl -a /dev/sda         # or SATA drive</code></pre>
                     </div>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>How do I set up automatic disk decryption (no password prompt at boot)?</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -9968,7 +9972,7 @@ sudo smartctl -a /dev/sda         # or SATA drive</code></pre>
                 <div id="faq-hardware" class="faq-container">
                     <h3 class="faq-group-heading">Hardware &amp; Gaming</h3>
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>Can I play games on Shanios?</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -9978,7 +9982,7 @@ sudo smartctl -a /dev/sda         # or SATA drive</code></pre>
                     </div>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>How often does Shanios get updates, and are they automatic?</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -9988,7 +9992,7 @@ sudo smartctl -a /dev/sda         # or SATA drive</code></pre>
                     </div>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>Is my data safe during a rollback?</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -9998,7 +10002,7 @@ sudo smartctl -a /dev/sda         # or SATA drive</code></pre>
                     </div>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>Can I run Android apps on Shanios?</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -10011,7 +10015,7 @@ sudo smartctl -a /dev/sda         # or SATA drive</code></pre>
                 <div id="faq-storage" class="faq-container">
                     <h3 class="faq-group-heading">Storage &amp; Encryption</h3>
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>How do I back up my data?</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -10036,7 +10040,7 @@ sudo cryptsetup luksHeaderBackup "$LUKS_DEVICE" --header-backup-file ~/luks-head
                     </div>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>How do I set up printing and scanning?</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -10052,7 +10056,7 @@ sudo cryptsetup luksHeaderBackup "$LUKS_DEVICE" --header-backup-file ~/luks-head
                     </div>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>How do I run virtual machines on Shanios?</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -10062,7 +10066,7 @@ sudo cryptsetup luksHeaderBackup "$LUKS_DEVICE" --header-backup-file ~/luks-head
                     </div>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>How do I check deduplication savings and compression ratios?</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -10090,7 +10094,7 @@ sudo shani-deploy --optimize</code></pre>
                     <h3 class="faq-group-heading">Security &amp; Privacy</h3>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>Does Shanios collect telemetry or usage data?</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -10100,7 +10104,7 @@ sudo shani-deploy --optimize</code></pre>
                     </div>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>What security modules and protections are active by default?</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -10110,7 +10114,7 @@ sudo shani-deploy --optimize</code></pre>
                     </div>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>Can I verify the OS image myself before deploying it?</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -10124,7 +10128,7 @@ sha256sum -c shanios-image.zst.sha256</code></pre></div>
                     </div>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>Does my YubiKey / FIDO2 key / smart card work?</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -10141,7 +10145,7 @@ systemctl status pcscd.socket</code></pre></div>
                     <h3 class="faq-group-heading">Laptop &amp; Hardware</h3>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>Is Shanios good for laptops? Does battery life suffer?</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -10151,7 +10155,7 @@ systemctl status pcscd.socket</code></pre></div>
                     </div>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>Does NVIDIA work? What about hybrid GPU laptops?</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -10172,7 +10176,7 @@ gdbus call --system --dest net.hadess.SwitcherooControl \
                     </div>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>Does fingerprint login work?</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -10195,7 +10199,7 @@ journalctl -u fprintd -f</code></pre></div>
                     </div>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>How do I update my BIOS / firmware without Windows?</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -10218,7 +10222,7 @@ fwupdmgr get-devices</code></pre></div>
                     <h3 class="faq-group-heading">Switching from Windows or macOS</h3>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>I'm coming from Windows. Will my apps work?</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -10230,7 +10234,7 @@ fwupdmgr get-devices</code></pre></div>
                     </div>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>I'm coming from macOS. What changes? What stays the same?</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -10242,7 +10246,7 @@ fwupdmgr get-devices</code></pre></div>
                     </div>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>I already use Linux. Does my knowledge transfer? What about pacman and the AUR?</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -10260,7 +10264,7 @@ fwupdmgr get-devices</code></pre></div>
                     </div>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>Does every update download the full OS image (~5–7 GB)?</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -10272,7 +10276,7 @@ fwupdmgr get-devices</code></pre></div>
                     </div>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>Who built Shanios, and what happens if development stops?</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -10284,7 +10288,7 @@ fwupdmgr get-devices</code></pre></div>
                     </div>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>How do I free up disk space?</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -10322,7 +10326,7 @@ sudo btrfs balance start -dusage=50 -musage=50 /</code></pre>
                     </div>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>Does Shanios work well with HiDPI / 4K displays and fractional scaling?</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -10333,7 +10337,7 @@ sudo btrfs balance start -dusage=50 -musage=50 /</code></pre>
                     </div>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>How do I set up and manage multiple monitors?</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -10346,7 +10350,7 @@ sudo btrfs balance start -dusage=50 -musage=50 /</code></pre>
                     </div>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>Can I install VS Code, Cursor, or JetBrains IDEs?</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -10380,7 +10384,7 @@ flatpak install flathub dev.zed.Zed</code></pre>
                     </div>
 
                     <div class="faq-item">
-                        <div class="faq-question">
+                        <div class="faq-question" role="button" tabindex="0">
                             <h4>Why is my Btrfs filesystem showing full even though I have free space?</h4>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
@@ -10637,6 +10641,5 @@ sudo btrfs balance start -dusage=50 /
     </div>
     <button class="back-to-top" aria-label="Back to top"><i class="fas fa-arrow-up"></i></button>
 
-    <script src="script.js"></script>
 </body>
 </html>

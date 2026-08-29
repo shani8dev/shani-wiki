@@ -158,7 +158,7 @@ function initSearch() {
 
       results.innerHTML = matches.length
       ? `<ul>${matches
-        .map(m => `<li><a href="#${m.id}">${m.text}</a></li>`)
+        .map(m => `<li><a href="#${m.id}">${m.text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</a></li>`)
         .join('')}</ul>`
         : `<p style="padding:8px">No results</p>`;
 
@@ -166,11 +166,32 @@ function initSearch() {
     }, 200);
   });
 
+  const closeResults = () => { results.style.display = 'none'; };
+
   document.addEventListener('click', e => {
-    if (!box.contains(e.target)) results.style.display = 'none';
+    if (!box.contains(e.target)) closeResults();
   });
 
-    button?.addEventListener('click', e => e.preventDefault());
+  // ── Keyboard support (parity with blog & docs search) ────────────
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { closeResults(); input.blur(); return; }
+    const items = results.querySelectorAll('a');
+    if (!items.length) return;
+    const idx = [...items].indexOf(document.activeElement);
+    if (e.key === 'ArrowDown') { e.preventDefault(); (items[idx + 1] || items[0])?.focus(); }
+    if (e.key === 'ArrowUp')   { e.preventDefault(); (items[idx - 1] || items[items.length - 1])?.focus(); }
+  });
+  results.addEventListener('click', e => {
+    if (e.target.closest('a')) setTimeout(closeResults, 0);
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === '/' && document.activeElement.tagName !== 'INPUT' &&
+        document.activeElement.tagName !== 'TEXTAREA' && !e.ctrlKey && !e.altKey && !e.isComposing) {
+      e.preventDefault(); input.focus();
+    }
+  });
+
+    button?.addEventListener('click', e => { e.preventDefault(); input.focus(); });
 }
 
 /* =====================================================
@@ -185,7 +206,7 @@ function initFAQ() {
 
     item.setAttribute('aria-expanded', 'false');
 
-    q.addEventListener('click', () => {
+    const toggle = () => {
       const open = item.getAttribute('aria-expanded') === 'true';
       item.setAttribute('aria-expanded', String(!open));
       item.classList.toggle('active');
@@ -197,6 +218,17 @@ function initFAQ() {
         } else {
           icon.classList.replace('fa-plus', 'fa-minus');
         }
+      }
+    };
+
+    q.addEventListener('click', toggle);
+    // Keyboard support: the .faq-question divs carry role="button" and
+    // tabindex="0" (set in index.html) — activate on Enter or Space so the
+    // accordions are reachable without a pointer.
+    q.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        toggle();
       }
     });
   });
