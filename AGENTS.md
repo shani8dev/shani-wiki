@@ -8,12 +8,13 @@ done.
 ## What this repo is
 
 A no-build-step technical documentation wiki (plain HTML/CSS/Markdown
-under `docs/`). As of the last full-ecosystem audit this repo was notably
-stale (its last commit predates every sibling repo's by months) and is
-missing some SEO/crawler artifacts (`404.html`, `sitemap.xml`,
+under `docs/`). At the last full-ecosystem audit this repo was notably
+stale (its then-last commit predated every sibling repo's by months) and
+was missing some SEO/crawler artifacts (`404.html`, `sitemap.xml`,
 `robots.txt`, `llms.txt`) that its siblings (`shani-blog`, `shani-docs`)
-already have. If you're touching this repo, that context is worth
-checking before assuming everything here is current.
+already have. That artifact gap is closed (commit `b036f05`, 2026-08-29,
+now pushed), but the wiki's **content** commits still date from 2026-04-15
+— check for staleness before touching it.
 
 ## Rule: open it and actually check
 
@@ -64,13 +65,14 @@ hash matches the pinned file's real content
   correct visual render (sidebar icons, logo, layout), and exercised the
   in-page search feature to confirm `script.js` still works normally.
 - **No LICENSE file (Low, needs a maintainer decision).** No `LICENSE`/`COPYING`
-  file anywhere in the repo, confirmed by direct file check. 11 of 15
-  repos in this ecosystem have one; the other 4 (including this one) don't:
-  `shani-docs`, `shani-install-media`, `shani-website`, `shani-wiki` — not
-  a unique outlier, one of a real cluster. Needs
+  file anywhere in the repo, confirmed by direct file check. The ecosystem
+  cluster currently lacking one (audit-verified 2026-09-17): `shani-chronoa`,
+  `shani-docs`, `shani-wiki`, `shani-website` — `shani-install-media` gained a
+  GPL-3.0 LICENSE on 2026-09-16 and `shani-settings` on 2026-09-17, both
+  closed. Not a unique outlier, one of a real cluster. Needs
   the maintainer to pick what license this content is under, not
   something to guess and add.
-- **Staleness.** Last commit 2026-04-15 — stale ~4 months. README has staleness notice.
+- **Staleness — status updated 2026-09-17.** SEO/crawler artifacts + README hardening landed in `b036f05` (2026-08-29, pushed); **content** itself last changed 2026-04-15 — still ~5 months stale. README has staleness notice.
 - **Missing artifacts — FIXED.** Added all 4, matching sibling
   conventions but adapted to this site's actual single-page structure
   (unlike `shani-docs`'s multi-page site, every "section" here is a
@@ -131,13 +133,76 @@ source alone.
 
 ## Cross-repo impact — check before calling a fix complete
 
-Brand CSS and related JS are **copy-pasted** across this repo and its
-siblings (`shani-blog`, `shani-docs`, `shani-website`) — there is no shared
-package. This repo is also the most likely of the four to be running a
-stale copy (see the staleness note above) — if you're fixing something
-here, check whether the other three already fixed it and this repo just
-never received the update.
+Brand CSS and related JS claims are the **opposite** here: this repo shares **no** `sw.js`, brand CSS, or nav/content-fetch JS with the other web repos (audit-verified 2026-09-17). This is a markdown-only site with a single `index.html`; the "shared files across four web repos" concern does not apply — updates to those files in `shani-docs`/`shani-blog` do NOT need to be mirrored here. The only cross-repo sync surface is content and hardening (e.g., SEO/CSP patterns), which the staleness note above already covers.
 
 ## Where things are documented
 
 `README.md` explains the site's purpose and structure.
+
+## Garuda Cross-Reference Findings (added 2026-09-17)
+
+Based on a full scan of the garuda clones mapped against shani — **29 repos** (not 34; several user-listed names don't exist — see `../garuda-catalog.md` §Discrepancies). See `../garuda-mapping-analysis.md`, `../deep-analysis.md`, `../shani-catalog.md`, and `../garuda-catalog.md` for full details. garuda-ng is the most directly comparable reference for the shared-web-code problem this repo faces.
+
+### 🟡 HIGH: CI/CD gap (shared across ALL repos)
+
+1. **Shared CI templates** (estimated 2-3 days, affects ALL repos).
+   - Garuda's `gitlab-ci-commons` provides reusable templates (commitizen, flake-check, pre-commit, tag-to-release). Each repo `include:`s from it.
+   - Shani repos run on GitHub Actions (no `.gitlab-ci.yml` anywhere) — 8 repos (blog, builder, docs, fleet, insights, install-media, pkgbuilds, platform) carry hand-written `.github/workflows/*.yml` with duplicated patterns.
+   - **Action**: Create `shani-ci-commons` (GitHub Actions reusable workflows / composite actions) with templates for lint, test, build, security scan. Each repo references them via `uses: shani8dev/shani-ci-commons/...` instead of copy-pasting.
+   - **Affects**: All 15 shani repos.
+
+### 🟡 HIGH: Dependency management gap
+
+2. **Add automated dependency updates** (estimated 4 hours, affects ALL repos).
+   - Garuda uses `renovate-runner` running hourly against all repos with `renovate.json` files.
+   - Shani repos have no automated dependency updating.
+   - **Action**: Set up Renovate (self-hosted or gitlab.com) with a fleet-wide config. Each repo adds a minimal `renovate.json`.
+
+### 🟢 MEDIUM: Code quality
+
+3. **Conventional commit enforcement** (estimated 2 hours, affects ALL repos).
+   - Every garuda repo has a `[commitizen]` badge; `cz commit` is enforced.
+   - Shani repos have no commit message standardization.
+
+### 🟡 Staleness warning
+
+4. **Stale content risk** — content last changed 2026-04-15 (SEO/crawler artifacts since landed in `b036f05`, 2026-08-29). Brand CSS and related JS are copy-pasted across `shani-blog`, `shani-docs`, and `shani-website` only — `shani-wiki` does NOT share `sw.js`, `brand-shani.css`, or nav JS. If fixing something here, check whether the other three already fixed it and this repo just never received the update. See `shani-blog/AGENTS.md` for the correction that website/wiki have no shared files.
+
+### 🟢 MEDIUM: Shared web components
+
+5. **Shared web component library** (estimated 2-3 days, affects shani-docs/blog/website).
+   - Garuda's `garuda-ng` is an Angular library shared across all web projects.
+   - Shani web repos share CSS/JS by copy-paste (only between docs and blog). `shani-website` and `shani-wiki` do NOT share these files.
+   - **Action**: Create a lightweight shared component library. Standardize on a CSS framework.
+
+### 🔍 Re-Scan Findings (2026-09-17)
+
+Re-scanned against `garuda-catalog.md` (29 repos, not 34) and `shani-catalog.md` (16 repos). **Confirmed mapping: `garuda-ng`** (EXISTS in `garuda-clones/` — Angular component library, TypeScript/Angular 22/Nx/pnpm, npm `@garudalinux/core`, themed variants, AnalogJS/Vite docs site, GitHub Actions, `renovate.json`, Git-Cliff, GPL-3.0-or-later). It is the closest garuda web-facing reference. shani-wiki is a **markdown-only single page with in-page `#anchor` navigation** — no slug/content-fetch logic, so the blog/docs slug fix does not propagate here (per the AGENTS.md correction).
+
+**New gaps from the garuda side:**
+1. **No CI/CD at all** — `garuda-ng` has GitHub Actions CI + CD (Playwright e2e, Cloudflare Pages deploy); shani-wiki has no CI workflows, no pre-commit hooks, and the **content** is still stale since 2026-04-15 (SEO/crawler artifacts committed `b036f05` 2026-08-29; confirmed in `shani-catalog.md` §14).
+2. **No dependency-update automation** — `garuda-ng` has `renovate.json`; shani-wiki has none.
+3. **Single ~7000-line `index.html`** — every section is a `#anchor` on one file; `garuda-ng`'s docs site is a real multi-page site with routing. Content here is harder to version, diff, and maintain than per-page files.
+4. **No changelog/contribution docs** — `garuda-ng` has Git-Cliff, CONTRIBUTING.md, CODE_OF_CONDUCT.md; shani-wiki has no LICENSE (4-repo cluster), no CONTRIBUTING.
+5. **No theme system** — `garuda-ng` ships catppuccin/dr460nized/vo1ded themed variants; shani-wiki has a single `style.css`.
+
+**Shani advantages:**
+1. **Single-page anchor structure = zero routing/JS complexity** — no slug/content-fetch logic to break; the blog/docs `index.html`-slug bug class cannot occur here by design.
+2. **Strict CSP** (`script-src 'self'`, zero inline scripts) + SRI on Font Awesome — verified live in a real browser (per this repo's known-issues section).
+3. **No build step, no framework dependencies** — nothing to keep in sync with a toolchain; `garuda-ng` requires pnpm 12 + Nx 23 + Angular 22.
+
+**Qt GUI gap note:** not applicable — static wiki; garuda's Qt GUI apps are unrelated.
+
+### 📋 Implementation Roadmap (2026-09-17)
+
+Implementation priorities are per `../IMPLEMENTATION-ROADMAP.md` (master roadmap for the whole shani ecosystem).
+
+1. ~~**Push pending working-tree fixes (P0, 5 min).**~~ **DONE — closed 2026-09-17.** `robots.txt`, `sitemap.xml`, `llms.txt`, the CSP meta tag, Font Awesome SRI hash, heading-order fix, and the dead `<script src="script.js">` tag removal are all committed in `b036f05` (2026-08-29) and pushed; the live site serves them.
+
+2. **Refresh stale content (P1, ongoing).** Content commits date from 2026-04-15 — ~5 months stale (the `b036f05` 2026-08-29 commit added SEO/crawler artifacts + README hardening but did not refresh the wiki's own prose). Brand CSS/JS and SEO updates that landed in `shani-docs`/`shani-blog` never reached this repo; audit the single `index.html` against the current sibling state and port what applies (this repo shares no `sw.js`/brand CSS/nav JS, so the port surface is content and hardening, not shared chrome).
+
+3. **Add LICENSE (P3, 5 min).** Master-roadmap item #31, not #26 (web-shared-components is #27; #26 is shani-gui welcome content). Match `shani-blog` — the only web sibling that has a LICENSE, and it is **MIT** (audit-verified 2026-09-17), not GPL-3.0 — unless the maintainer decides web repos should follow the OS-side GPL-3.0 standard instead; one of the 4-repo cluster missing it.
+
+4. **CI workflow (P1).** No CI at all today. Use `shani-ci-commons` templates (item #7): HTML validation of the single `index.html` (html5lib strict parse), SRI-hash verification on the Font Awesome CDN link, and a staleness check that flags when the last commit is older than N months.
+
+5. **Conventional commits (P1).** Ecosystem-wide commit convention (item #9) — no dependencies to Renovate here, so skip `renovate.json`.
