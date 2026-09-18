@@ -33,6 +33,42 @@ or touch a CDN `<script>`/`<link>` tag, confirm any `integrity=` (SRI)
 hash matches the pinned file's real content
 (`openssl dgst -sha384 -binary <file> | openssl base64 -A`).
 
+## Required verification for a change
+
+```bash
+# Serve locally and open in a browser; check the console for errors.
+python3 -m http.server 8000
+
+# Strict-parse every HTML page:
+python3 -c "
+import html5lib, pathlib
+for f in pathlib.Path('.').glob('*.html'):
+    html5lib.parse(f.read_text(), strict=True)
+print('all pages parse strict')
+"
+
+# This is single-page-with-anchors, not multi-page like shani-docs — if
+# you touch any in-page nav/TOC, check the whole anchor-link graph, not
+# just the links you edited:
+python3 -c "
+import re, pathlib
+html = pathlib.Path('index.html').read_text()
+ids = set(re.findall(r'id=\"([^\"]+)\"', html))
+hrefs = re.findall(r'href=\"#([^\"]+)\"', html)
+broken = [h for h in hrefs if h not in ids]
+print(f'{len(hrefs)} anchor links, {len(broken)} broken:', broken)
+"
+
+# sitemap.xml validates as XML:
+python3 -c "import xml.etree.ElementTree as ET; ET.parse('sitemap.xml')"
+
+# Syntax-check any touched JS:
+node --check script.js
+
+# If you touched a CDN <script>/<link> tag's integrity= hash:
+openssl dgst -sha384 -binary <file> | openssl base64 -A
+```
+
 ## Audit-verified known issues (confirmed present)
 
 - **8 orphaned PNGs removed — FIXED, but undocumented until now.**
