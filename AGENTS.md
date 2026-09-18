@@ -174,7 +174,7 @@ Based on a full scan of the garuda clones mapped against shani — **29 repos** 
 
 ### 🟡 Staleness warning
 
-4. **Stale content risk** — content last changed 2026-04-15 (SEO/crawler artifacts since landed in `b036f05`, 2026-08-29). Brand CSS and related JS are copy-pasted across `shani-blog`, `shani-docs`, and `shani-website` only — `shani-wiki` does NOT share `sw.js`, `brand-shani.css`, or nav JS. If fixing something here, check whether the other three already fixed it and this repo just never received the update. See `shani-blog/AGENTS.md` for the correction that website/wiki have no shared files.
+4. **Stale content risk** — content last changed 2026-04-15 (SEO/crawler artifacts since landed in `b036f05`, 2026-08-29). Brand CSS and related JS are copy-pasted between `shani-blog` and `shani-docs` only — the same two repos the parent `AGENTS.md` lists as sharing. `shani-wiki` (and `shani-website`) share no `sw.js`, `brand-shani.css`, or nav JS with any sibling site. If fixing something here, check whether the other one of those two already fixed it and this repo just never received the update.
 
 ### 🟢 MEDIUM: Shared web components
 
