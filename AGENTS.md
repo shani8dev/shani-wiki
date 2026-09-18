@@ -110,7 +110,7 @@ openssl dgst -sha384 -binary <file> | openssl base64 -A
   in-page search feature to confirm `script.js` still works normally.
 - **No LICENSE file (Low, needs a maintainer decision).** No `LICENSE`/`COPYING`
   file anywhere in the repo, confirmed by direct file check. The ecosystem
-  cluster currently lacking one (audit-verified 2026-09-17): `shani-chronoa`,
+  cluster currently lacking one (audit-verified 2026-09-17):
   `shani-docs`, `shani-wiki`, `shani-website` — `shani-install-media` gained a
   GPL-3.0 LICENSE on 2026-09-16 and `shani-settings` on 2026-09-17, both
   closed. Not a unique outlier, one of a real cluster. Needs
