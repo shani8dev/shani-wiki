@@ -131,6 +131,8 @@ hash matches the pinned file's real content
   Verified live: page loads with zero console errors, and the in-page
   search feature (the script's actual functionality) still works.
 
+- **Independent re-verification pass (2026-09-18) — all clean, no regressions.** Re-ran every check this file's known-issues entries claim, from scratch, not by trusting the prior entries: `html5lib` strict parse of `index.html` (0 errors) and of `404.html` (0 errors), live SRI fetch+hash of the Font Awesome CDN link (matches), `sitemap.xml` parses as valid XML, `llms.txt` present (21 lines), all 87 in-page `href="#..."` anchor links resolve to a real `id="..."` (0 broken), `node --check assets/js/script.js` (syntax OK), and the "no shared `sw.js`/brand CSS/nav JS" claim re-confirmed by a fresh filesystem search (still true). No uncommitted work was sitting in the working tree. Nothing to fix this pass — the `downloads.shani.dev`/`2026.05.18` release-URL claim from the entry above remains genuinely unverifiable without production access, not newly re-checked here.
+
 ## If you have Superpowers / oh-my-opencode / ultrawork / similar available
 
 If your environment provides Claude Code's **Superpowers** plugin, OpenCode's
