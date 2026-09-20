@@ -13,101 +13,10 @@ on:
 
 jobs:
   validate:
-    runs-on: ubuntu-latest
-    # ubuntu-latest ships python3 but not html5lib. A single tiny
-    # dependency for an offline-optional, standard-library-friendly
-    # verifier is acceptable for a no-build-step static site.
-    permissions:
-      contents: read
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.x'
-
-      - name: Install html5lib
-        run: python3 -m pip install --quiet html5lib
-
-      - name: Validate index.html (html5lib strict parse, SRI, staleness)
-        run: |
-          # (1) html5lib strict parse — 0 parser errors. html5lib is
-          # error-tolerant by design (it auto-corrects like a browser), so
-          # non-empty HTMLParser.errors == malformed markup that a real
-          # browser would silently mis-render. Wiki AGENTS.md rule.
-          # (2) SRI — fetch each cdnjs CDN <link>/<script> with an
-          # integrity= hash and confirm the live bytes match; mismatch or
-          # a downgraded CDN file is a supply-chain regression.
-          # (3) staleness — warn (non-fatal) if index.html's last commit
-          # is older than STALE_DAYS so rot is surfaced, not silently kept.
-          python3 - <<'PY'
-          import base64, hashlib, os, re, subprocess, sys, urllib.request
-          import html5lib
-
-          STALE_DAYS = int(os.environ.get("STALE_DAYS", "90"))
-
-          doc = open("index.html", encoding="utf-8").read()
-
-          # (1) html5lib parse
-          parser = html5lib.HTMLParser()
-          parser.parse(doc)
-          errs = parser.errors
-          if errs:
-              print("::error::index.html has %d html5lib parse errors" % len(errs))
-              for e in errs[:10]:
-                  print("  parse error:", e)
-              sys.exit(1)
-          print("html5lib parse: 0 errors")
-
-          # (2) SRI verification on every <link>/<script> carrying integrity=
-          tagged = re.findall(
-              r'<(?:link|script)[^>]*?(?:src|href)='
-              '"([^"]+)"[^>]*?integrity="([^"]+)"', doc, flags=re.IGNORECASE)
-          if not tagged:
-              print("::error::no cdnjs resource with integrity= found in index.html")
-              sys.exit(1)
-          sri_fail = False
-          for url, integrity in tagged:
-              algo, _, pinned = integrity.partition("-")
-              try:
-                  data = urllib.request.urlopen(url, timeout=20).read()
-              except Exception as e:
-                  # Network blips happen in CI; do not fail the build on a
-                  # transient fetch, but flag it loudly so a real SRI
-                  # regression can't hide behind "the network was down".
-                  print("::warning::SRI fetch failed for %s: %r (verify manually)" % (url, e))
-                  continue
-              dig = hashlib.new(algo, data).digest()
-              computed = base64.b64encode(dig).decode()
-              if computed != pinned:
-                  print("::error::SRI mismatch for %s" % url)
-                  print("  pinned   : sha384-%s" % pinned if algo == "sha384" else "  pinned   : %s-%s" % (algo, pinned))
-                  print("  computed : %s-%s" % (algo, computed))
-                  sri_fail = True
-              else:
-                  print("SRI match: %s (%s)" % (url, algo))
-          if sri_fail:
-              sys.exit(1)
-
-          # (3) staleness warning (non-fatal)
-          try:
-              ts = subprocess.check_output(
-                  ["git", "log", "-1", "--format=%ct", "--", "index.html"],
-              ).decode().strip()
-              if ts:
-                  age_days = (subprocess.check_output(["date", "+%s"]).decode().strip())
-                  age_days = (int(age_days) - int(ts)) / 86400
-                  if age_days > STALE_DAYS:
-                      print("::warning::index.html last changed %.0f days ago (> %d) — content may be stale"
-                            % (age_days, STALE_DAYS))
-                  else:
-                      print("staleness: index.html last changed %.0f days ago (within %d-day window)"
-                            % (age_days, STALE_DAYS))
-          except subprocess.CalledProcessError:
-              print("::warning::cannot determine last commit date for index.html")
-          print("All wiki checks passed.")
-          PY
+    uses: shani8dev/shani-ci-commons/.github/workflows/validate-html.yml@main
+    with:
+      strict-parse: false
+      require-sri: true
 
   security:
     name: Security
