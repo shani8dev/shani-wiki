@@ -108,3 +108,10 @@ jobs:
               print("::warning::cannot determine last commit date for index.html")
           print("All wiki checks passed.")
           PY
+
+  security:
+    name: Security
+    uses: shani8dev/shani-ci-commons/.github/workflows/security.yml@main
+    with:
+      scan-type: secrets
+    needs: validate

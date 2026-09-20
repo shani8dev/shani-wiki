@@ -39,11 +39,16 @@ hash matches the pinned file's real content
 # Serve locally and open in a browser; check the console for errors.
 python3 -m http.server 8000
 
-# Strict-parse every HTML page:
+# Strict-parse every HTML page. NOTE: html5lib.parse() does NOT accept a
+# `strict` kwarg on html5lib 1.1 (TypeError). The strict flag lives on the
+# parser object — construct HTMLParser(strict=True) then call .parse().
 python3 -c "
 import html5lib, pathlib
 for f in pathlib.Path('.').glob('*.html'):
-    html5lib.parse(f.read_text(), strict=True)
+    p = html5lib.HTMLParser(strict=True)
+    p.parse(f.read_text())
+    errs = p.errors
+    assert not errs, f'{f}: {errs[:3]}'
 print('all pages parse strict')
 "
 
