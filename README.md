@@ -2,7 +2,7 @@
 
 Technical documentation wiki for Shanios — the immutable Linux OS with atomic updates.
 
-> **Staleness notice (2026-08-28):** This repo was stale as of the last full-ecosystem audit. Its last commit predates every sibling repo's by months. Verify content against current `shani-install-media` and `shani-settings` before citing. This repo is also missing SEO/crawler artifacts (`404.html`, `sitemap.xml`, `robots.txt`, `llms.txt`) that its siblings (`shani-blog`, `shani-docs`) already have.
+> **Staleness notice (updated 2026-09-17):** This repo's **content** commits still date from 2026-04-15 (~5 months stale) — verify prose against current `shani-install-media` and `shani-settings` before citing. SEO/crawler artifacts (`404.html`, `sitemap.xml`, `robots.txt`, `llms.txt`) were added in `b036f05` (2026-08-29) and are live; the staleness is in the wiki's *prose*, not its infrastructure.
 
 ## Purpose
 
