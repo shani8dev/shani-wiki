@@ -1082,7 +1082,7 @@
                                 <text x="90" y="95" text-anchor="middle" fill="#fff" font-size="20" font-weight="bold">1</text>
                                 <text x="90" y="113" text-anchor="middle" fill="#fff" font-size="11">Check</text>
                                 <text x="90" y="155" text-anchor="middle" fill="#93c5fd" font-size="10">Auto checker</text>
-                                <text x="90" y="169" text-anchor="middle" fill="#93c5fd" font-size="10">shani-update timer</text>
+                                <text x="90" y="169" text-anchor="middle" fill="#93c5fd" font-size="10">Cassini agent timer</text>
                                 <text x="90" y="183" text-anchor="middle" fill="#93c5fd" font-size="10">finds new release</text>
                             </g>
                             <line x1="128" y1="100" x2="162" y2="100" stroke="#ff8a5c" stroke-width="2" marker-end="url(#arrow-update)"/>
@@ -2355,7 +2355,7 @@ diff -r /etc /data/overlay/etc/upper</code></pre>
                             <rect x="862" y="603" width="108" height="46" rx="5" fill="rgba(139,92,246,0.18)" stroke="#8b5cf6" stroke-width="1"/>
                             <text x="916" y="618" text-anchor="middle" fill="#c4b5fd" font-size="10" font-weight="bold">mark-boot-success</text>
                             <text x="916" y="631" text-anchor="middle" fill="#a78bfa" font-size="10">startup-check.sh</text>
-                            <text x="916" y="644" text-anchor="middle" fill="#a78bfa" font-size="10">shani-update timer</text>
+                            <text x="916" y="644" text-anchor="middle" fill="#a78bfa" font-size="10">Cassini agent timer</text>
 
                             <!-- Right-side connector line -->
                             <line x1="955" y1="52" x2="955" y2="700" stroke="#374151" stroke-width="1" stroke-dasharray="3,3"/>
@@ -2928,7 +2928,7 @@ sudo gen-efi cleanup-tpm2
                     <h4>Automatic Update Checker</h4>
                     <p>Shanios includes a background service that automatically checks for updates:</p>
                     <ul>
-                        <li><strong>shani-update:</strong> Runs as a per-user systemd service (<code>shani-update.timer</code>), firing 5 minutes after login then every 2 hours. It is slot-aware: if the system detects it is running from the candidate slot (a post-update test boot), it silently exits and sends a notification asking the user to validate the new system before the next update cycle. When an update is available it presents a GUI dialog (yad for X11/Wayland with backend fallback, then zenity, kdialog, or console) asking the user to install or defer. If deferred, it schedules a follow-up via <code>systemd-run --user --on-active=86400s</code> (24 hours). If approved, it opens a terminal window running <code>pkexec shani-deploy</code> under <code>systemd-inhibit</code>, monitors completion via a status file, and on success presents a reboot prompt. Logs are kept in <code>~/.cache/shani-update.log</code> with automatic 1 MB rotation.</li>
+                        <li><strong>Shani Cassini's notification agent:</strong> Runs as a per-user systemd service (<code>shani-cassini-agent.timer</code>), firing 2 minutes after login then every 2 hours. It is a GTK-free background process — it reads <code>shani-deploy --status --check --json</code> and sends a desktop notification via <code>notify-send</code>, so it needs no window and no display of its own. It stays quiet unless there is genuinely something to say: a pending reboot after a finished deploy, a recorded boot failure, or a new image being available. It never claims a system booted successfully on its own, and a notification is only recorded as delivered once <code>notify-send</code> confirms it, so an unconfirmed one is retried on the next tick. Applying an update remains an explicit, user-initiated action from Cassini's <strong>Updates &amp; Rollback</strong> page (or <code>pkexec shani-deploy</code>).</li>
                     </ul>
 
                     <h4>Manual Update</h4>
@@ -2966,7 +2966,7 @@ sudo gen-efi cleanup-tpm2
                                 <li><strong>startup-check.sh</strong> runs at login (via autostart or systemd user session) and reads the failure files. If a fallback boot is confirmed — booted slot differs from <code>current-slot</code> and a <code>boot_failure</code> file exists for the expected slot — it presents a GUI dialog (yad / zenity / kdialog with console fallback) prompting the user to rollback. If the user approves, it opens a terminal and runs <code>pkexec shani-deploy --rollback</code>, monitors completion, then offers to reboot.</li>
                                 <li><strong>shani-deploy</strong> also detects the mismatch independently on next update run via the <code>/data/current-slot</code> vs booted-slot comparison, giving a second recovery path even if the user skips the GUI prompt.</li>
                             </ol>
-                            <p>A <code>/data/deployment_pending</code> flag prevents a partially-completed deploy from being lost if power fails mid-extraction. The <code>shani-update</code> user-mode checker also silently exits if it detects the system is still in a "candidate boot" validation state, suppressing spurious update prompts until stability is confirmed.</p>
+                            <p>A <code>/data/deployment_pending</code> flag prevents a partially-completed deploy from being lost if power fails mid-extraction. Cassini's notification agent also stays quiet while a deploy is still awaiting a reboot (<code>candidate_boot</code>), so a half-finished update never produces a spurious "an update is available" prompt.</p>
                         </div>
                     </div>
 
@@ -2976,11 +2976,11 @@ sudo gen-efi cleanup-tpm2
                         <li><strong>stable (default):</strong> Thoroughly tested releases</li>
                         <li><strong>latest:</strong> Newest features (may be less stable)</li>
                     </ul>
-                    <p>Versions use a date-based format (<code>YYYYMMDD</code>, e.g. <code>20251201</code>). The channel manifest (<code>stable.txt</code> or <code>latest.txt</code>) is fetched from the R2 CDN (<code>downloads.shani.dev</code>) with SourceForge as fallback, and contains the current image filename. Version comparison is lexicographic — newer dates are always greater — and the user-space checker (<code>shani-update</code>) also handles profile changes at the same version date as a valid update trigger.</p>
+                    <p>Versions use a date-based format (<code>YYYYMMDD</code>, e.g. <code>20251201</code>). The channel manifest (<code>stable.txt</code> or <code>latest.txt</code>) is fetched from the R2 CDN (<code>downloads.shani.dev</code>) with SourceForge as fallback, and contains the current image filename. Version comparison is lexicographic — newer dates are always greater — and the user-space agent (Cassini's notification agent) also handles profile changes at the same version date as a valid update trigger.</p>
                     <div class="note-box" role="note">
                         <div class="note-icon"><i class="fas fa-info-circle"></i></div>
                         <div class="note-content">
-                            <p><strong>Channel scope:</strong> <code>/etc/shani-channel</code> and <code>-t</code> flags are read by <code>shani-deploy</code>. The background <code>shani-update</code> user daemon always checks the <strong>stable</strong> channel — it is not affected by the channel file. To get <code>latest</code> channel auto-updates, run <code>sudo shani-deploy -t latest</code> manually or set a cron/timer to call it.</p>
+                            <p><strong>Channel scope:</strong> <code>/etc/shani-channel</code> and <code>-t</code> flags are read by <code>shani-deploy</code>. The background Cassini notification agent always checks the <strong>stable</strong> channel — it is not affected by the channel file. To get <code>latest</code> channel auto-updates, run <code>sudo shani-deploy -t latest</code> manually or set a cron/timer to call it.</p>
                         </div>
                     </div>
                     <p>Set your preferred channel:</p>
@@ -9987,7 +9987,7 @@ sudo smartctl -a /dev/sda         # or SATA drive</code></pre>
                             <div class="toggle-icon"><i class="fas fa-plus"></i></div>
                         </div>
                         <div class="faq-answer">
-                            <p>Updates follow a date-based versioning scheme (<code>YYYYMMDD</code>) on the <strong>stable</strong> (default) or <strong>latest</strong> channels. A background service (<code>shani-update.timer</code>) checks for updates 5 minutes after login and every 2 hours thereafter. When an update is found, a GUI dialog asks you to install or defer (defer schedules a reminder after 24 hours). Updates are never applied silently — user approval is always required before <code>shani-deploy</code> runs.</p>
+                            <p>Updates follow a date-based versioning scheme (<code>YYYYMMDD</code>) on the <strong>stable</strong> (default) or <strong>latest</strong> channels. A background service (<code>shani-cassini-agent.timer</code>) checks for updates 2 minutes after login and every 2 hours thereafter, and sends a desktop notification when a new image is available. Updates are never applied silently — applying one is always an explicit action from the Updates &amp; Rollback page, which runs <code>shani-deploy</code>.</p>
                         </div>
                     </div>
 
@@ -10506,8 +10506,8 @@ sudo btrfs balance start -dusage=50 /
                                 <td>The family of Shanios-specific meta-packages (shani-core, shani-deploy, shani-desktop-plasma, shani-multimedia, shani-network, shani-storage, shani-tools, shani-accessibility, shani-bluetooth, shani-fonts, shani-printer, shani-scanner, shani-video, shani-video-guest, shani-peripherals, and others) that group systemd services, udev rules, configuration snippets, and default settings into logical units. Each pulls in the appropriate base packages and pre-configures them for Shanios's immutable environment.</td>
                             </tr>
                             <tr>
-                                <th scope="row">shani-update</th>
-                                <td>The per-user systemd service and timer (<code>shani-update.service</code> / <code>shani-update.timer</code>) that runs in the background to check for OS updates. Fires 5 minutes after login then every 2 hours. When an update is available it presents a GUI dialog (yad/zenity/kdialog) asking the user to install or defer. Runs <code>pkexec shani-deploy</code> under <code>systemd-inhibit</code> when approved. Logs to <code>~/.cache/shani-update.log</code>.</td>
+                                <th scope="row">shani-cassini-agent.timer</th>
+                                <td>The per-user systemd service and timer (<code>shani-cassini-agent.service</code> / <code>shani-cassini-agent.timer</code>) that runs in the background to check for OS updates and boot problems. Fires 2 minutes after login then every 2 hours. Sends a desktop notification via <code>notify-send</code> when a new image is available or a reboot is pending; applying the update stays a user action in Cassini's Updates &amp; Rollback page.</td>
                             </tr>
                             <tr>
                                 <th scope="row">dracut</th>
