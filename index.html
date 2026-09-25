@@ -2999,7 +2999,7 @@ sudo shani-deploy --set-channel stable</code></pre>
                     <div class="warning-box" role="alert">
                         <div class="warning-icon"><i class="fas fa-exclamation-triangle"></i></div>
                         <div class="warning-content">
-                            <p><strong>Rollback direction:</strong> <code>--rollback</code> restores the <em>non-booted</em> slot from its backup snapshot, keeping the <em>currently booted</em> slot intact. Always run it from the slot you want to <strong>keep</strong>. If you need to undo an update that you already rebooted into, boot back into the old slot (select it from the systemd-boot menu) and then run <code>--rollback</code>.</p>
+                            <p><strong>Rollback direction:</strong> run from the <em>updated</em> system, <code>--rollback</code> makes the previous system the default boot entry again and deletes nothing — reboot to use it. Run from the <em>older</em> system after a fallback (systemd-boot booted it because the update failed), it restores the other slot from its pre-update backup snapshot.</p>
                         </div>
                     </div>
 
@@ -3007,7 +3007,7 @@ sudo shani-deploy --set-channel stable</code></pre>
                         <pre><code># Show help
 sudo shani-deploy --help
 
-# Rollback — run from the slot you want to KEEP (restores the other slot from backup)
+# Rollback — from the updated system: back to the previous one (then reboot)
 sudo shani-deploy --rollback
 
 # Manual cleanup of old backups and downloaded images
