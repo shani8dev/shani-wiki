@@ -8,7 +8,15 @@ done.
 ## What this repo is
 
 A no-build-step technical documentation wiki (plain HTML/CSS/Markdown
-under `docs/`). At the last full-ecosystem audit this repo was notably
+under `docs/`), served at `wiki.shani.dev`.
+
+**This wiki is superseded by `shani-docs` (`docs.shani.dev`), which is the
+maintained documentation.** The maintainer confirmed the supersession
+relationship; do not add new documentation here, and do not treat this
+page as current. Prefer `shani-docs` for any new or updated content, and
+check whether a fix belongs there instead of here.
+
+At the last full-ecosystem audit this repo was notably
 stale (its then-last commit predated every sibling repo's by months) and
 was missing some SEO/crawler artifacts (`404.html`, `sitemap.xml`,
 `robots.txt`, `llms.txt`) that its siblings (`shani-blog`, `shani-docs`)
@@ -121,7 +129,8 @@ openssl dgst -sha384 -binary <file> | openssl base64 -A
   closed. Not a unique outlier, one of a real cluster. Needs
   the maintainer to pick what license this content is under, not
   something to guess and add.
-- **Staleness — status updated 2026-09-17.** SEO/crawler artifacts + README hardening landed in `b036f05` (2026-08-29, pushed); **content** itself last changed 2026-04-15 — still ~5 months stale. README has staleness notice.
+- **Superseded by `shani-docs` — notice added to `index.html` (2026-09-26).** `wiki.shani.dev` and `docs.shani.dev` were both live with **zero cross-links in either direction**, so a reader landing here had no way to learn that `shani-docs` is the maintained set. Added a `.warning-box` (`role="alert"`, `fa-exclamation-triangle`) as the first element inside `<main>`, before the Overview section, linking to `https://docs.shani.dev` and stating the content is unmaintained since April 2026. It deliberately reuses the two `.warning-box` blocks already in this file (lines ~1578, ~2784) rather than inventing new styling, so it needs no CSS. Verified: `html5lib` strict parse 0 errors on `index.html` + `404.html`, 96 anchor links with 0 broken, `sitemap.xml` valid, `node --check assets/js/script.js` OK, script-tag count still 1 (so the strict `script-src 'self'` CSP is unaffected), and a real browser load confirming it renders above the fold (1104×140, orange warning styling, link visible). **Pre-existing, not from this change:** the page logs one console error, `The Content Security Policy directive 'frame-ancestors' is ignored when delivered via a <meta> element` — that directive is in the CSP meta and is in committed HEAD; `frame-ancestors` only works as an HTTP header, so the intended clickjacking protection is not actually applied. GitHub Pages cannot set arbitrary response headers, so this needs a proxy/header-level fix or removal of the dead directive — **not** a mechanical edit to this file.
+- **Staleness — status updated 2026-09-26.** SEO/crawler artifacts + README hardening landed in `b036f05` (2026-08-29, pushed); **content** itself last changed 2026-04-15 — still ~5 months stale. README has staleness notice, and `index.html` now carries a supersession notice pointing at `shani-docs` (see above).
 - **Missing artifacts — FIXED.** Added all 4, matching sibling
   conventions but adapted to this site's actual single-page structure
   (unlike `shani-docs`'s multi-page site, every "section" here is a
