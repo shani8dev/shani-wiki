@@ -252,7 +252,7 @@ Implementation priorities are per `../IMPLEMENTATION-ROADMAP.md` (master roadmap
 
 2. **Refresh stale content (P1, ongoing).** Content commits date from 2026-04-15 — ~5 months stale (the `b036f05` 2026-08-29 commit added SEO/crawler artifacts + README hardening but did not refresh the wiki's own prose). Brand CSS/JS and SEO updates that landed in `shani-docs`/`shani-blog` never reached this repo; audit the single `index.html` against the current sibling state and port what applies (this repo shares no `sw.js`/brand CSS/nav JS, so the port surface is content and hardening, not shared chrome).
 
-3. **Add LICENSE (P3, 5 min).** Master-roadmap item #31, not #26 (web-shared-components is #27; #26 is shani-gui welcome content). Match `shani-blog` — the only web sibling that has a LICENSE, and it is **MIT** (audit-verified 2026-09-17), not GPL-3.0 — unless the maintainer decides web repos should follow the OS-side GPL-3.0 standard instead; one of the 4-repo cluster missing it.
+3. **Add LICENSE (P3, 5 min).** Master-roadmap item #31, not #26 (web-shared-components is #27; #26 is shani-cassini welcome content). Match `shani-blog` — the only web sibling that has a LICENSE, and it is **MIT** (audit-verified 2026-09-17), not GPL-3.0 — unless the maintainer decides web repos should follow the OS-side GPL-3.0 standard instead; one of the 4-repo cluster missing it.
 
 4. **CI workflow (P1).** No CI at all today. Use `shani-ci-commons` templates (item #7): HTML validation of the single `index.html` (html5lib strict parse), SRI-hash verification on the Font Awesome CDN link, and a staleness check that flags when the last commit is older than N months.
 
