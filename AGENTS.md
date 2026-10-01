@@ -61,6 +61,47 @@ correct." It is verified by observing the actual behavior of the real
 thing in the real environment — built, served, deployed, signed, running.
 If you haven't seen it work (or fail) for real, it isn't verified.
 
+## Test harness: shani-testbed (use it - and improve it, never invent around it)
+
+The ecosystem's real test harness is the sibling repo **`../shani-testbed`**
+(read its `README.md` and `AGENTS.md`). It installs a real ShaniOS image with
+the real installer, boots its slots (`systemd-nspawn`, and UEFI + TPM VMs),
+runs real deploys and rollbacks, drives GUI apps through their accessibility
+tree, and checks web pages in a real headless browser. Every command runs from
+`../shani-install-media`, which provides the builder container:
+
+```bash
+cd ../shani-install-media
+./run_in_container.sh build.sh test <command> ...   # `... test help` lists them all
+```
+
+**If the check you need does not exist, add it to shani-testbed - do not invent
+around it.** A one-off script in this repo, a scratchpad, or a heredoc piped
+into a container is lost when the session ends, and the next agent re-derives
+it. Extend the harness instead (see "Extend the harness" in its AGENTS.md):
+
+- an in-slot check -> `shani-testbed/slot-tests/<name>.sh` (`# slot-test-mode: boot`,
+  prints `RESULT <name> PASS|FAIL|SKIP` lines), run by `slot-test <slot> <name>`;
+- a GUI interaction or assertion -> an `app` action in `lib/app.sh`, or a walk
+  through a real app as `app-scripts/<app>.actions`;
+- a web check -> `lib/web_client.py`;
+- a new way to boot, drive or observe -> a command or option in `lib/`;
+
+each with a negative control (a check that cannot fail is not a check), its
+self-test (`tests/run-app-actions.sh`, `tests/run-web-client.sh`, ...), and the
+`usage` + README updated. One harness run at a time: disk-touching commands
+take `disk/.testbed.lock` and a second run is refused. Plain nspawn boots see
+the image's whole `/var`; real boots have an empty tmpfs `/var`
+(`systemd.volatile=state`) - use `slot-test --volatile`, or a real UEFI boot
+with `iso-install --boot-only --console-exec=CMD`, for anything touching `/var`.
+
+### What to run for this repo
+
+- `web --site=/opt/shani-wiki --allow-host=cdnjs.cloudflare.com` (one page: no `--crawl`)
+  (what `.github/workflows/web-check.yml` runs). Without the container:
+  `python3 ../shani-testbed/lib/web_serve.py . 8700 &` then
+  `python3 ../shani-testbed/lib/web_client.py --url=http://127.0.0.1:8700/`.
+
 ## Rule: open it and actually check
 
 Serve the repo locally (`python3 -m http.server 8000` from the repo root)
@@ -112,6 +153,24 @@ openssl dgst -sha384 -binary <file> | openssl base64 -A
 ```
 
 ## Audit-verified known issues (confirmed present)
+
+- **Real-browser check in CI: `.github/workflows/web-check.yml` (2026-10-01)**
+  (shani-ci-commons `web-check.yml`, shani-testbed's `lib/web_client.py`). Its
+  first run found the three issues below; all fixed, 10/10 checks pass.
+- **22 `[email protected]` strings in code examples - FIXED (2026-10-01).**
+  The HTML had been saved from a Cloudflare-proxied page, which rewrites every
+  `x@y` into `<a href="/cdn-cgi/l/email-protection" data-cfemail=...>` decoded
+  by a script only Cloudflare injects. GitHub Pages serves no such script, so
+  readers saw `ssh [email protected]` (and even
+  `systemd-zram-setup@zram0.service` was mangled), and each link 404'd. Decoded
+  back to the original text (XOR with the first byte); all were placeholders
+  (example.com, 192.168.x addresses, a public GNOME extension id).
+- **Horizontal scroll at desktop widths - FIXED (2026-10-01).** A long inline
+  `<code>` in a card ran 78px past a 1280px window. `p/li/td code` now has
+  `overflow-wrap: anywhere` (block code keeps `.code-block`'s own scroll).
+- **Search input had no id/name** (Chrome issue
+  `FormEmptyIdAndNameAttributesForInputError`, which breaks autofill) - FIXED,
+  `id="wiki-search" name="q"`.
 
 - **8 orphaned PNGs removed — FIXED, but undocumented until now.**
   `assets/images/{architecture,blue-green,boot-process,hibernation,

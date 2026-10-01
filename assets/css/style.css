@@ -35,6 +35,10 @@ html[data-theme="light"] {
 
   --text-main: #1a102f;
   --text-muted: #2f2f2f;
+  /* links: the coral --primary is 2.18:1 on this background (WCAG 1.4.3
+     wants 4.5); the brand's darkened coral is 5.72:1 (shani-testbed `web`,
+     2026-10-01). Dark mode keeps --primary, 8.26:1 there. */
+  --link: #b53309;
 }
 
 /* ===================================================== */
@@ -67,7 +71,7 @@ img {
 }
 
 a {
-  color: var(--primary);
+  color: var(--link, var(--primary));
   text-decoration: none;
   transition: var(--transition);
 }
@@ -542,10 +546,14 @@ th, td {
   text-align: left;
 }
 
+/* White only on the gradient header row. A header cell outside <thead>
+   (several tables put their header row in the body) sits on the card
+   background: white there was white-on-white in light mode, 1.00:1. */
 th {
-  color: #fff;
+  color: var(--text-main);
   font-weight: 600;
 }
+thead th { color: #fff; }
 
 td {
   color: var(--text-main);
@@ -611,6 +619,39 @@ tbody tr:hover {
   padding: 0;
   color: inherit;
 }
+
+/* Inline code (paths, commands) is one unbreakable word to the browser: a long
+   one in a card ran 78px past a 1280px window and gave the whole page a
+   horizontal scrollbar (found by shani-testbed's `web` overflow check). Let it
+   wrap anywhere; block code keeps .code-block's own horizontal scroll. */
+p code, li code, td code {
+  overflow-wrap: anywhere;
+}
+/* bare <pre> blocks (outside .code-block) scroll in their own box instead of
+   being cut off by the layout's overflow on tablets and phones */
+pre { max-width: 100%; overflow-x: auto; }
+/* .note-box/.warning-box are flex rows: their text column's min-width is
+   auto, so one long word (a path, a URL) pushed it 140px off a phone screen,
+   cut off and unreachable. Let it shrink and break long words. */
+.note-content, .warning-content { min-width: 0; }
+.note-icon, .warning-icon { flex-shrink: 0; }  /* the icon keeps its size */
+/* the same min-width: auto trap in the install steps (the page was 508px
+   wider than a 390px phone) and the FAQ rows (toggle icons 2px past the
+   edge on a tablet) - shani-testbed `web` overflow check, 2026-10-01 */
+.step-content, .faq-question > *:not(.toggle-icon) { min-width: 0; overflow-wrap: anywhere; }
+.step-content { flex: 1 1 auto; }
+/* ...and one level up: .steps-container is a grid whose track grew to its
+   widest step's min-content (504px in #secure-boot on a 390px phone).
+   Grid items need min-width: 0 to stay inside their track. */
+.steps-container > *, .faq-container > *, .card-container > *,
+.contribute-options > *, .feature-list > *, .security-features > * { min-width: 0; }
+.faq-question h4, .faq-answer { overflow-wrap: anywhere; }
+/* long unbreakable words in prose (package lists, paths) overflowed a
+   320 CSS px viewport by 31px (WCAG 1.4.10 reflow, 400 % zoom) */
+.content p, .content li, .content td, .content dd { overflow-wrap: break-word; }
+.toggle-icon { flex-shrink: 0; }
+.note-content, .warning-content { overflow-wrap: anywhere; }
+.faq-item, .faq-question, .faq-answer { box-sizing: border-box; max-width: 100%; }
 
 /* ===================================================== */
 /* FAQ                                                   */
